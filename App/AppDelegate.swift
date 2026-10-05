@@ -18,9 +18,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         item.button?.image = NSImage(systemSymbolName: "square.on.square", accessibilityDescription: "On Hand")
         item.button?.toolTip = "On Hand — clipboard history"
         item.button?.target = self
-        item.button?.action = #selector(togglePanel)
+        item.button?.action = #selector(togglePanel(_:))
         statusItem = item
-        KeyboardShortcuts.onKeyUp(for: .showHistory) { [weak self] in self?.togglePanel() }
+        KeyboardShortcuts.onKeyUp(for: .showHistory) { [weak self] in self?.togglePanel(nil) }
         if !model.preferences.hasStarted || ProcessInfo.processInfo.arguments.contains("--demo") {
             showPanel()
         }
@@ -31,11 +31,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         return true
     }
 
-    @objc private func togglePanel() {
-        if panel?.isVisible == true { panel?.orderOut(nil) } else { showPanel() }
+    @objc private func togglePanel(_ sender: Any?) {
+        if panel?.isVisible == true { panel?.orderOut(nil) } else { showPanel(atStatusItem: sender != nil) }
     }
 
-    private func showPanel() {
+    private func showPanel(atStatusItem: Bool = false) {
         if NSWorkspace.shared.frontmostApplication?.bundleIdentifier != Bundle.main.bundleIdentifier {
             previousApp = NSWorkspace.shared.frontmostApplication
         }
@@ -66,9 +66,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             }, onSettings: { [weak self] in self?.showSettings() }))
             panel = window
         }
-        panel?.center()
+        if atStatusItem { positionAtStatusItem() } else { panel?.center() }
         NSApp.activate(ignoringOtherApps: true)
         panel?.makeKeyAndOrderFront(nil)
+    }
+
+    private func positionAtStatusItem() {
+        guard let panel, let button = statusItem?.button, let window = button.window,
+              let screen = window.screen else { panel?.center(); return }
+        let anchor = window.convertToScreen(button.convert(button.bounds, to: nil))
+        let visible = screen.visibleFrame.insetBy(dx: 8, dy: 8)
+        let origin = NSPoint(x: max(visible.minX, min(anchor.midX - panel.frame.width / 2,
+                                                    visible.maxX - panel.frame.width)),
+                             y: max(visible.minY, anchor.minY - panel.frame.height - 6))
+        panel.setFrameOrigin(origin)
     }
 
     func windowDidResignKey(_ notification: Notification) {
