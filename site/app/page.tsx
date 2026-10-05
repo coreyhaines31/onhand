@@ -11,7 +11,7 @@ import Image from "next/image";
 import ClipboardDemo from "@/components/clipboard-demo";
 
 const source = "https://github.com/coreyhaines31/onhand";
-const download = "/downloads/on-hand-0.1.0-preview.zip";
+const download = "https://github.com/coreyhaines31/onhand/releases/download/v1.0.0/OnHand-1.0.0.zip";
 
 export default function Home() {
   return (
@@ -54,9 +54,9 @@ export default function Home() {
             </a>
           </div>
           <p className="download-note">
-            Free preview · Apple silicon · macOS 14+
+            Free · Apple silicon and Intel · macOS 14+
             <br />
-            Not yet notarized. <a href="/install">Installation guide</a>
+            Signed and notarized by Apple. <a href="/install">Installation guide</a>
           </p>
           <p className="hero-note">
             No account. No subscription. Stored on your Mac.
@@ -114,7 +114,7 @@ export default function Home() {
           <details>
             <summary>Is On Hand free?</summary>
             <p>
-              Yes. This preview is free, with no account, trial, or
+              Yes. On Hand is free, with no account, trial, or
               subscription. The local app’s source is available under the MIT
               license. Optional paid services may come later.
             </p>
@@ -122,8 +122,8 @@ export default function Home() {
           <details>
             <summary>Will it run on my Mac?</summary>
             <p>
-              The preview download is for Apple silicon Macs running macOS 14 or
-              later. It is not yet notarized by Apple. Follow the{" "}
+              On Hand supports Apple silicon and Intel Macs running macOS 14 or
+              later. It is signed and notarized by Apple. Follow the{" "}
               <a href="/install">installation guide</a> to set it up.
             </p>
           </details>
@@ -147,8 +147,8 @@ export default function Home() {
           <details>
             <summary>Does it sync between Macs?</summary>
             <p>
-              No. Your history stays on the Mac where you copied it. This
-              preview has no cloud sync.
+              No. Your history stays on the Mac where you copied it. On Hand
+              has no cloud sync.
             </p>
           </details>
           <details>
@@ -164,7 +164,7 @@ export default function Home() {
         <div>
           <h2>Free. Open source. On your Mac.</h2>
           <p>
-            Free developer preview for macOS 14+.{" "}
+            Free for macOS 14+.{" "}
             <a href="/install">Installation guide</a>
           </p>
         </div>

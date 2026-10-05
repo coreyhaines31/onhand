@@ -7,15 +7,14 @@ export default function Install() {
       </Link>
       <h1>Install On Hand.</h1>
       <p>
-        This is a developer preview for Apple silicon Macs running macOS 14 or
-        later. It is locally signed, but has not been signed with Developer ID
-        or notarized by Apple.
+        On Hand supports Apple silicon and Intel Macs running macOS 14 or later.
+        The app is signed with Developer ID and notarized by Apple.
       </p>
-      <h2>Install the preview</h2>
+      <h2>Install the app</h2>
       <ol>
         <li>
-          <a href="/downloads/on-hand-0.1.0-preview.zip" download>
-            Download the preview
+          <a href="https://github.com/coreyhaines31/onhand/releases/download/v1.0.0/OnHand-1.0.0.zip" download>
+            Download On Hand
           </a>{" "}
           and unzip it.
         </li>
@@ -23,9 +22,8 @@ export default function Install() {
           Move <strong>On Hand.app</strong> to Applications.
         </li>
         <li>
-          Open the app. macOS may block an unnotarized download. If you trust
-          this preview, use the per-app <strong>Open Anyway</strong> option in
-          System Settings → Privacy &amp; Security.
+          Open On Hand from Applications. Confirm Open if macOS asks whether
+          you want to open an app downloaded from the internet.
         </li>
         <li>
           Choose “Start keeping my clipboard.” Only new copies are captured.

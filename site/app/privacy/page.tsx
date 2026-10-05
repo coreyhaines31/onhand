@@ -6,7 +6,7 @@ export default function Privacy() {
         ← Back to On Hand
       </Link>
       <h1>Your clipboard stays local.</h1>
-      <p>On Hand 0.1.0 · Updated October 5, 2026</p>
+      <p>On Hand 1.0.0 · Updated October 5, 2026</p>
       <h2>What the app stores</h2>
       <p>
         On Hand stores text, links, and images locally in your Mac’s Application
@@ -43,9 +43,11 @@ export default function Privacy() {
       </p>
       <h2>Updates and future services</h2>
       <p>
-        This local preview does not check for updates. Signed releases may
-        contact an update server through Sparkle. Any future sync service will
-        be optional and will have its own clearly described data practices.
+        On Hand uses Sparkle to check for signed app updates hosted on GitHub.
+        Update checks request the release feed; they do not upload your clipboard
+        history. Automatic checks are optional, and you can check manually in
+        Settings. Any future sync service will be optional and will describe its
+        data practices before you enable it.
       </p>
     </main>
   );
