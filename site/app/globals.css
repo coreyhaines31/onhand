@@ -72,6 +72,8 @@ summary:focus-visible {
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.6px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .mark {
   display: inline-flex;
@@ -683,7 +685,7 @@ kbd {
   .nav-links {
     gap: 16px;
   }
-  .nav-links a:first-child {
+  .nav-links a:not(:last-child) {
     display: none;
   }
   .demo-tools {
