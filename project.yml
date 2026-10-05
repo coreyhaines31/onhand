@@ -23,8 +23,11 @@ targets:
   OnHand:
     type: application
     platform: macOS
-    sources: [App]
-    resources: [Resources]
+    sources:
+      - path: App
+      - path: Resources
+        excludes: [Info.plist]
+        buildPhase: resources
     dependencies:
       - package: OnHandCore
       - package: KeyboardShortcuts
