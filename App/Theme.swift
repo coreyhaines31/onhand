@@ -5,10 +5,6 @@ enum HandLayout {
     static let height: CGFloat = 600
 }
 
-extension Color {
-    static let handGreen = Color.accentColor
-}
-
 struct HandMark: View {
     var body: some View {
         Image(systemName: "square.on.square")

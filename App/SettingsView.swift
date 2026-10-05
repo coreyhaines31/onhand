@@ -58,7 +58,7 @@ struct SettingsView: View {
                 Button("Quit On Hand") { NSApp.terminate(nil) }
             }
         }
-        .formStyle(.grouped).frame(width: 520, height: 620).tint(.handGreen)
+        .formStyle(.grouped).frame(width: 520, height: 620).tint(.accentColor)
         .confirmationDialog("Clear clipboard history?", isPresented: $clearing) {
             Button(includePinned ? "Delete all clips" : "Delete unpinned clips", role: .destructive) {
                 model.clear(keepPinned: !includePinned)

@@ -71,7 +71,8 @@ struct HistoryView: View {
                 Text(model.query.isEmpty ? "Clipboard history" : "Search results")
                     .font(.subheadline.weight(.medium))
                 Spacer()
-                Text("\(model.visibleClips.count) items").font(.caption).monospacedDigit()
+                Text(model.visibleClips.count == 1 ? "1 item" : "\(model.visibleClips.count) items")
+                    .font(.caption).monospacedDigit()
             }.foregroundStyle(.secondary)
         }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 6)
     }
