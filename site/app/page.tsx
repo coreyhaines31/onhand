@@ -34,13 +34,13 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow">A native clipboard manager for Mac</p>
           <h1>
-            Everything you copy.
+            Copy it once.
             <br />
-            <span>Close at hand.</span>
+            <span>Find it again.</span>
           </h1>
           <p className="intro">
-            Find the text, links, and images you copied. Keep what you need. Get
-            back to work.
+            Bring back the text, links, and images you copied earlier. On Hand
+            keeps them in your Mac’s menu bar, ready to reuse.
           </p>
           <a className="button primary" href={download} download>
             <ArrowDown size={18} />
@@ -51,69 +51,82 @@ export default function Home() {
             <br />
             Not yet notarized. <a href="/install">Installation guide</a>
           </p>
-          <p className="hero-note">Local history. No account. Open source.</p>
+          <p className="hero-note">
+            No account. No subscription. Stored on your Mac.
+          </p>
         </div>
         <div className="hero-visual">
           <ClipboardDemo />
           <p className="demo-caption">
-            Interactive preview · Sample clips only
+            Try searching, pinning, or previewing a sample clip.
           </p>
         </div>
       </section>
       <section id="features" className="features wrap" aria-label="Features">
         <article>
           <Search size={25} strokeWidth={1.5} />
-          <h2>Find it again.</h2>
+          <h2>Find the link you lost.</h2>
           <p>
-            Search by content or app. Filter links, images, and pinned clips.
-            Preview before you copy.
+            Search a word you remember or the app you copied from. Filter by
+            type and preview a clip before you copy it back.
           </p>
         </article>
         <article>
           <Pin size={25} strokeWidth={1.5} />
-          <h2>Keep it around.</h2>
+          <h2>Keep the clips you reuse.</h2>
           <p>
-            Pin the things you use often. Keep the window open while you move
-            between apps.
+            Pin a reply, an address, or a useful snippet. It stays saved until
+            you remove it. Leave history open to reuse clips across apps.
           </p>
         </article>
         <article>
           <Keyboard size={25} strokeWidth={1.5} />
-          <h2>Stay on your keyboard.</h2>
+          <h2>Keep your hands on the keys.</h2>
           <p>
-            Open with <kbd>⌘⇧Space</kbd>. Copy a result with <kbd>⌘1–9</kbd>,
-            then paste as usual.
+            Press <kbd>⌘⇧Space</kbd> to open history. Choose a clip with the
+            arrow keys and Return, or use <kbd>⌘1–9</kbd>. Paste with{" "}
+            <kbd>⌘V</kbd>.
           </p>
         </article>
       </section>
       <section className="privacy wrap">
         <LockKeyhole size={30} strokeWidth={1.4} />
-        <h2>Your clipboard stays on your Mac.</h2>
+        <h2>Your history. On your Mac.</h2>
         <p>
-          No clipboard uploads or app analytics. Pause capture, exclude apps,
-          and choose how long history stays. Password-marked clips are skipped.
+          Your clips stay local, with no app analytics or clipboard uploads.
+          Pause capture anytime, choose apps to exclude, and set how long
+          unpinned clips stay.
         </p>
         <a href="/privacy">
           Read the privacy policy <ArrowUpRight size={14} />
         </a>
       </section>
       <section id="questions" className="faq wrap">
-        <h2>A few things to know.</h2>
+        <h2>Before you download.</h2>
         <div className="questions">
           <details>
             <summary>Is On Hand free?</summary>
             <p>
-              Yes. The local clipboard manager is free and MIT-licensed.
-              Optional paid services may come later, but this preview has no
-              account, trial, or subscription.
+              Yes. This preview is free, with no account, trial, or
+              subscription. The local app’s source is available under the MIT
+              license. Optional paid services may come later.
             </p>
           </details>
           <details>
-            <summary>What can it remember?</summary>
+            <summary>Will it run on my Mac?</summary>
             <p>
-              Plain text, web links, and images. History is limited to 500 clips
-              or 50 MB. Text over 1 MB, images over 10 MB, and copied files are
-              skipped. Rich text is saved as plain text.
+              The preview download is for Apple silicon Macs running macOS 14 or
+              later. It is not yet notarized by Apple. Follow the{" "}
+              <a href="/install">installation guide</a> to set it up.
+            </p>
+          </details>
+          <details>
+            <summary>What does On Hand save?</summary>
+            <p>
+              Text, web links, and images you copy after turning on capture.
+              History holds up to 500 clips or 50 MB. Unpinned clips expire
+              after seven days by default. Text over 1 MB, images over 10 MB,
+              and copied files are skipped; rich text is saved as plain text.
             </p>
           </details>
           <details>
@@ -127,8 +140,8 @@ export default function Home() {
           <details>
             <summary>Does it sync between Macs?</summary>
             <p>
-              Not in this MVP. Your history stays on the Mac where it was
-              captured. Optional sync is a possible future service.
+              No. Your history stays on the Mac where you copied it. This
+              preview has no cloud sync.
             </p>
           </details>
           <details>
@@ -142,10 +155,24 @@ export default function Home() {
               <a href="https://github.com/coreyhaines31/onhand">
                 development repository
               </a>{" "}
-              may require access during preview.
+              is private during preview; the source download is available to
+              everyone.
             </p>
           </details>
         </div>
+      </section>
+      <section className="download-row wrap" aria-label="Download On Hand">
+        <div>
+          <h2>Keep your next copy on hand.</h2>
+          <p>
+            Free developer preview for macOS 14+.{" "}
+            <a href="/install">Installation guide</a>
+          </p>
+        </div>
+        <a className="button primary" href={download} download>
+          <ArrowDown size={18} />
+          Download for Mac
+        </a>
       </section>
       <footer className="footer wrap">
         <span>

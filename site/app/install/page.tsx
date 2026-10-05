@@ -5,11 +5,7 @@ export default function Install() {
       <Link className="back" href="/">
         ← Back to On Hand
       </Link>
-      <h1>
-        A little setup.
-        <br />
-        <em>Then it’s on hand.</em>
-      </h1>
+      <h1>Install On Hand.</h1>
       <p>
         This is a developer preview for Apple silicon Macs running macOS 14 or
         later. It is locally signed, but has not been signed with Developer ID
@@ -29,8 +25,7 @@ export default function Install() {
         <li>
           Open the app. macOS may block an unnotarized download. If you trust
           this preview, use the per-app <strong>Open Anyway</strong> option in
-          System Settings → Privacy &amp; Security. Do not disable Gatekeeper
-          globally.
+          System Settings → Privacy &amp; Security.
         </li>
         <li>
           Choose “Start keeping my clipboard.” Only new copies are captured.
@@ -38,11 +33,19 @@ export default function Install() {
       </ol>
       <h2>Everyday use</h2>
       <p>
-        Press <strong>⌘⇧Space</strong> or click the overlapping-squares icon in
-        your menu bar. Type to search, use the arrow keys to browse, and press
-        Return to copy. Then paste with ⌘V. Click the pin to keep a clip.
-        Right-click a clip to preview or delete it. Settings lets you change
-        your shortcut, start at login, pause, or clear history.
+        Press <strong>⌘⇧Space</strong> to open history. Search for a word or
+        app, choose a clip with the arrow keys, and press Return to copy it.
+        Switch to your destination and paste with <strong>⌘V</strong>.
+      </p>
+      <p>
+        Use <strong>⌘1–9</strong> to copy a numbered result, <strong>⌘O</strong>{" "}
+        to preview, <strong>⌘P</strong> to pin, and <strong>⌘F</strong> to
+        search. The keyboard button in On Hand shows the shortcut reference.
+      </p>
+      <p>
+        Turn on “Keep window open” to reuse several clips across apps. In
+        Settings, you can change the global shortcut, choose excluded apps,
+        adjust retention, pause capture, or clear history.
       </p>
       <h2>Build it yourself</h2>
       <p>

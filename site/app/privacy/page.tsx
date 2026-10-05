@@ -5,13 +5,9 @@ export default function Privacy() {
       <Link className="back" href="/">
         ← Back to On Hand
       </Link>
-      <h1>
-        Your clipboard.
-        <br />
-        <em>Your business.</em>
-      </h1>
+      <h1>Your clipboard stays local.</h1>
       <p>On Hand 0.1.0 · Updated October 4, 2026</p>
-      <h2>The Mac app</h2>
+      <h2>What the app stores</h2>
       <p>
         On Hand stores text, links, and images locally in your Mac’s Application
         Support folder. The app does not upload clipboard contents, collect
@@ -19,7 +15,7 @@ export default function Privacy() {
         database protected by your user account’s file permissions; it is not
         separately encrypted. FileVault can protect your Mac’s disk.
       </p>
-      <h2>You control what stays</h2>
+      <h2>What you control</h2>
       <p>
         Recording begins after you choose “Start keeping my clipboard.” You can
         pause it, choose apps to exclude, delete individual clips, or clear
@@ -36,13 +32,12 @@ export default function Privacy() {
         information. Clearing On Hand’s history does not clear the macOS system
         clipboard or backups.
       </p>
-      <h2>This website</h2>
+      <h2>What the website collects</h2>
       <p>
-        The site has no application analytics or advertising trackers. Vercel
-        may process request information to serve the website. The site uses
-        system fonts. The interactive demo uses sample clips; it only writes a
-        sample to your clipboard when you click one. It never reads your
-        clipboard.
+        The website uses no analytics or advertising trackers. Vercel may
+        process request information to serve the website. The site uses system
+        fonts. The interactive demo uses sample clips; it only writes a sample
+        to your clipboard when you click one. It never reads your clipboard.
       </p>
       <h2>Updates and future services</h2>
       <p>
