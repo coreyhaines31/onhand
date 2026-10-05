@@ -22,8 +22,8 @@ export default function Privacy() {
       <h2>You control what stays</h2>
       <p>
         Recording begins after you choose “Start keeping my clipboard.” You can
-        pause it, exclude apps by bundle identifier, delete individual clips, or
-        clear history from Settings. Unpinned clips expire after seven days by
+        pause it, choose apps to exclude, delete individual clips, or clear
+        history from Settings. Unpinned clips expire after seven days by
         default. You can choose a different retention period. Pinned clips stay
         until removed.
       </p>
@@ -39,10 +39,10 @@ export default function Privacy() {
       <h2>This website</h2>
       <p>
         The site has no application analytics or advertising trackers. Vercel
-        may process request information to serve the website. Fonts are
-        requested from Google Fonts. The interactive demo uses sample clips; it
-        only writes a sample to your clipboard when you click one. It never
-        reads your clipboard.
+        may process request information to serve the website. The site uses
+        system fonts. The interactive demo uses sample clips; it only writes a
+        sample to your clipboard when you click one. It never reads your
+        clipboard.
       </p>
       <h2>Updates and future services</h2>
       <p>
