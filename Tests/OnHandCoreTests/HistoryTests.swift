@@ -96,3 +96,10 @@ import Testing
                                  excludedApps: CapturePolicy.defaultExcludedApps))
     #expect(CapturePolicy.allows(types: ["public.png"], sourceBundleID: "com.apple.Preview", excludedApps: []))
 }
+
+@Test func preservesEmbeddedNullsAndUnicode() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let value = "Before\0After · こんにちは 👋"
+    try store.insert(text: value, source: "Test")
+    #expect(try store.all().first?.text == value)
+}

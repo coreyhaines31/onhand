@@ -82,7 +82,7 @@ final class Database {
             let status: Int32
             switch value {
             case .text(let text):
-                status = sqlite3_bind_text(statement, index, text, -1, transient)
+                status = sqlite3_bind_text(statement, index, text, Int32(text.utf8.count), transient)
             case .blob(let data):
                 if data.isEmpty {
                     status = sqlite3_bind_zeroblob(statement, index, 0)
@@ -103,7 +103,9 @@ final class Database {
     }
 
     private func string(_ statement: OpaquePointer, _ index: Int32) -> String {
-        sqlite3_column_text(statement, index).map { String(cString: $0) } ?? ""
+        guard let bytes = sqlite3_column_text(statement, index) else { return "" }
+        let count = Int(sqlite3_column_bytes(statement, index))
+        return String(bytes: UnsafeBufferPointer(start: bytes, count: count), encoding: .utf8) ?? ""
     }
 
     private func error() -> StorageError {
