@@ -8,3 +8,6 @@ node_modules/
 .next/
 .env*
 !.env.example
+site/*.tsbuildinfo
+site/public/downloads/*.zip
+.build-release/
