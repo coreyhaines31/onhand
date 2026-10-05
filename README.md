@@ -10,7 +10,9 @@ A native, local-first clipboard manager for macOS 14+. Built with Swift 6, Swift
 - Persistent text, link, and image history with deduplication.
 - Search by content or source app; filter pinned clips, links, or images.
 - Pin, preview, copy, or delete individual clips. The compact native panel follows the design of Spare and Midnight Oil.
-- Arrow keys and Return to copy; Escape to dismiss. Paste normally with ⌘V.
+- Arrow keys and Return to copy; ⌘1–9 copies numbered results in the current search/filter. Paste normally with ⌘V.
+- ⌘O previews, ⌘P pins, and ⌘F focuses search. An in-app keyboard reference shows every shortcut.
+- Optional keep-open mode leaves history visible across app switches, with brief copy confirmation.
 - Explicit first-run opt-in, persistent pause, an excluded-app picker, and retention settings.
 - Launch at login through macOS ServiceManagement.
 - No account, telemetry, clipboard upload, or Accessibility permission needed.
@@ -29,7 +31,7 @@ open "dist/On Hand.app"
 
 `make app` generates the Xcode project, resolves pinned dependencies, creates the app icon, builds a release app, and applies an ad-hoc signature. The resulting app is for local development, not a notarized public distribution. The default local build uses the host architecture; the release script builds a universal binary.
 
-The window appears on first launch. After onboarding, use the menu bar icon or ⌘⇧Space. Double-clicking the running app opens history. Selecting a clip copies it and returns focus to the previous application; press ⌘V to paste. Use the chevron to preview a clip without losing your search. In preview, Return copies, ⌘P pins, and Escape or ⌘[ goes back. Right-click a clip for deletion. Menu bar clicks open history beneath the icon; the global shortcut opens it centered.
+The window appears on first launch. After onboarding, use the menu bar icon or ⌘⇧Space. Double-clicking the running app opens history. Selecting a clip copies it and returns focus to the previous application; press ⌘V to paste. Use the chevron to preview a clip without losing your search. In preview, Return copies, ⌘P pins, and Escape or ⌘[ goes back. Right-click a clip for deletion. Menu bar clicks open history beneath the icon; the global shortcut opens it centered. Enable Keep window open in the toolbar or Settings to reuse several clips across apps. Copying returns focus to the last destination app while keeping history visible. The global shortcut focuses an inactive open window without resetting your search; Escape still dismisses it.
 
 For a screenshot with synthetic data and no access to the real history, quit the app and run:
 
