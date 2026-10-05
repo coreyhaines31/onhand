@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ClipDetailView: View {
     let clip: Clip
+    let copied: Bool
     let image: NSImage?
     let onCopy: () -> Void
     let onPin: () -> Void
@@ -25,7 +26,7 @@ struct ClipDetailView: View {
             ScrollView {
                 Group {
                     if let image {
-                        Image(nsImage: image).resizable().scaledToFit()
+                        Image(nsImage: image).resizable().scaledToFit().accessibilityLabel("Copied image preview")
                     } else {
                         Text(String(clip.text.prefix(previewLimit)))
                             .font(.body).textSelection(.enabled)
@@ -44,7 +45,8 @@ struct ClipDetailView: View {
                     Label(clip.isPinned ? "Unpin" : "Pin", systemImage: clip.isPinned ? "pin.slash" : "pin")
                 }.keyboardShortcut("p", modifiers: .command)
                 Spacer()
-                Button("Copy", action: onCopy).keyboardShortcut(.defaultAction).buttonStyle(.borderedProminent)
+                Button(copied ? "Copied" : "Copy", action: onCopy)
+                    .keyboardShortcut(.defaultAction).buttonStyle(.borderedProminent)
             }.padding(16)
         }
     }

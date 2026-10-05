@@ -14,7 +14,8 @@ struct HistoryView: View {
             if !model.preferences.hasStarted {
                 welcome
             } else if let clip = model.clips.first(where: { $0.id == model.previewID }) {
-                ClipDetailView(clip: clip, image: clip.kind == .image ? model.preview(clip) : nil,
+                ClipDetailView(clip: clip, copied: model.copiedID == clip.id,
+                               image: clip.kind == .image ? model.preview(clip) : nil,
                                onCopy: { onCopy(clip) }, onPin: { model.pin(clip) })
             } else {
                 searchBar
@@ -26,6 +27,11 @@ struct HistoryView: View {
         }
         .frame(width: HandLayout.width, height: HandLayout.height)
         .background(Color(nsColor: .windowBackgroundColor))
+        .task(id: model.copySequence) {
+            guard model.copiedID != nil else { return }
+            try? await Task.sleep(for: .seconds(3))
+            if !Task.isCancelled { model.copiedID = nil }
+        }
         .onChange(of: model.query) { model.selectedID = model.visibleClips.first?.id }
         .onChange(of: model.filter) { model.selectedID = model.visibleClips.first?.id }
         .onMoveCommand { direction in move(direction) }
@@ -105,7 +111,7 @@ struct HistoryView: View {
                         LazyVStack(spacing: 2) {
                             ForEach(Array(model.visibleClips.enumerated()), id: \.element.id) { index, clip in
                                 ClipRow(clip: clip, shortcut: index < 9 ? index + 1 : nil,
-                                        selected: model.selectedID == clip.id,
+                                        selected: model.selectedID == clip.id, copied: model.copiedID == clip.id,
                                         image: clip.kind == .image ? model.preview(clip) : nil,
                                         onCopy: { onCopy(clip) }, onPin: { model.pin(clip) },
                                         onDelete: { model.delete(clip) },
@@ -127,7 +133,8 @@ struct HistoryView: View {
             Text(model.recording ? "Capturing · On this Mac only" : "Capture paused")
                 .foregroundStyle(.secondary)
             Spacer()
-            Text("↑↓ select  ↵ copy").foregroundStyle(.tertiary)
+            Text(model.copiedID == nil ? "↑↓ select  ↵ copy" : "Copied · ⌘V to paste")
+                .foregroundStyle(model.copiedID == nil ? Color.secondary : Color.accentColor)
         }
         .font(.caption).padding(.horizontal, 16).padding(.vertical, 10)
     }

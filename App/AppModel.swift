@@ -17,6 +17,8 @@ final class AppModel {
     var selectedID: String?
     var previewID: String?
     var searchFocusRequest = 0
+    var copiedID: String?
+    var copySequence = 0
     private var store: HistoryStore?
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
@@ -103,7 +105,10 @@ final class AppModel {
         board.clearContents()
         let success = board.writeObjects([item])
         lastChange = board.changeCount
-        if !success { errorMessage = "Could not write to the clipboard. Please try again." }
+        if success {
+            copiedID = clip.id
+            copySequence += 1
+        } else { errorMessage = "Could not write to the clipboard. Please try again." }
         return success
     }
 

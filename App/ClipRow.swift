@@ -6,6 +6,7 @@ struct ClipRow: View {
     let clip: Clip
     let shortcut: Int?
     let selected: Bool
+    let copied: Bool
     let image: NSImage?
     let onCopy: () -> Void
     let onPin: () -> Void
@@ -61,7 +62,10 @@ struct ClipRow: View {
 
     private var thumbnail: some View {
         Group {
-            if let image {
+            if copied {
+                Image(systemName: "checkmark").foregroundStyle(Color.accentColor)
+                    .accessibilityLabel("Copied")
+            } else if let image {
                 Image(nsImage: image).resizable().scaledToFill()
             } else {
                 Image(systemName: clip.kind == .link ? "link" : "text.alignleft")
