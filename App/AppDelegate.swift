@@ -1,5 +1,6 @@
 import AppKit
 import KeyboardShortcuts
+import OnHandCore
 import SwiftUI
 
 @MainActor
@@ -59,16 +60,39 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                 self.model.previewID = nil
                 return true
             }
+            window.onCommand = { [weak self] in self?.handleCommand($0) ?? false }
             window.contentView = NSHostingView(rootView: HistoryView(model: model, onCopy: { [weak self] clip in
-                guard let self, self.model.copy(clip) else { return }
-                self.panel?.orderOut(nil)
-                self.previousApp?.activate()
+                self?.copyClip(clip)
             }, onSettings: { [weak self] in self?.showSettings() }))
             panel = window
         }
         if atStatusItem { positionAtStatusItem() } else { panel?.center() }
         NSApp.activate(ignoringOtherApps: true)
         panel?.makeKeyAndOrderFront(nil)
+    }
+
+    private func copyClip(_ clip: Clip) {
+        guard model.copy(clip) else { return }
+        panel?.orderOut(nil)
+        previousApp?.activate()
+    }
+
+    private func handleCommand(_ key: String) -> Bool {
+        guard model.preferences.hasStarted else { return false }
+        switch key {
+        case "f":
+            model.previewID = nil
+            model.searchFocusRequest += 1
+        case "o":
+            if let clip = model.selectedClip { model.previewID = clip.id }
+        case "p":
+            if let clip = model.selectedClip { model.pin(clip) }
+        default:
+            guard model.previewID == nil, let number = Int(key), (1...9).contains(number) else { return false }
+            let clips = model.visibleClips
+            if number <= clips.count { copyClip(clips[number - 1]) }
+        }
+        return true
     }
 
     private func positionAtStatusItem() {
@@ -123,8 +147,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
 final class HistoryPanel: NSPanel {
     var onBack: (() -> Bool)?
+    var onCommand: ((String) -> Bool)?
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        let modifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
+        if isKeyWindow, modifiers == .command, let key = event.charactersIgnoringModifiers,
+           onCommand?(key) == true { return true }
+        return super.performKeyEquivalent(with: event)
+    }
+
     override func cancelOperation(_ sender: Any?) {
         if onBack?() != true { orderOut(nil) }
     }

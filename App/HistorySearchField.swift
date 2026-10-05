@@ -3,6 +3,7 @@ import SwiftUI
 
 struct HistorySearchField: NSViewRepresentable {
     @Binding var text: String
+    let focusRequest: Int
     let onSubmit: () -> Void
     let onMove: (MoveCommandDirection) -> Void
 
@@ -20,10 +21,18 @@ struct HistorySearchField: NSViewRepresentable {
     func updateNSView(_ field: NSSearchField, context: Context) {
         context.coordinator.parent = self
         if field.stringValue != text { field.stringValue = text }
+        if context.coordinator.focusRequest != focusRequest {
+            context.coordinator.focusRequest = focusRequest
+            Task { @MainActor in
+                field.window?.makeFirstResponder(field)
+                field.selectText(nil)
+            }
+        }
     }
 
     final class Coordinator: NSObject, NSSearchFieldDelegate {
         var parent: HistorySearchField
+        var focusRequest = -1
         init(parent: HistorySearchField) { self.parent = parent }
 
         func controlTextDidChange(_ notification: Notification) {

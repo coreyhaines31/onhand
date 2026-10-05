@@ -5,6 +5,7 @@ struct HistoryView: View {
     @Bindable var model: AppModel
     let onCopy: (Clip) -> Void
     let onSettings: () -> Void
+    @State private var showingShortcuts = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -52,13 +53,17 @@ struct HistoryView: View {
                 .help(model.recording ? "Pause capture" : "Resume capture")
                 .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
             }
+            Button { showingShortcuts.toggle() } label: { Image(systemName: "keyboard") }
+                .buttonStyle(.borderless).help("Keyboard shortcuts").accessibilityLabel("Keyboard shortcuts")
+                .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
             Button(action: onSettings) { Image(systemName: "gearshape") }
                 .buttonStyle(.borderless).help("Settings").accessibilityLabel("Settings")
         }.padding(.horizontal, 16).padding(.vertical, 12)
     }
 
     private var searchBar: some View {
-        HistorySearchField(text: $model.query, onSubmit: copySelected, onMove: move)
+        HistorySearchField(text: $model.query, focusRequest: model.searchFocusRequest,
+                           onSubmit: copySelected, onMove: move)
             .frame(height: 24).padding(.horizontal, 16).padding(.top, 14)
     }
 
@@ -91,8 +96,9 @@ struct HistoryView: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(spacing: 2) {
-                            ForEach(model.visibleClips) { clip in
-                                ClipRow(clip: clip, selected: model.selectedID == clip.id,
+                            ForEach(Array(model.visibleClips.enumerated()), id: \.element.id) { index, clip in
+                                ClipRow(clip: clip, shortcut: index < 9 ? index + 1 : nil,
+                                        selected: model.selectedID == clip.id,
                                         image: clip.kind == .image ? model.preview(clip) : nil,
                                         onCopy: { onCopy(clip) }, onPin: { model.pin(clip) },
                                         onDelete: { model.delete(clip) },

@@ -16,6 +16,7 @@ final class AppModel {
     var filter = "All"
     var selectedID: String?
     var previewID: String?
+    var searchFocusRequest = 0
     private var store: HistoryStore?
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
@@ -53,6 +54,11 @@ final class AppModel {
     var visibleClips: [Clip] {
         HistoryStore.filtered(clips, query: query, pinnedOnly: filter == "Pinned",
                               kind: filter == "Images" ? .image : (filter == "Links" ? .link : nil))
+    }
+
+    var selectedClip: Clip? {
+        if let previewID { return clips.first { $0.id == previewID } }
+        return visibleClips.first { $0.id == selectedID } ?? visibleClips.first
     }
 
     var ready: Bool { store != nil }

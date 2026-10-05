@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ClipRow: View {
     let clip: Clip
+    let shortcut: Int?
     let selected: Bool
     let image: NSImage?
     let onCopy: () -> Void
@@ -30,6 +31,10 @@ struct ClipRow: View {
                     }.frame(maxWidth: .infinity, alignment: .leading)
                 }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
             }.buttonStyle(.plain).help("Copy to clipboard")
+            if let shortcut {
+                Text("⌘\(shortcut)").font(.system(size: 10)).monospacedDigit().foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
             Button(action: onPreview) { Image(systemName: "chevron.right").font(.caption) }
                 .buttonStyle(.borderless).foregroundStyle(.secondary)
                 .help("Preview clip").accessibilityLabel("Preview clip")
