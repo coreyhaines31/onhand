@@ -1,0 +1,55 @@
+import Link from "next/link";
+export default function Privacy() {
+  return (
+    <main className="document wrap">
+      <Link className="back" href="/">
+        ← Back to On Hand
+      </Link>
+      <h1>
+        Your clipboard.
+        <br />
+        <em>Your business.</em>
+      </h1>
+      <p>On Hand 0.1.0 · Updated October 4, 2026</p>
+      <h2>The Mac app</h2>
+      <p>
+        On Hand stores text, links, and images locally in your Mac’s Application
+        Support folder. The app does not upload clipboard contents, collect
+        analytics, or require an account. History is stored in a local SQLite
+        database protected by your user account’s file permissions; it is not
+        separately encrypted. FileVault can protect your Mac’s disk.
+      </p>
+      <h2>You control what stays</h2>
+      <p>
+        Recording begins after you choose “Start keeping my clipboard.” You can
+        pause it, exclude apps by bundle identifier, delete individual clips, or
+        clear history from Settings. Unpinned clips expire after seven days by
+        default. You can choose a different retention period. Pinned clips stay
+        until removed.
+      </p>
+      <h2>Sensitive information</h2>
+      <p>
+        On Hand ignores clipboard items marked concealed, transient, or
+        automatically generated, and excludes several common password managers
+        by default. These are conventions, not guarantees: unmarked passwords
+        and secrets can still be saved. Pause capture before copying sensitive
+        information. Clearing On Hand’s history does not clear the macOS system
+        clipboard or backups.
+      </p>
+      <h2>This website</h2>
+      <p>
+        The site has no application analytics or advertising trackers. Vercel
+        may process request information to serve the website. Fonts are
+        requested from Google Fonts. The interactive demo uses sample clips; it
+        only writes a sample to your clipboard when you click one. It never
+        reads your clipboard.
+      </p>
+      <h2>Updates and future services</h2>
+      <p>
+        This local preview does not check for updates. Signed releases may
+        contact an update server through Sparkle. Any future sync service will
+        be optional and will have its own clearly described data practices.
+      </p>
+    </main>
+  );
+}
