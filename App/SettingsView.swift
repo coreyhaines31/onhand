@@ -12,7 +12,7 @@ struct SettingsView: View {
     var body: some View {
         @Bindable var preferences = model.preferences
         Form {
-            Section("Make it yours") {
+            Section("General") {
                 KeyboardShortcuts.Recorder("Open On Hand:", name: .showHistory)
                 Toggle("Launch at login", isOn: $launchAtLogin)
                     .onChange(of: launchAtLogin) { _, enabled in
@@ -36,19 +36,14 @@ struct SettingsView: View {
                 Text("Up to 500 clips or 50 MB. Pinned clips stay until you remove them.")
                     .font(.caption).foregroundStyle(.secondary)
             }
-            Section("Your clipboard, your business") {
+            Section("Privacy") {
                 Toggle("Pause capture", isOn: Binding(get: { model.isPaused }, set: { _ in model.togglePause() }))
                 Text("""
                      History is stored locally on this Mac. Nothing is uploaded. Password-marked and temporary clips \
                      are skipped, but apps do not mark every secret. Pause before copying sensitive information.
                      """)
                     .font(.caption).foregroundStyle(.secondary)
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Ignore these apps (one bundle identifier per line)").font(.caption)
-                    TextEditor(text: $preferences.excludedApps)
-                        .font(.system(size: 11, design: .monospaced)).frame(height: 82)
-                        .border(.quaternary)
-                }
+                ExcludedAppsView(preferences: preferences)
                 Toggle("Include pinned clips when clearing", isOn: $includePinned)
                 Button("Clear history…", role: .destructive) { clearing = true }
             }
