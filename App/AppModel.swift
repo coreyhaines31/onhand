@@ -15,6 +15,7 @@ final class AppModel {
     var query = ""
     var filter = "All"
     var selectedID: String?
+    var previewID: String?
     private var store: HistoryStore?
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
@@ -71,7 +72,8 @@ final class AppModel {
         perform {
             try store?.prune(olderThan: Date().addingTimeInterval(-Double(preferences.retentionDays) * 86_400))
             clips = try store?.all() ?? []
-            if !clips.contains(where: { $0.id == selectedID }) { selectedID = nil }
+            if !visibleClips.contains(where: { $0.id == selectedID }) { selectedID = visibleClips.first?.id }
+            if !clips.contains(where: { $0.id == previewID }) { previewID = nil }
         }
     }
 

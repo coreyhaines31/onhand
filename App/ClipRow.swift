@@ -9,8 +9,8 @@ struct ClipRow: View {
     let onCopy: () -> Void
     let onPin: () -> Void
     let onDelete: () -> Void
+    let onPreview: () -> Void
     @State private var hovering = false
-    @State private var showingPreview = false
 
     var body: some View {
         HStack(spacing: 8) {
@@ -30,6 +30,9 @@ struct ClipRow: View {
                     }.frame(maxWidth: .infinity, alignment: .leading)
                 }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
             }.buttonStyle(.plain).help("Copy to clipboard")
+            Button(action: onPreview) { Image(systemName: "chevron.right").font(.caption) }
+                .buttonStyle(.borderless).foregroundStyle(.secondary)
+                .help("Preview clip").accessibilityLabel("Preview clip")
             Button(action: onPin) {
                 Image(systemName: clip.isPinned ? "pin.fill" : "pin")
                     .foregroundStyle(clip.isPinned ? Color.handGreen : .secondary)
@@ -44,17 +47,10 @@ struct ClipRow: View {
         .onHover { hovering = $0 }
         .contextMenu {
             Button("Copy", action: onCopy)
-            Button("Preview") { showingPreview = true }
+            Button("Preview", action: onPreview)
             Button(clip.isPinned ? "Unpin" : "Pin", action: onPin)
             Divider()
             Button("Delete", role: .destructive, action: onDelete)
-        }
-        .popover(isPresented: $showingPreview) {
-            ScrollView {
-                if let image {
-                    Image(nsImage: image).resizable().scaledToFit().frame(maxWidth: 460, maxHeight: 420)
-                } else { Text(clip.text).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading) }
-            }.padding(20).frame(width: 500, height: 440)
         }
     }
 

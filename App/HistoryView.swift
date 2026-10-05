@@ -12,6 +12,9 @@ struct HistoryView: View {
             Divider()
             if !model.preferences.hasStarted {
                 welcome
+            } else if let clip = model.clips.first(where: { $0.id == model.previewID }) {
+                ClipDetailView(clip: clip, image: clip.kind == .image ? model.preview(clip) : nil,
+                               onCopy: { onCopy(clip) }, onPin: { model.pin(clip) })
             } else {
                 searchBar
                 filters
@@ -32,8 +35,14 @@ struct HistoryView: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            Image(systemName: "square.on.square").foregroundStyle(.secondary)
-            Text("On Hand").font(.headline)
+            if model.previewID != nil {
+                Button { model.previewID = nil } label: { Image(systemName: "chevron.left") }
+                    .buttonStyle(.borderless).help("Back to history").accessibilityLabel("Back to history")
+                    .keyboardShortcut("[", modifiers: .command)
+            } else {
+                Image(systemName: "square.on.square").foregroundStyle(.secondary)
+            }
+            Text(model.previewID == nil ? "On Hand" : "Clip preview").font(.headline)
             Spacer()
             if model.preferences.hasStarted {
                 Button { model.togglePause() } label: {
@@ -85,7 +94,8 @@ struct HistoryView: View {
                                 ClipRow(clip: clip, selected: model.selectedID == clip.id,
                                         image: clip.kind == .image ? model.preview(clip) : nil,
                                         onCopy: { onCopy(clip) }, onPin: { model.pin(clip) },
-                                        onDelete: { model.delete(clip) })
+                                        onDelete: { model.delete(clip) },
+                                        onPreview: { model.selectedID = clip.id; model.previewID = clip.id })
                                     .id(clip.id)
                             }
                         }.padding(.horizontal, 8).padding(.bottom, 8)

@@ -40,6 +40,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             previousApp = NSWorkspace.shared.frontmostApplication
         }
         model.query = ""
+        model.previewID = nil
         model.reload()
         if panel == nil {
             let size = NSSize(width: HandLayout.width, height: HandLayout.height)
@@ -53,6 +54,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             window.level = .floating
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
             window.delegate = self
+            window.onBack = { [weak self] in
+                guard let self, self.model.previewID != nil else { return false }
+                self.model.previewID = nil
+                return true
+            }
             window.contentView = NSHostingView(rootView: HistoryView(model: model, onCopy: { [weak self] clip in
                 guard let self, self.model.copy(clip) else { return }
                 self.panel?.orderOut(nil)
@@ -105,7 +111,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 }
 
 final class HistoryPanel: NSPanel {
+    var onBack: (() -> Bool)?
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
-    override func cancelOperation(_ sender: Any?) { orderOut(nil) }
+    override func cancelOperation(_ sender: Any?) {
+        if onBack?() != true { orderOut(nil) }
+    }
 }
