@@ -1,36 +1,40 @@
 # Releasing On Hand
 
-The MVP is an ad-hoc-signed developer preview. Do not label it notarized or enable a public update feed until the steps below pass.
+Public source and releases: https://github.com/coreyhaines31/onhand
 
-## Public release prerequisites
+## Prerequisites
 
-- A public source repository and versioned release destination.
-- A Developer ID Application signing identity with access to its private key.
-- An Apple Developer team ID and a `notarytool` keychain profile.
-- A Sparkle Ed25519 key pair. Keep the private key in the macOS keychain or protected CI secrets; never commit it.
-- A stable HTTPS URL for the signed appcast and publicly downloadable release archive.
+- Full Xcode, XcodeGen, SwiftLint, and authenticated GitHub CLI.
+- An Xcode account with Developer ID cloud-signing access to the Apple Developer team.
+- A working `notarytool` Keychain profile for that team.
+- A Sparkle Ed25519 key in the login Keychain under account `onhand`.
 
-The local preview deliberately omits `SUFeedURL` and `SUPublicEDKey`. The app only initializes Sparkle when both are present.
+Generate the update key once using `.build-app/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys --account onhand`. Back up the private key securely outside the repository. Never rotate it without planning how existing installations will trust subsequent updates.
 
-## Build a signed universal release
+## Build and verify
 
-Update `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `project.yml`. Set the following environment variables without committing their values:
+Update `MARKETING_VERSION` and monotonically increase `CURRENT_PROJECT_VERSION` in `project.yml`, then run:
 
 ```sh
-export SIGNING_IDENTITY='Developer ID Application: YOUR NAME (TEAMID)'
-export APPLE_TEAM_ID='TEAMID'
-export NOTARY_PROFILE='onhand-notary'
-export SPARKLE_PUBLIC_KEY='YOUR_ED25519_PUBLIC_KEY'
-export SPARKLE_FEED_URL='https://YOUR_HOST/appcast.xml'
-bash scripts/release.sh
+APPLE_TEAM_ID=YOUR_TEAM_ID NOTARY_PROFILE=YOUR_PROFILE bash scripts/release.sh
 ```
 
-The script validates, builds both arm64 and x86_64, signs through Xcode, submits to Apple's notary service, staples the ticket, and verifies Gatekeeper acceptance. It stops on errors and creates `dist/release/OnHand.zip`. The signing/notarization path requires your Apple credentials and has not been exercised by the local MVP checks.
+The script runs lint and core tests, builds a universal archive, preserves hardened runtime in the archive signature, exports with cloud-managed Developer ID signing, submits to Apple's notary service, checks acceptance, staples the ticket, and verifies Gatekeeper. It creates a new `dist/release.XXXXXX/updates` directory with the versioned ZIP, signed appcast, and SHA-256 checksum. Release-specific plist changes are restored on exit.
 
-Use the `generate_appcast` tool from the resolved Sparkle package to generate the appcast for the release directory and sign each update with the matching private key. Confirm its download URL, version, minimum macOS version, and Ed25519 signature. Publish the appcast and archive together only after testing an upgrade from the previous signed version.
+The stable update feed is `https://github.com/coreyhaines31/onhand/releases/latest/download/appcast.xml`. Override `SPARKLE_FEED_URL` only for isolated testing or an intentional migration. `SPARKLE_ACCOUNT` defaults to `onhand`. Local `make app` builds deliberately omit the update configuration.
+
+## Publish
+
+Complete release QA and merge the tested feature PR into `cf/development`. Create the version tag from that exact commit, then publish the generated ZIP, appcast, and checksum as a GitHub release. The latest-release feed requires a regular release, not a draft or prerelease.
+
+Before replacing an existing release, test an upgrade from the previous signed version. The original ad-hoc developer preview has no updater; its users must install the first signed release manually. Confirm the update archive's signature matches the public key embedded in the app, and verify the public download checksum after publishing.
+
+Do not overwrite published versioned archives. A changed binary requires a new version and build number.
 
 ## Website
 
-For a developer preview, `bash scripts/package-preview.sh` packages the local app and the committed source tree. Commit all intended source before running it. The ZIP files are ignored by Git; they must be generated before a Vercel CLI deployment, or supplied as build artifacts for a Git-based deployment.
+The website links to versioned GitHub release assets and the public source repository. Update the download URL when publishing a new version. Keep compatibility and installation copy aligned with the tested release.
 
-For public release, replace the preview download URLs and unnotarized labels in `site/app/page.tsx` and `site/app/install/page.tsx` with the signed release URL and accurate installation copy. Set the Vercel project's root to `site`. Register and verify the domain before adding it; no domain was purchased by the MVP workflow.
+Run `npm --prefix site run lint`, `npm --prefix site run typecheck`, and `npm --prefix site run build` before deploying. Fathom is enabled only for Vercel production builds. Deploy from the repository root with `vercel deploy --cwd site --prod --scope coreys-apps`.
+
+`bash scripts/package-preview.sh` remains available for local developer previews; its output is not a signed public release.

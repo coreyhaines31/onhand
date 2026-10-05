@@ -4,7 +4,7 @@ Everything you copy, close at hand.
 
 A native, local-first clipboard manager for macOS 14+. Built with Swift 6, SwiftUI/AppKit, SQLite, KeyboardShortcuts, and Sparkle. The website uses Next.js, React, and TypeScript and is ready for Vercel.
 
-## The MVP
+## Features
 
 - Menu bar access and a customizable global shortcut (⌘⇧Space by default).
 - Persistent text, link, and image history with deduplication.
@@ -64,14 +64,14 @@ npm run build
 
 Node 22+ is supported. The preview runs through portless. For Vercel, import this repository and set the root directory to `site`; no environment variables or database are required. Set the custom domain only after registering it.
 
-Before deploying, run `bash scripts/package-preview.sh` to create the downloadable local preview and source archive under `site/public/downloads`. The website explicitly labels the binary as unnotarized. Its browser demo uses sample clips and only writes to the clipboard after a click; it never reads it.
+Public downloads are versioned GitHub release assets. The browser demo uses sample clips and only writes to the clipboard after a click; it never reads it. The website uses Fathom Analytics on production deployments; the native app has no analytics.
 
 ## Distribution
 
-See [RELEASING.md](RELEASING.md) for Developer ID signing, notarization, universal builds, and signed Sparkle updates. No Apple credentials, signing keys, or update endpoints are embedded in this local preview. Sparkle stays inactive unless both a feed URL and public signing key are supplied to the release script.
+See [RELEASING.md](RELEASING.md) for cloud-managed Developer ID signing, notarization, universal builds, and signed Sparkle updates. Private signing keys stay in Keychain. Release builds include a public update key and GitHub-hosted feed; local developer builds leave Sparkle inactive.
 
 ## License and commercial direction
 
 MIT; commercial use is allowed. The local app can remain open source while optional hosted sync, managed team services, or separate commercial extensions are offered later. MIT releases cannot be retroactively made proprietary. No sync or paid licensing is implemented in this MVP.
 
-The development repository starts private for review; the source archive includes this MIT license. A public launch still needs a public repository/release, Developer ID signing, notarization, and domain registration.
+Source, issues, and releases are public at https://github.com/coreyhaines31/onhand. The original developer preview must be replaced manually with the first signed release to receive future updates.
