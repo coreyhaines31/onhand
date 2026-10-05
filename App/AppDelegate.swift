@@ -37,7 +37,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     @objc private func togglePanel(_ sender: Any?) {
-        if panel?.isVisible == true { panel?.orderOut(nil) } else { showPanel(atStatusItem: sender != nil) }
+        if let panel, panel.isVisible {
+            if panel.isKeyWindow {
+                panel.orderOut(nil)
+            } else {
+                NSApp.activate(ignoringOtherApps: true)
+                panel.makeKeyAndOrderFront(nil)
+                model.searchFocusRequest += 1
+            }
+        } else { showPanel(atStatusItem: sender != nil) }
     }
 
     private func showPanel(atStatusItem: Bool = false) {
@@ -77,6 +85,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     private func copyClip(_ clip: Clip) {
         guard model.copy(clip) else { return }
+        model.selectedID = clip.id
         if !model.preferences.keepOpen { panel?.orderOut(nil) }
         previousApp?.activate()
     }
