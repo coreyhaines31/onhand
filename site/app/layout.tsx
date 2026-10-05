@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 export const metadata: Metadata = {
   title: "On Hand — Free clipboard manager for Mac",
@@ -17,7 +18,17 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        {process.env.VERCEL_ENV === "production" && (
+          <Script
+            src="https://cdn.usefathom.com/script.js"
+            data-site="CWVCJNNN"
+            data-spa="auto"
+            strategy="afterInteractive"
+          />
+        )}
+      </body>
     </html>
   );
 }

@@ -6,7 +6,7 @@ export default function Privacy() {
         ← Back to On Hand
       </Link>
       <h1>Your clipboard stays local.</h1>
-      <p>On Hand 0.1.0 · Updated October 4, 2026</p>
+      <p>On Hand 0.1.0 · Updated October 5, 2026</p>
       <h2>What the app stores</h2>
       <p>
         On Hand stores text, links, and images locally in your Mac’s Application
@@ -34,9 +34,11 @@ export default function Privacy() {
       </p>
       <h2>What the website collects</h2>
       <p>
-        The website uses no analytics or advertising trackers. Vercel may
-        process request information to serve the website. The site uses system
-        fonts. The interactive demo uses sample clips; it only writes a sample
+        The website uses Fathom Analytics to measure visits and page views without
+        cookies. See{" "}
+        <a href="https://usefathom.com/privacy">Fathom’s privacy policy</a> for
+        details. Vercel may process request information to serve the website.
+        The site uses system fonts. The interactive demo uses sample clips; it only writes a sample
         to your clipboard when you click one. It never reads your clipboard.
       </p>
       <h2>Updates and future services</h2>
