@@ -59,6 +59,7 @@ mkdir -p "$RELEASE_DIR/updates"
 ditto -c -k --sequesterRsrc --keepParent "$app" "$RELEASE_DIR/updates/OnHand-$VERSION.zip"
 "$SPARKLE_BIN/generate_appcast" --account "$SPARKLE_ACCOUNT" \
   --download-url-prefix "https://github.com/coreyhaines31/onhand/releases/download/v$VERSION/" \
-  --link 'https://onhand-tan.vercel.app' "$RELEASE_DIR/updates"
+  --link 'https://onhandformac.com' "$RELEASE_DIR/updates"
+"$SPARKLE_BIN/sign_update" --account "$SPARKLE_ACCOUNT" "$RELEASE_DIR/updates/appcast.xml"
 (cd "$RELEASE_DIR/updates" && shasum -a 256 "OnHand-$VERSION.zip" > SHA256SUMS.txt)
 printf 'Signed release and update feed ready: %s/updates\n' "$RELEASE_DIR"
