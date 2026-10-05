@@ -1,0 +1,74 @@
+import AppKit
+import OnHandCore
+import SwiftUI
+
+struct ClipRow: View {
+    let clip: Clip
+    let selected: Bool
+    let image: NSImage?
+    let onCopy: () -> Void
+    let onPin: () -> Void
+    let onDelete: () -> Void
+    @State private var hovering = false
+    @State private var showingPreview = false
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button(action: onCopy) {
+                HStack(alignment: .top, spacing: 12) {
+                    thumbnail
+                    VStack(alignment: .leading, spacing: 7) {
+                        Text(clip.kind == .image ? "Copied image" : String(clip.text.prefix(400)))
+                            .font(.system(size: 13)).lineLimit(2).multilineTextAlignment(.leading)
+                            .foregroundStyle(.primary)
+                        HStack(spacing: 6) {
+                            Text(clip.source)
+                            Text("·")
+                            Text(clip.createdAt, style: .relative)
+                            if clip.isPinned { Image(systemName: "pin.fill").foregroundStyle(Color.handGreen) }
+                        }.font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1)
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
+            }.buttonStyle(.plain).help("Copy to clipboard")
+            Button(action: onPin) {
+                Image(systemName: clip.isPinned ? "pin.fill" : "pin")
+                    .foregroundStyle(clip.isPinned ? Color.handGreen : .secondary)
+            }
+            .buttonStyle(.plain).opacity(hovering || clip.isPinned || selected ? 1 : 0.3)
+            .accessibilityLabel(clip.isPinned ? "Unpin clip" : "Pin clip")
+        }
+        .padding(13)
+        .background(selected ? Color.handGreen.opacity(0.1) : (hovering ? Color.primary.opacity(0.035) : .clear),
+                    in: RoundedRectangle(cornerRadius: 10))
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(selected ? Color.handGreen.opacity(0.25) : .clear))
+        .onHover { hovering = $0 }
+        .contextMenu {
+            Button("Copy", action: onCopy)
+            Button("Preview") { showingPreview = true }
+            Button(clip.isPinned ? "Unpin" : "Pin", action: onPin)
+            Divider()
+            Button("Delete", role: .destructive, action: onDelete)
+        }
+        .popover(isPresented: $showingPreview) {
+            ScrollView {
+                if let image {
+                    Image(nsImage: image).resizable().scaledToFit().frame(maxWidth: 460, maxHeight: 420)
+                } else { Text(clip.text).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading) }
+            }.padding(20).frame(width: 500, height: 440)
+        }
+    }
+
+    private var thumbnail: some View {
+        Group {
+            if let image {
+                Image(nsImage: image).resizable().scaledToFill()
+            } else {
+                Image(systemName: clip.kind == .link ? "link" : "text.alignleft")
+                    .font(.system(size: 15)).foregroundStyle(Color.handGreen)
+            }
+        }
+        .frame(width: 36, height: 36)
+        .background(Color.handGreen.opacity(0.07), in: RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+}
