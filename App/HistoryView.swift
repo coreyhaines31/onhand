@@ -47,7 +47,7 @@ struct HistoryView: View {
                     .buttonStyle(.borderless).help("Back to history").accessibilityLabel("Back to history")
                     .keyboardShortcut("[", modifiers: .command)
             } else {
-                Image(systemName: "square.on.square").foregroundStyle(.secondary)
+                Image(nsImage: BrandIcon.image(size: 17)).foregroundStyle(.secondary)
             }
             Text(model.previewID == nil ? "On Hand" : "Clip preview").font(.headline)
             Spacer()

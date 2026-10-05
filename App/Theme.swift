@@ -7,8 +7,7 @@ enum HandLayout {
 
 struct HandMark: View {
     var body: some View {
-        Image(systemName: "square.on.square")
-            .font(.system(size: 32, weight: .light))
+        Image(nsImage: BrandIcon.image(size: 48))
             .foregroundStyle(.secondary)
             .frame(width: 56, height: 56)
     }

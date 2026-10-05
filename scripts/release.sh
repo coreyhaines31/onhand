@@ -11,7 +11,8 @@ export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Develope
 make lint
 make test
 mkdir -p .build-app/OnHand.iconset dist/release
-swift scripts/icon.swift .build-app/OnHand.iconset
+swiftc App/BrandIcon.swift scripts/icon.swift -o .build-app/render-icon
+.build-app/render-icon .build-app/OnHand.iconset
 iconutil -c icns .build-app/OnHand.iconset -o Resources/OnHand.icns
 xcodegen generate
 /usr/libexec/PlistBuddy -c "Add :SUFeedURL string $SPARKLE_FEED_URL" Resources/Info.plist

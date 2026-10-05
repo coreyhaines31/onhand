@@ -20,7 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             name: NSWorkspace.didActivateApplicationNotification, object: nil
         )
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = NSImage(systemSymbolName: "square.on.square", accessibilityDescription: "On Hand")
+        item.button?.image = BrandIcon.image(size: 19)
         item.button?.toolTip = "On Hand — clipboard history"
         item.button?.target = self
         item.button?.action = #selector(togglePanel(_:))
