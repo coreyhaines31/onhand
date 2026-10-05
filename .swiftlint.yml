@@ -1,0 +1,11 @@
+included:
+  - App
+  - Sources/OnHandCore
+  - Tests
+excluded:
+  - .build
+  - .build-app
+opt_in_rules:
+  - sorted_imports
+identifier_name:
+  excluded: [id, db, x, y]

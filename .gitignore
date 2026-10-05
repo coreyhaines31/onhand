@@ -1,0 +1,10 @@
+.build/
+.build-app/
+dist/
+*.xcodeproj/
+.DS_Store
+.vercel/
+node_modules/
+.next/
+.env*
+!.env.example
