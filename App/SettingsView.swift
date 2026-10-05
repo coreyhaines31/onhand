@@ -8,6 +8,7 @@ struct SettingsView: View {
     @State private var clearing = false
     @State private var includePinned = false
     let updater: AppUpdater
+    private let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
 
     var body: some View {
         @Bindable var preferences = model.preferences
@@ -50,7 +51,7 @@ struct SettingsView: View {
             }
             Section {
                 HStack {
-                    Text("On Hand 0.1.0").foregroundStyle(.secondary)
+                    Text("On Hand \(version)").foregroundStyle(.secondary)
                     Spacer()
                     if updater.available {
                         Button("Check for updates…") { updater.check() }
