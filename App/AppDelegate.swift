@@ -15,6 +15,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         installMenu()
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self, selector: #selector(applicationActivated(_:)),
+            name: NSWorkspace.didActivateApplicationNotification, object: nil
+        )
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         item.button?.image = NSImage(systemSymbolName: "square.on.square", accessibilityDescription: "On Hand")
         item.button?.toolTip = "On Hand — clipboard history"
@@ -73,8 +77,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     private func copyClip(_ clip: Clip) {
         guard model.copy(clip) else { return }
-        panel?.orderOut(nil)
+        if !model.preferences.keepOpen { panel?.orderOut(nil) }
         previousApp?.activate()
+    }
+
+    @objc private func applicationActivated(_ notification: Notification) {
+        guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
+              app.processIdentifier != ProcessInfo.processInfo.processIdentifier else { return }
+        previousApp = app
     }
 
     private func handleCommand(_ key: String) -> Bool {
@@ -107,7 +117,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     func windowDidResignKey(_ notification: Notification) {
-        if (notification.object as? NSWindow) === panel { panel?.orderOut(nil) }
+        if (notification.object as? NSWindow) === panel, !model.preferences.keepOpen { panel?.orderOut(nil) }
     }
 
     @objc private func showSettings() {

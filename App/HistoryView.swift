@@ -46,6 +46,13 @@ struct HistoryView: View {
             Text(model.previewID == nil ? "On Hand" : "Clip preview").font(.headline)
             Spacer()
             if model.preferences.hasStarted {
+                Button { model.preferences.keepOpen.toggle() } label: {
+                    Image(systemName: "rectangle.on.rectangle")
+                        .foregroundStyle(model.preferences.keepOpen ? Color.accentColor : .secondary)
+                }
+                .buttonStyle(.borderless).help("Keep window open while switching apps")
+                .accessibilityLabel("Keep window open")
+                .accessibilityValue(model.preferences.keepOpen ? "On" : "Off")
                 Button { model.togglePause() } label: {
                     Image(systemName: model.recording ? "pause" : "play")
                 }
