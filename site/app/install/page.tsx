@@ -49,8 +49,8 @@ export default function Install() {
       </p>
       <h2>Build it yourself</h2>
       <p>
-        <a href="/downloads/on-hand-source.zip" download>
-          Download the source
+        <a href="https://github.com/coreyhaines31/onhand">
+          View the source on GitHub
         </a>
         . Install Xcode, XcodeGen, and SwiftLint, then run{" "}
         <code>make test</code>, <code>make lint</code>, and{" "}

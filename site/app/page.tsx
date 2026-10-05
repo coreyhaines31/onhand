@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import ClipboardDemo from "@/components/clipboard-demo";
 
-const source = "/downloads/on-hand-source.zip";
+const source = "https://github.com/coreyhaines31/onhand";
 const download = "/downloads/on-hand-0.1.0-preview.zip";
 
 export default function Home() {
@@ -154,16 +154,8 @@ export default function Home() {
           <details>
             <summary>Can I inspect or build the code?</summary>
             <p>
-              Yes.{" "}
-              <a href="/downloads/on-hand-source.zip" download>
-                Download the MIT-licensed source
-              </a>{" "}
-              with build instructions. The{" "}
-              <a href="https://github.com/coreyhaines31/onhand">
-                development repository
-              </a>{" "}
-              is private during preview; the source download is available to
-              everyone.
+              Yes. <a href={source}>View the MIT-licensed source on GitHub</a>
+              {" "}to inspect the code, build the app, report an issue, or contribute.
             </p>
           </details>
         </div>
