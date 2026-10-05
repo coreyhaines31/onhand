@@ -1,15 +1,19 @@
 import SwiftUI
 
+enum HandLayout {
+    static let width: CGFloat = 440
+    static let height: CGFloat = 600
+}
+
 extension Color {
-    static let handGreen = Color(red: 0.19, green: 0.39, blue: 0.31)
+    static let handGreen = Color.accentColor
 }
 
 struct HandMark: View {
     var body: some View {
         Image(systemName: "square.on.square")
-            .font(.system(size: 23, weight: .medium))
-            .foregroundStyle(.white)
-            .frame(width: 44, height: 44)
-            .background(Color.handGreen, in: RoundedRectangle(cornerRadius: 13))
+            .font(.system(size: 32, weight: .light))
+            .foregroundStyle(.secondary)
+            .frame(width: 56, height: 56)
     }
 }

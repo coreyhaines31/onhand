@@ -5,24 +5,23 @@ struct HistoryView: View {
     @Bindable var model: AppModel
     let onCopy: (Clip) -> Void
     let onSettings: () -> Void
-    @FocusState private var searchFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
             header
+            Divider()
             if !model.preferences.hasStarted {
                 welcome
             } else {
                 searchBar
                 filters
                 history
+                Divider()
                 footer
             }
         }
-        .frame(width: 520, height: 640)
-        .background(.background)
-        .tint(.handGreen)
-        .onAppear { searchFocused = true }
+        .frame(width: HandLayout.width, height: HandLayout.height)
+        .background(Color(nsColor: .windowBackgroundColor))
         .onChange(of: model.query) { model.selectedID = model.visibleClips.first?.id }
         .onChange(of: model.filter) { model.selectedID = model.visibleClips.first?.id }
         .onMoveCommand { direction in move(direction) }
@@ -32,50 +31,40 @@ struct HistoryView: View {
     }
 
     private var header: some View {
-        HStack(spacing: 12) {
-            HandMark()
-            VStack(alignment: .leading, spacing: 3) {
-                Text("On Hand").font(.system(size: 21, weight: .semibold, design: .serif))
-                Text("A little less lost. A lot more handy.").font(.system(size: 11)).foregroundStyle(.secondary)
-            }
+        HStack(spacing: 10) {
+            Image(systemName: "square.on.square").foregroundStyle(.secondary)
+            Text("On Hand").font(.headline)
             Spacer()
-            Button(action: onSettings) { Image(systemName: "gearshape").font(.system(size: 16)) }
-                .buttonStyle(.plain).help("Settings").accessibilityLabel("Settings")
-        }.padding(.horizontal, 24).padding(.top, 24).padding(.bottom, 20)
+            if model.preferences.hasStarted {
+                Button { model.togglePause() } label: {
+                    Image(systemName: model.recording ? "pause" : "play")
+                }
+                .buttonStyle(.borderless)
+                .help(model.recording ? "Pause capture" : "Resume capture")
+                .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
+            }
+            Button(action: onSettings) { Image(systemName: "gearshape") }
+                .buttonStyle(.borderless).help("Settings").accessibilityLabel("Settings")
+        }.padding(.horizontal, 16).padding(.vertical, 12)
     }
 
     private var searchBar: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
-            TextField("Find something you copied…", text: $model.query)
-                .textFieldStyle(.plain).focused($searchFocused)
-                .accessibilityLabel("Search clipboard history")
-                .onSubmit { copySelected() }
-                .onKeyPress(.downArrow) { move(.down); return .handled }
-                .onKeyPress(.upArrow) { move(.up); return .handled }
-            if !model.query.isEmpty {
-                Button { model.query = "" } label: { Image(systemName: "xmark.circle.fill") }
-                    .buttonStyle(.plain).accessibilityLabel("Clear search")
-            }
-        }
-        .padding(13).background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, 24)
+        HistorySearchField(text: $model.query, onSubmit: copySelected, onMove: move)
+            .frame(height: 24).padding(.horizontal, 16).padding(.top, 14)
     }
 
     private var filters: some View {
-        HStack(spacing: 6) {
-            ForEach(["All", "Pinned", "Links", "Images"], id: \.self) { filter in
-                Button { model.filter = filter } label: {
-                    Text(filter).font(.system(size: 12, weight: .medium))
-                        .padding(.horizontal, 13).padding(.vertical, 7)
-                        .background(model.filter == filter ? Color.handGreen.opacity(0.12) : .clear,
-                                    in: Capsule())
-                        .foregroundStyle(model.filter == filter ? Color.handGreen : .secondary)
-                }.buttonStyle(.plain).accessibilityAddTraits(model.filter == filter ? [.isSelected] : [])
-            }
-            Spacer()
-            Text("\(model.visibleClips.count)").font(.system(size: 11, design: .monospaced)).foregroundStyle(.tertiary)
-        }.padding(.horizontal, 24).padding(.vertical, 14)
+        VStack(spacing: 12) {
+            Picker("Show", selection: $model.filter) {
+                ForEach(["All", "Pinned", "Links", "Images"], id: \.self) { Text($0).tag($0) }
+            }.pickerStyle(.segmented).labelsHidden()
+            HStack {
+                Text(model.query.isEmpty ? "Clipboard history" : "Search results")
+                    .font(.subheadline.weight(.medium))
+                Spacer()
+                Text("\(model.visibleClips.count) items").font(.caption).monospacedDigit()
+            }.foregroundStyle(.secondary)
+        }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 6)
     }
 
     private var history: some View {
@@ -83,15 +72,15 @@ struct HistoryView: View {
             if model.visibleClips.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: model.query.isEmpty ? "square.on.square.dashed" : "magnifyingglass")
-                        .font(.system(size: 36, weight: .light)).foregroundStyle(Color.handGreen.opacity(0.7))
-                    Text(emptyTitle).font(.system(size: 20, weight: .medium, design: .serif))
+                        .font(.system(size: 28, weight: .light)).foregroundStyle(.tertiary)
+                    Text(emptyTitle).font(.headline)
                     Text(emptyDetail).font(.system(size: 12)).foregroundStyle(.secondary)
                         .multilineTextAlignment(.center).frame(maxWidth: 290)
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(spacing: 6) {
+                        LazyVStack(spacing: 2) {
                             ForEach(model.visibleClips) { clip in
                                 ClipRow(clip: clip, selected: model.selectedID == clip.id,
                                         image: clip.kind == .image ? model.preview(clip) : nil,
@@ -99,7 +88,7 @@ struct HistoryView: View {
                                         onDelete: { model.delete(clip) })
                                     .id(clip.id)
                             }
-                        }.padding(.horizontal, 16).padding(.bottom, 12)
+                        }.padding(.horizontal, 8).padding(.bottom, 8)
                     }.onChange(of: model.selectedID) { _, id in
                         if let id { proxy.scrollTo(id, anchor: .center) }
                     }
@@ -109,24 +98,21 @@ struct HistoryView: View {
     }
 
     private var footer: some View {
-        HStack(spacing: 7) {
-            Circle().fill(model.recording ? Color.handGreen : .orange).frame(width: 6, height: 6)
-            Button(model.recording ? "Capturing" : "Paused") { model.togglePause() }
-                .buttonStyle(.plain).help("Pause or resume clipboard capture")
+        HStack(spacing: 6) {
+            Circle().fill(model.recording ? Color.green : .orange).frame(width: 5, height: 5)
+            Text(model.recording ? "Capturing · On this Mac only" : "Capture paused")
+                .foregroundStyle(.secondary)
             Spacer()
-            Text("↑↓ browse").foregroundStyle(.tertiary)
-            Text("↵ copy · ⌘V paste").foregroundStyle(.secondary)
+            Text("↑↓ select  ↵ copy").foregroundStyle(.tertiary)
         }
-        .font(.system(size: 11)).padding(.horizontal, 24).padding(.vertical, 16)
-        .background(.quaternary.opacity(0.25))
+        .font(.caption).padding(.horizontal, 16).padding(.vertical, 10)
     }
 
     private var welcome: some View {
         VStack(spacing: 20) {
             Spacer()
-            Image(systemName: "tray.and.arrow.down").font(.system(size: 48, weight: .ultraLight))
-                .foregroundStyle(Color.handGreen)
-            Text("Your next copy has a home.").font(.system(size: 27, weight: .medium, design: .serif))
+            HandMark()
+            Text("Your next copy has a home.").font(.title2.weight(.semibold))
             Text("On Hand remembers the text, links, and images you copy, so you can find them again.")
                 .font(.system(size: 14)).foregroundStyle(.secondary)
                 .multilineTextAlignment(.center).frame(maxWidth: 340)
@@ -135,7 +121,7 @@ struct HistoryView: View {
                 Label("Password-marked clips are skipped", systemImage: "key")
                 Label("Unpinned clips expire after 7 days", systemImage: "clock")
             }.font(.system(size: 12)).foregroundStyle(.secondary).padding(.vertical, 8)
-            Button("Start keeping my clipboard") { model.start(); searchFocused = true }
+            Button("Start keeping my clipboard") { model.start() }
                 .buttonStyle(.borderedProminent).controlSize(.large).disabled(!model.ready)
             Text("Pause or clear your history anytime.").font(.system(size: 11)).foregroundStyle(.tertiary)
             Spacer()

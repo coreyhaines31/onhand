@@ -42,7 +42,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         model.query = ""
         model.reload()
         if panel == nil {
-            let window = HistoryPanel(contentRect: NSRect(x: 0, y: 0, width: 520, height: 640),
+            let size = NSSize(width: HandLayout.width, height: HandLayout.height)
+            let window = HistoryPanel(contentRect: NSRect(origin: .zero, size: size),
                                       styleMask: [.titled, .fullSizeContentView], backing: .buffered, defer: false)
             window.title = "On Hand"
             window.titleVisibility = .hidden

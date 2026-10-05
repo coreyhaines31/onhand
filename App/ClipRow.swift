@@ -13,20 +13,20 @@ struct ClipRow: View {
     @State private var showingPreview = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             Button(action: onCopy) {
                 HStack(alignment: .top, spacing: 12) {
                     thumbnail
-                    VStack(alignment: .leading, spacing: 7) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(clip.kind == .image ? "Copied image" : String(clip.text.prefix(400)))
-                            .font(.system(size: 13)).lineLimit(2).multilineTextAlignment(.leading)
+                            .font(.body).lineLimit(2).multilineTextAlignment(.leading)
                             .foregroundStyle(.primary)
                         HStack(spacing: 6) {
                             Text(clip.source)
                             Text("·")
                             Text(clip.createdAt, style: .relative)
                             if clip.isPinned { Image(systemName: "pin.fill").foregroundStyle(Color.handGreen) }
-                        }.font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1)
+                        }.font(.caption).foregroundStyle(.secondary).lineLimit(1)
                     }.frame(maxWidth: .infinity, alignment: .leading)
                 }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
             }.buttonStyle(.plain).help("Copy to clipboard")
@@ -37,10 +37,10 @@ struct ClipRow: View {
             .buttonStyle(.plain).opacity(hovering || clip.isPinned || selected ? 1 : 0.3)
             .accessibilityLabel(clip.isPinned ? "Unpin clip" : "Pin clip")
         }
-        .padding(13)
+        .padding(.horizontal, 8).padding(.vertical, 9)
         .background(selected ? Color.handGreen.opacity(0.1) : (hovering ? Color.primary.opacity(0.035) : .clear),
-                    in: RoundedRectangle(cornerRadius: 10))
-        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(selected ? Color.handGreen.opacity(0.25) : .clear))
+                    in: RoundedRectangle(cornerRadius: 6))
+        .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(selected ? Color.handGreen.opacity(0.25) : .clear))
         .onHover { hovering = $0 }
         .contextMenu {
             Button("Copy", action: onCopy)
@@ -67,8 +67,8 @@ struct ClipRow: View {
                     .font(.system(size: 15)).foregroundStyle(Color.handGreen)
             }
         }
-        .frame(width: 36, height: 36)
-        .background(Color.handGreen.opacity(0.07), in: RoundedRectangle(cornerRadius: 8))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .frame(width: 30, height: 30)
+        .background(Color.handGreen.opacity(0.07), in: RoundedRectangle(cornerRadius: 5))
+        .clipShape(RoundedRectangle(cornerRadius: 5))
     }
 }
