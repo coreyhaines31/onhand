@@ -1,12 +1,13 @@
 import {
   ArrowDown,
   ArrowUpRight,
-  Copy,
+  Code2,
   Keyboard,
   LockKeyhole,
   Pin,
   Search,
 } from "lucide-react";
+import Image from "next/image";
 import ClipboardDemo from "@/components/clipboard-demo";
 
 const source = "/downloads/on-hand-source.zip";
@@ -18,21 +19,21 @@ export default function Home() {
       <nav className="nav wrap" aria-label="Main navigation">
         <a className="brand" href="#" aria-label="On Hand home">
           <span className="mark">
-            <Copy size={19} />
+            <Image src="/brand-symbol.svg" width={29} height={29} alt="" />
           </span>
           On Hand
         </a>
         <div className="nav-links">
           <a href="#features">Features</a>
           <a href="#questions">Questions</a>
-          <a href={source} download>
-            Source <ArrowUpRight size={12} />
+          <a href={source}>
+            View source code <ArrowUpRight size={12} />
           </a>
         </div>
       </nav>
       <section className="hero wrap">
         <div className="hero-copy">
-          <p className="eyebrow">A native clipboard manager for Mac</p>
+          <p className="eyebrow">Free, open-source clipboard manager for Mac</p>
           <h1>
             Copy it once.
             <br />
@@ -42,10 +43,16 @@ export default function Home() {
             Bring back the text, links, and images you copied earlier. On Hand
             keeps them in your Mac’s menu bar, ready to reuse.
           </p>
-          <a className="button primary" href={download} download>
-            <ArrowDown size={18} />
-            Download for Mac
-          </a>
+          <div className="hero-actions">
+            <a className="button primary" href={download} download>
+              <ArrowDown size={18} />
+              Download for free
+            </a>
+            <a className="button secondary" href={source}>
+              <Code2 size={18} />
+              View source code
+            </a>
+          </div>
           <p className="download-note">
             Free preview · Apple silicon · macOS 14+
             <br />
@@ -163,16 +170,22 @@ export default function Home() {
       </section>
       <section className="download-row wrap" aria-label="Download On Hand">
         <div>
-          <h2>Keep your next copy on hand.</h2>
+          <h2>Free. Open source. On your Mac.</h2>
           <p>
             Free developer preview for macOS 14+.{" "}
             <a href="/install">Installation guide</a>
           </p>
         </div>
-        <a className="button primary" href={download} download>
-          <ArrowDown size={18} />
-          Download for Mac
-        </a>
+        <div className="download-actions">
+          <a className="button primary" href={download} download>
+            <ArrowDown size={18} />
+            Download for free
+          </a>
+          <a className="button secondary" href={source}>
+            <Code2 size={18} />
+            View source code
+          </a>
+        </div>
       </section>
       <footer className="footer wrap">
         <span>
@@ -181,9 +194,7 @@ export default function Home() {
         <div>
           <a href="/install">Install</a>
           <a href="/privacy">Privacy</a>
-          <a href={source} download>
-            Source code
-          </a>
+          <a href={source}>View source code</a>
         </div>
       </footer>
     </main>

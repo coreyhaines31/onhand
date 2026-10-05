@@ -3,7 +3,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Copy,
   FileText,
   Keyboard,
   Link,
@@ -14,6 +13,7 @@ import {
   Settings,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 const initialClips = [
@@ -110,7 +110,7 @@ export default function ClipboardDemo() {
             <ChevronLeft size={15} />
           </button>
         ) : (
-          <Copy size={15} aria-hidden="true" />
+          <Image src="/brand-symbol.svg" width={21} height={21} alt="" />
         )}
         <strong>{preview ? "Clip preview" : "On Hand"}</strong>
         <div
