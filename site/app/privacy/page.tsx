@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+export const metadata: Metadata = {
+  title: "Privacy policy",
+  description:
+    "On Hand keeps your clipboard history on your Mac. What the app stores, what you control, and what the website collects.",
+  alternates: { canonical: "/privacy" },
+  openGraph: { title: "On Hand privacy policy", url: "/privacy", images: "/opengraph-image" },
+};
+
 export default function Privacy() {
   return (
     <main className="document wrap">
