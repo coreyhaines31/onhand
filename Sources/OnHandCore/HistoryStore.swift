@@ -36,6 +36,14 @@ public final class HistoryStore {
         }
     }
 
+    public func imagesNeedingRecognition() throws -> [Clip] {
+        try db.clips("SELECT * FROM clips WHERE kind = 'image' AND ocr IS NULL ORDER BY created DESC")
+    }
+
+    public func setRecognizedText(_ text: String, for id: String) throws {
+        try db.execute("UPDATE clips SET ocr = ? WHERE id = ?", [.text(text), .text(id)])
+    }
+
     public func togglePin(_ id: String) throws {
         try db.execute("UPDATE clips SET pinned = 1 - pinned WHERE id = ?", [.text(id)])
     }
@@ -57,7 +65,8 @@ public final class HistoryStore {
         let words = query.split(whereSeparator: \.isWhitespace).map(String.init)
         return clips.filter { clip in
             (!pinnedOnly || clip.isPinned) && (kind == nil || clip.kind == kind) && words.allSatisfy {
-                (clip.text + " " + clip.source + " " + clip.title).localizedStandardContains($0)
+                [clip.text, clip.source, clip.title, clip.recognizedText ?? ""].joined(separator: " ")
+                    .localizedStandardContains($0)
             }
         }
     }

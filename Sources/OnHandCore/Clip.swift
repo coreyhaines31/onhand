@@ -9,6 +9,7 @@ public struct Clip: Identifiable, Equatable, Sendable {
     public let source: String
     public let createdAt: Date
     public let isPinned: Bool
+    public var recognizedText: String?
 
     public var title: String {
         if kind == .image { return "Image" }
