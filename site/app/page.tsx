@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import ClipboardDemo from "@/components/clipboard-demo";
-import { downloadUrl as download, sourceUrl as source } from "@/lib/site";
+import { downloadUrl as download, siteUrl, sourceUrl as source } from "@/lib/site";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -22,9 +22,75 @@ export const metadata: Metadata = {
   },
 };
 
+const faqs: { question: string; answer: string; link?: { href: string; label: string } }[] = [
+  {
+    question: "Is On Hand free?",
+    answer:
+      "Yes. On Hand is free, with no account, trial, or subscription. The local app’s source is available under the MIT license. Optional paid services may come later.",
+  },
+  {
+    question: "Will it run on my Mac?",
+    answer:
+      "On Hand supports Apple silicon and Intel Macs running macOS 14 or later. It is signed and notarized by Apple.",
+    link: { href: "/install", label: "Read the installation guide" },
+  },
+  {
+    question: "What does On Hand save?",
+    answer:
+      "Text, web links, and images you copy after turning on capture. History holds up to 500 clips or 50 MB. Unpinned clips expire after seven days by default. Text over 1 MB, images over 10 MB, and copied files are skipped; rich text is saved as plain text.",
+  },
+  {
+    question: "Does it capture passwords?",
+    answer:
+      "On Hand skips concealed and temporary clipboard items and excludes several common password managers by default. Not every app marks secrets, so pause capture before copying sensitive information.",
+  },
+  {
+    question: "Does it sync between Macs?",
+    answer:
+      "No. Your history stays on the Mac where you copied it. On Hand has no cloud sync.",
+  },
+  {
+    question: "Can I inspect or build the code?",
+    answer:
+      "Yes. The source is MIT-licensed, so you can inspect the code, build the app, report an issue, or contribute.",
+    link: { href: source, label: "View the source on GitHub" },
+  },
+];
+
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "On Hand",
+    description:
+      "A free, open-source clipboard manager for Mac that keeps your clipboard history of text, links, and images on your Mac.",
+    url: siteUrl,
+    image: `${siteUrl}/opengraph-image`,
+    operatingSystem: "macOS 14 or later",
+    applicationCategory: "UtilitiesApplication",
+    downloadUrl: `${siteUrl}${download}`,
+    license: "https://opensource.org/licenses/MIT",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    author: { "@type": "Person", name: "Corey Haines" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  },
+];
+
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <nav className="nav wrap" aria-label="Main navigation">
         <a className="brand" href="#" aria-label="On Hand home">
           <span className="mark">
@@ -120,53 +186,20 @@ export default function Home() {
       <section id="questions" className="faq wrap">
         <h2>Before you download.</h2>
         <div className="questions">
-          <details>
-            <summary>Is On Hand free?</summary>
-            <p>
-              Yes. On Hand is free, with no account, trial, or
-              subscription. The local app’s source is available under the MIT
-              license. Optional paid services may come later.
-            </p>
-          </details>
-          <details>
-            <summary>Will it run on my Mac?</summary>
-            <p>
-              On Hand supports Apple silicon and Intel Macs running macOS 14 or
-              later. It is signed and notarized by Apple. Follow the{" "}
-              <a href="/install">installation guide</a> to set it up.
-            </p>
-          </details>
-          <details>
-            <summary>What does On Hand save?</summary>
-            <p>
-              Text, web links, and images you copy after turning on capture.
-              History holds up to 500 clips or 50 MB. Unpinned clips expire
-              after seven days by default. Text over 1 MB, images over 10 MB,
-              and copied files are skipped; rich text is saved as plain text.
-            </p>
-          </details>
-          <details>
-            <summary>Does it capture passwords?</summary>
-            <p>
-              On Hand skips concealed and temporary clipboard items and excludes
-              several common password managers by default. Not every app marks
-              secrets, so pause capture before copying sensitive information.
-            </p>
-          </details>
-          <details>
-            <summary>Does it sync between Macs?</summary>
-            <p>
-              No. Your history stays on the Mac where you copied it. On Hand
-              has no cloud sync.
-            </p>
-          </details>
-          <details>
-            <summary>Can I inspect or build the code?</summary>
-            <p>
-              Yes. <a href={source}>View the MIT-licensed source on GitHub</a>
-              {" "}to inspect the code, build the app, report an issue, or contribute.
-            </p>
-          </details>
+          {faqs.map((faq) => (
+            <details key={faq.question}>
+              <summary>{faq.question}</summary>
+              <p>
+                {faq.answer}
+                {faq.link && (
+                  <>
+                    {" "}
+                    <a href={faq.link.href}>{faq.link.label}</a>.
+                  </>
+                )}
+              </p>
+            </details>
+          ))}
         </div>
       </section>
       <section className="download-row wrap" aria-label="Download On Hand">
