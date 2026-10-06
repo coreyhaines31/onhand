@@ -23,6 +23,7 @@ final class AppModel {
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
     private var lastPrune = Date.distantPast
+    private var isRecognizing = false
     private let previews = NSCache<NSString, NSImage>()
 
     init() {
@@ -45,6 +46,7 @@ final class AppModel {
                 try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: file.path)
             }
             reload()
+            recognizePendingImages()
         } catch { errorMessage = "Could not open clipboard history. \(error.localizedDescription)" }
         if !isDemo {
             timer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { [weak self] _ in
@@ -120,6 +122,21 @@ final class AppModel {
         return image
     }
 
+    private func recognizePendingImages() {
+        guard !isRecognizing, let clip = (try? store?.imagesNeedingRecognition())?.first else { return }
+        isRecognizing = true
+        let data = clip.data
+        Task {
+            let text = await Task.detached(priority: .utility) { TextRecognizer.text(in: data) }.value
+            isRecognizing = false
+            do {
+                try store?.setRecognizedText(text, for: clip.id)
+            } catch { return }
+            reload()
+            recognizePendingImages()
+        }
+    }
+
     private func perform(_ action: () throws -> Void) {
         do { try action() } catch { errorMessage = error.localizedDescription }
     }
@@ -150,6 +167,7 @@ extension AppModel {
         perform {
             let id = try store?.insert(text: text, image: image, source: source?.localizedName ?? "Unknown app")
             if id != nil { reload() }
+            if image != nil { recognizePendingImages() }
         }
     }
 
