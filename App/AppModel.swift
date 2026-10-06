@@ -184,5 +184,23 @@ extension AppModel {
                                       date: Date().addingTimeInterval(-Double(index * 120)))
             if index == 0, let id { try store?.togglePin(id) }
         }
+        if let image = Self.demoImage(text: "Order #4021 · Ships Thursday") {
+            try store?.insert(image: image, source: "Screenshot", date: Date().addingTimeInterval(-60))
+        }
+    }
+
+    private static func demoImage(text: String) -> Data? {
+        guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 720, pixelsHigh: 240,
+                                         bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                                         colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+        else { return nil }
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
+        NSColor(white: 0.97, alpha: 1).setFill()
+        NSRect(x: 0, y: 0, width: 720, height: 240).fill()
+        (text as NSString).draw(at: NSPoint(x: 48, y: 100),
+                                withAttributes: [.font: NSFont.systemFont(ofSize: 40, weight: .semibold)])
+        NSGraphicsContext.restoreGraphicsState()
+        return rep.representation(using: .png, properties: [:])
     }
 }
