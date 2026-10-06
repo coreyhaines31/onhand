@@ -1,3 +1,4 @@
+import CSQLite
 import Foundation
 @testable import OnHandCore
 import Testing
@@ -102,4 +103,32 @@ import Testing
     let value = "Before\0After · こんにちは 👋"
     try store.insert(text: value, source: "Test")
     #expect(try store.all().first?.text == value)
+}
+
+@Test func recognizedTextIsStoredAndSearchable() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let id = try #require(try store.insert(image: Data([1, 2, 3]), source: "Preview"))
+    #expect(try store.nextImageNeedingRecognition()?.id == id)
+    try store.setRecognizedText("Invoice 4021", for: id)
+    #expect(try store.nextImageNeedingRecognition() == nil)
+    let clips = try store.all()
+    #expect(clips[0].recognizedText == "Invoice 4021")
+    #expect(HistoryStore.filtered(clips, query: "invoice 4021").count == 1)
+    #expect(HistoryStore.filtered(clips, query: "receipt").isEmpty)
+}
+
+@Test func historyFromVersionOneGainsRecognition() throws {
+    let path = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID()).sqlite").path
+    defer { try? FileManager.default.removeItem(atPath: path) }
+    var handle: OpaquePointer?
+    sqlite3_open(path, &handle)
+    sqlite3_exec(handle, """
+    CREATE TABLE clips (id TEXT PRIMARY KEY, kind TEXT NOT NULL, text TEXT NOT NULL,
+        payload BLOB NOT NULL, source TEXT NOT NULL, created REAL NOT NULL, pinned INTEGER NOT NULL DEFAULT 0);
+    INSERT INTO clips VALUES ('a', 'image', '', x'0102', 'Preview', 1, 1);
+    """, nil, nil, nil)
+    sqlite3_close(handle)
+    let store = try HistoryStore(path: path)
+    #expect(try store.all().first?.isPinned == true)
+    #expect(try store.nextImageNeedingRecognition()?.id == "a")
 }

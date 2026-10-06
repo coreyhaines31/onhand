@@ -23,6 +23,7 @@ final class AppModel {
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
     private var lastPrune = Date.distantPast
+    private var isRecognizing = false
     private let previews = NSCache<NSString, NSImage>()
 
     init() {
@@ -45,6 +46,7 @@ final class AppModel {
                 try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: file.path)
             }
             reload()
+            recognizePendingImages()
         } catch { errorMessage = "Could not open clipboard history. \(error.localizedDescription)" }
         if !isDemo {
             timer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { [weak self] _ in
@@ -120,6 +122,21 @@ final class AppModel {
         return image
     }
 
+    private func recognizePendingImages() {
+        guard !isRecognizing, let clip = try? store?.nextImageNeedingRecognition() else { return }
+        isRecognizing = true
+        let data = clip.data
+        Task {
+            let text = await Task.detached(priority: .utility) { TextRecognizer.text(in: data) }.value
+            isRecognizing = false
+            do {
+                try store?.setRecognizedText(text, for: clip.id)
+            } catch { return }
+            reload()
+            recognizePendingImages()
+        }
+    }
+
     private func perform(_ action: () throws -> Void) {
         do { try action() } catch { errorMessage = error.localizedDescription }
     }
@@ -150,6 +167,7 @@ extension AppModel {
         perform {
             let id = try store?.insert(text: text, image: image, source: source?.localizedName ?? "Unknown app")
             if id != nil { reload() }
+            if image != nil { recognizePendingImages() }
         }
     }
 
@@ -166,5 +184,23 @@ extension AppModel {
                                       date: Date().addingTimeInterval(-Double(index * 120)))
             if index == 0, let id { try store?.togglePin(id) }
         }
+        if let image = Self.demoImage(text: "Order #4021 · Ships Thursday") {
+            try store?.insert(image: image, source: "Screenshot", date: Date().addingTimeInterval(-60))
+        }
+    }
+
+    private static func demoImage(text: String) -> Data? {
+        guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 720, pixelsHigh: 240,
+                                         bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                                         colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+        else { return nil }
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
+        NSColor(white: 0.97, alpha: 1).setFill()
+        NSRect(x: 0, y: 0, width: 720, height: 240).fill()
+        (text as NSString).draw(at: NSPoint(x: 48, y: 100),
+                                withAttributes: [.font: NSFont.systemFont(ofSize: 40, weight: .semibold)])
+        NSGraphicsContext.restoreGraphicsState()
+        return rep.representation(using: .png, properties: [:])
     }
 }

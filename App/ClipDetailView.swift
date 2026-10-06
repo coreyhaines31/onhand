@@ -26,7 +26,14 @@ struct ClipDetailView: View {
             ScrollView {
                 Group {
                     if let image {
-                        Image(nsImage: image).resizable().scaledToFit().accessibilityLabel("Copied image preview")
+                        VStack(alignment: .leading, spacing: 12) {
+                            Image(nsImage: image).resizable().scaledToFit().accessibilityLabel("Copied image preview")
+                            if let text = clip.recognizedText, !text.isEmpty {
+                                Text("Text in image").font(.caption).foregroundStyle(.secondary)
+                                Text(text).font(.body).textSelection(.enabled)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
                     } else {
                         Text(String(clip.text.prefix(previewLimit)))
                             .font(.body).textSelection(.enabled)

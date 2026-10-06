@@ -27,6 +27,7 @@ final class Database {
         )
         """)
         try execute("CREATE INDEX IF NOT EXISTS clips_created ON clips(created DESC)")
+        if try !columns("clips").contains("ocr") { try execute("ALTER TABLE clips ADD COLUMN ocr TEXT") }
     }
 
     deinit { sqlite3_close(handle) }
@@ -56,9 +57,18 @@ final class Database {
                 id: string(statement, 0), kind: Clip.Kind(rawValue: string(statement, 1)) ?? .text,
                 text: string(statement, 2), data: payload, source: string(statement, 4),
                 createdAt: Date(timeIntervalSince1970: sqlite3_column_double(statement, 5)),
-                isPinned: sqlite3_column_int(statement, 6) != 0
+                isPinned: sqlite3_column_int(statement, 6) != 0,
+                recognizedText: sqlite3_column_type(statement, 7) == SQLITE_NULL ? nil : string(statement, 7)
             ))
         }
+    }
+
+    private func columns(_ table: String) throws -> Set<String> {
+        let statement = try prepare("PRAGMA table_info(\(table))", [])
+        defer { sqlite3_finalize(statement) }
+        var names: Set<String> = []
+        while sqlite3_step(statement) == SQLITE_ROW { names.insert(string(statement, 1)) }
+        return names
     }
 
     func transaction<T>(_ work: () throws -> T) throws -> T {
