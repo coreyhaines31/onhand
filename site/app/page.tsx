@@ -92,7 +92,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <nav className="nav wrap" aria-label="Main navigation">
-        <a className="brand" href="#" aria-label="On Hand home">
+        <a className="brand" href="/" aria-label="On Hand home">
           <span className="mark">
             <Image src="/brand-symbol.svg" width={29} height={29} alt="" />
           </span>
