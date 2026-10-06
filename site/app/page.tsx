@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -10,6 +11,16 @@ import {
 import Image from "next/image";
 import ClipboardDemo from "@/components/clipboard-demo";
 import { downloadUrl as download, sourceUrl as source } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "On Hand — Free, Open-Source Clipboard Manager for Mac",
+    description:
+      "Copy it once. Find it again. A native clipboard manager that keeps your history on your Mac.",
+    url: "/",
+  },
+};
 
 export default function Home() {
   return (
