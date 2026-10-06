@@ -1026,3 +1026,11 @@ kbd {
   font-size: 13px;
   line-height: 1.5;
 }
+@media (max-width: 800px) {
+  .roundup {
+    min-width: 680px;
+  }
+}
+.roundup th[scope="row"] {
+  white-space: nowrap;
+}
