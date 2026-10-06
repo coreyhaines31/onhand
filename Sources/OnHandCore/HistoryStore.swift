@@ -36,8 +36,8 @@ public final class HistoryStore {
         }
     }
 
-    public func imagesNeedingRecognition() throws -> [Clip] {
-        try db.clips("SELECT * FROM clips WHERE kind = 'image' AND ocr IS NULL ORDER BY created DESC")
+    public func nextImageNeedingRecognition() throws -> Clip? {
+        try db.clips("SELECT * FROM clips WHERE kind = 'image' AND ocr IS NULL ORDER BY created DESC LIMIT 1").first
     }
 
     public func setRecognizedText(_ text: String, for id: String) throws {

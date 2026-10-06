@@ -123,7 +123,7 @@ final class AppModel {
     }
 
     private func recognizePendingImages() {
-        guard !isRecognizing, let clip = (try? store?.imagesNeedingRecognition())?.first else { return }
+        guard !isRecognizing, let clip = try? store?.nextImageNeedingRecognition() else { return }
         isRecognizing = true
         let data = clip.data
         Task {

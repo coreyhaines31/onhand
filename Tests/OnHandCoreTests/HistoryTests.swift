@@ -108,9 +108,9 @@ import Testing
 @Test func recognizedTextIsStoredAndSearchable() throws {
     let store = try HistoryStore(path: ":memory:")
     let id = try #require(try store.insert(image: Data([1, 2, 3]), source: "Preview"))
-    #expect(try store.imagesNeedingRecognition().map(\.id) == [id])
+    #expect(try store.nextImageNeedingRecognition()?.id == id)
     try store.setRecognizedText("Invoice 4021", for: id)
-    #expect(try store.imagesNeedingRecognition().isEmpty)
+    #expect(try store.nextImageNeedingRecognition() == nil)
     let clips = try store.all()
     #expect(clips[0].recognizedText == "Invoice 4021")
     #expect(HistoryStore.filtered(clips, query: "invoice 4021").count == 1)
@@ -130,5 +130,5 @@ import Testing
     sqlite3_close(handle)
     let store = try HistoryStore(path: path)
     #expect(try store.all().first?.isPinned == true)
-    #expect(try store.imagesNeedingRecognition().map(\.id) == ["a"])
+    #expect(try store.nextImageNeedingRecognition()?.id == "a")
 }
