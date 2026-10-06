@@ -127,15 +127,19 @@ summary:focus-visible {
   color: var(--muted);
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: normal;
   margin-bottom: 20px;
 }
-h1 {
+h1,
+.headline {
   font-size: clamp(42px, 4.1vw, 58px);
   line-height: 1.06;
   font-weight: 650;
   letter-spacing: -2.7px;
 }
-h1 span {
+h1 span,
+.headline span {
   color: #62738e;
   background: linear-gradient(110deg, #7c8493, #375880);
   -webkit-background-clip: text;
@@ -707,7 +711,8 @@ kbd {
     grid-template-columns: 1fr 400px;
     gap: 38px;
   }
-  h1 {
+  h1,
+  .headline {
     font-size: 46px;
     letter-spacing: -2px;
   }
@@ -741,7 +746,8 @@ kbd {
   .hero-actions {
     justify-content: center;
   }
-  h1 {
+  h1,
+  .headline {
     font-size: clamp(40px, 7.5vw, 56px);
     letter-spacing: -2px;
   }
@@ -872,7 +878,8 @@ kbd {
   }
 }
 @media (forced-colors: active) {
-  h1 span {
+  h1 span,
+  .headline span {
     background: none;
     -webkit-text-fill-color: currentColor;
   }

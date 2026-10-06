@@ -108,12 +108,12 @@ export default function Home() {
       </nav>
       <section className="hero wrap">
         <div className="hero-copy">
-          <p className="eyebrow">Free, open-source clipboard manager for Mac</p>
-          <h1>
+          <h1 className="eyebrow">Free, open-source clipboard manager for Mac</h1>
+          <p className="headline">
             Copy it once.
             <br />
             <span>Find it again.</span>
-          </h1>
+          </p>
           <p className="intro">
             Bring back the text, links, and images you copied earlier. On Hand
             keeps them in your Mac’s menu bar, ready to reuse.
