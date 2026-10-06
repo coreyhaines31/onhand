@@ -20,7 +20,7 @@ struct ClipRow: View {
                 HStack(alignment: .top, spacing: 12) {
                     thumbnail
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(clip.kind == .image ? "Copied image" : String(clip.text.prefix(400)))
+                        Text(clip.kind == .image ? imageTitle : String(clip.text.prefix(400)))
                             .font(.body).lineLimit(2).multilineTextAlignment(.leading)
                             .foregroundStyle(.primary)
                         HStack(spacing: 6) {
@@ -58,6 +58,11 @@ struct ClipRow: View {
             Divider()
             Button("Delete", role: .destructive, action: onDelete)
         }
+    }
+
+    private var imageTitle: String {
+        guard let text = clip.recognizedText, !text.isEmpty else { return "Copied image" }
+        return String(text.prefix(400))
     }
 
     private var thumbnail: some View {
