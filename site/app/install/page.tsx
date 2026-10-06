@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Download, install, and start using On Hand, the free clipboard manager for Mac. Keyboard shortcuts, settings, and how to build it from source.",
   alternates: { canonical: "/install" },
-  openGraph: { title: "Install On Hand on your Mac", url: "/install" },
+  openGraph: { title: "Install On Hand on your Mac", url: "/install", images: "/opengraph-image" },
 };
 
 export default function Install() {

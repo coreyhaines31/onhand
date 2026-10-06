@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "On Hand keeps your clipboard history on your Mac. What the app stores, what you control, and what the website collects.",
   alternates: { canonical: "/privacy" },
-  openGraph: { title: "On Hand privacy policy", url: "/privacy" },
+  openGraph: { title: "On Hand privacy policy", url: "/privacy", images: "/opengraph-image" },
 };
 
 export default function Privacy() {
