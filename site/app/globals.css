@@ -375,7 +375,8 @@ kbd {
 }
 .footer > div {
   display: flex;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 8px 24px;
 }
 .copyright {
   margin-left: 14px;

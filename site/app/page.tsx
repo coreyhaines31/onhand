@@ -8,8 +8,9 @@ import {
   Pin,
   Search,
 } from "lucide-react";
-import Image from "next/image";
 import ClipboardDemo from "@/components/clipboard-demo";
+import SiteFooter from "@/components/site-footer";
+import SiteNav from "@/components/site-nav";
 import { downloadUrl as download, siteUrl, sourceUrl as source } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -91,21 +92,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
-      <nav className="nav wrap" aria-label="Main navigation">
-        <a className="brand" href="/" aria-label="On Hand home">
-          <span className="mark">
-            <Image src="/brand-symbol.svg" width={29} height={29} alt="" />
-          </span>
-          On Hand
-        </a>
-        <div className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#questions">Questions</a>
-          <a href={source}>
-            View source code <ArrowUpRight size={12} />
-          </a>
-        </div>
-      </nav>
+      <SiteNav />
       <section className="hero wrap">
         <div className="hero-copy">
           <h1 className="eyebrow">Free, open-source clipboard manager for Mac</h1>
@@ -221,16 +208,7 @@ export default function Home() {
           </a>
         </div>
       </section>
-      <footer className="footer wrap">
-        <span>
-          On Hand <span className="copyright">© 2026 Corey Haines</span>
-        </span>
-        <div>
-          <a href="/install">Install</a>
-          <a href="/privacy">Privacy</a>
-          <a href={source}>View source code</a>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
