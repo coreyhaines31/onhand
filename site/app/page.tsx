@@ -9,9 +9,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import ClipboardDemo from "@/components/clipboard-demo";
-
-const source = "https://github.com/coreyhaines31/onhand";
-const download = "https://github.com/coreyhaines31/onhand/releases/download/v1.0.0/OnHand-1.0.0.zip";
+import { downloadUrl as download, sourceUrl as source } from "@/lib/site";
 
 export default function Home() {
   return (
@@ -44,7 +42,7 @@ export default function Home() {
             keeps them in your Mac’s menu bar, ready to reuse.
           </p>
           <div className="hero-actions">
-            <a className="button primary" href={download} download>
+            <a className="button primary" href={download}>
               <ArrowDown size={18} />
               Download for free
             </a>
@@ -169,7 +167,7 @@ export default function Home() {
           </p>
         </div>
         <div className="download-actions">
-          <a className="button primary" href={download} download>
+          <a className="button primary" href={download}>
             <ArrowDown size={18} />
             Download for free
           </a>

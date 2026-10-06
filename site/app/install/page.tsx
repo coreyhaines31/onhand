@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { downloadUrl } from "@/lib/site";
 export default function Install() {
   return (
     <main className="document wrap">
@@ -13,7 +14,7 @@ export default function Install() {
       <h2>Install the app</h2>
       <ol>
         <li>
-          <a href="https://github.com/coreyhaines31/onhand/releases/download/v1.0.0/OnHand-1.0.0.zip" download>
+          <a href={downloadUrl}>
             Download On Hand
           </a>{" "}
           and unzip it.
