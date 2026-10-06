@@ -89,7 +89,7 @@ export default function Home() {
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <nav className="nav wrap" aria-label="Main navigation">
         <a className="brand" href="/" aria-label="On Hand home">
