@@ -43,8 +43,8 @@ export default function Privacy() {
         automatically generated, and excludes several common password managers
         by default. It also checks what you copy, on your Mac, for card numbers,
         US Social Security numbers, and common secret keys, and doesn’t save
-        them. If a screenshot’s text contains one, the image is deleted after
-        it’s read, usually within a second. You can turn this off in Settings.
+        them. If a screenshot’s text contains one, the image is deleted as soon
+        as its text is read. You can turn this off in Settings.
       </p>
       <p>
         These checks are conventions and patterns, not guarantees: passwords
