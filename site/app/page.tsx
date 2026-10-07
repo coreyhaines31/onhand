@@ -38,12 +38,12 @@ const faqs: { question: string; answer: string; link?: { href: string; label: st
   {
     question: "What does On Hand save?",
     answer:
-      "Text, web links, and images you copy after turning on capture. History holds up to 500 clips or 50 MB. Unpinned clips expire after seven days by default. Text over 1 MB, images over 10 MB, and copied files are skipped; rich text is saved as plain text.",
+      "Text, web links, and images you copy after turning on capture. On Hand reads the text in images on your Mac so you can search screenshots. History holds up to 500 clips or 50 MB. Unpinned clips expire after seven days by default. Text over 1 MB, images over 10 MB, and copied files are skipped; rich text is saved as plain text.",
   },
   {
     question: "Does it capture passwords?",
     answer:
-      "On Hand skips concealed and temporary clipboard items and excludes several common password managers by default. Not every app marks secrets, so pause capture before copying sensitive information.",
+      "On Hand skips concealed and temporary clipboard items and excludes several common password managers by default. It also won’t save card numbers, Social Security numbers, or secret keys, including in screenshots. It can’t recognize every secret, so pause capture before copying other private information, or press ⌃⌥⌘⌫ to forget your last copy.",
   },
   {
     question: "Does it sync between Macs?",
@@ -136,16 +136,18 @@ export default function Home() {
           <Search size={25} strokeWidth={1.5} />
           <h2>Find the link you lost.</h2>
           <p>
-            Search a word you remember or the app you copied from. Filter by
-            type and preview a clip before you copy it back.
+            Search a word you remember or the app you copied from, even text
+            inside a screenshot. Filter by type and preview a clip before you
+            copy it back.
           </p>
         </article>
         <article>
           <Pin size={25} strokeWidth={1.5} />
           <h2>Keep the clips you reuse.</h2>
           <p>
-            Pin a reply, an address, or a useful snippet. It stays saved until
-            you remove it. Leave history open to reuse clips across apps.
+            Pin a reply, an address, or a useful snippet, and group pins into
+            boards. They stay until you remove them. Leave history open to
+            reuse clips across apps.
           </p>
         </article>
         <article>
@@ -163,6 +165,7 @@ export default function Home() {
         <h2>Your history. On your Mac.</h2>
         <p>
           Your clips stay local, with no app analytics or clipboard uploads.
+          Card numbers, Social Security numbers, and secret keys aren’t saved.
           Pause capture anytime, choose apps to exclude, and set how long
           unpinned clips stay.
         </p>
