@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 const picks: { heading: string; slug?: string; body: string }[] = [
   {
     heading: "Best free and open source: On Hand or Maccy",
-    body: "Both are free, MIT-licensed, keep history on your Mac, and need macOS 14. Maccy is a compact popup with years of releases behind it and already searches text in images. On Hand is a menu bar window with previews, filters, and a keep-open mode for copying into several apps. Try both; they can run side by side.",
+    body: "Both are free, MIT-licensed, keep history on your Mac, and need macOS 14. Both search text in images. Maccy is a compact popup with years of releases behind it. On Hand is a menu bar window with previews, pinboards, and a keep-open mode, and it won’t save card numbers or secret keys. Try both; they can run side by side.",
   },
   {
     heading: "Best if you also use an iPhone or iPad: Paste",
@@ -69,7 +69,7 @@ const structuredData = {
   description,
   url: `${siteUrl}/best-clipboard-managers-for-mac`,
   datePublished: "2026-10-06",
-  dateModified: "2026-10-06",
+  dateModified: "2026-10-07",
   author: { "@type": "Person", name: "Corey Haines" },
   image: `${siteUrl}/opengraph-image`,
 };

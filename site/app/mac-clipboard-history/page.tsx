@@ -47,7 +47,7 @@ const structuredData = [
     description,
     url: `${siteUrl}/mac-clipboard-history`,
     datePublished: "2026-10-06",
-    dateModified: "2026-10-06",
+    dateModified: "2026-10-07",
     author: { "@type": "Person", name: "Corey Haines" },
     image: `${siteUrl}/opengraph-image`,
   },
@@ -163,8 +163,8 @@ export default function MacClipboardHistory() {
           </li>
         </ol>
         <p>
-          On Hand keeps text, links, and images, lets you pin the clips you reuse, and stores
-          everything on your Mac. It also works on macOS Tahoe if you want pins and a longer
+          On Hand keeps text, links, and images, searches the text inside screenshots, lets you
+          pin the clips you reuse to boards, and stores everything on your Mac. It also works on macOS Tahoe if you want pins and a longer
           history than Spotlight offers.{" "}
           <Link href="/alternatives">Compare clipboard managers for Mac</Link>.
         </p>

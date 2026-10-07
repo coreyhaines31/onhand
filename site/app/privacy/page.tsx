@@ -15,7 +15,7 @@ export default function Privacy() {
         ← Back to On Hand
       </Link>
       <h1>Your clipboard stays local.</h1>
-      <p>On Hand 1.0.0 · Updated October 5, 2026</p>
+      <p>On Hand 1.1.0 · Updated October 7, 2026</p>
       <h2>What the app stores</h2>
       <p>
         On Hand stores text, links, and images locally in your Mac’s Application
@@ -23,6 +23,11 @@ export default function Privacy() {
         analytics, or require an account. History is stored in a local SQLite
         database protected by your user account’s file permissions; it is not
         separately encrypted. FileVault can protect your Mac’s disk.
+      </p>
+      <p>
+        To make screenshots searchable, On Hand reads the text in copied images
+        with Apple’s on-device Vision framework. Recognition happens on your
+        Mac, and the text is stored in the same local database as the image.
       </p>
       <h2>What you control</h2>
       <p>
@@ -36,10 +41,17 @@ export default function Privacy() {
       <p>
         On Hand ignores clipboard items marked concealed, transient, or
         automatically generated, and excludes several common password managers
-        by default. These are conventions, not guarantees: unmarked passwords
-        and secrets can still be saved. Pause capture before copying sensitive
-        information. Clearing On Hand’s history does not clear the macOS system
-        clipboard or backups.
+        by default. It also checks what you copy, on your Mac, for card numbers,
+        US Social Security numbers, and common secret keys, and doesn’t save
+        them. If a screenshot’s text contains one, the image is deleted as soon
+        as its text is read. You can turn this off in Settings.
+      </p>
+      <p>
+        These checks are conventions and patterns, not guarantees: passwords
+        you type yourself, addresses, and other private details can still be
+        saved. Pause capture before copying sensitive information, or press
+        ⌃⌥⌘⌫ to forget your last copy, which also clears the system clipboard.
+        Clearing On Hand’s history does not clear backups.
       </p>
       <h2>What the website collects</h2>
       <p>

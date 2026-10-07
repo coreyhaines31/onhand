@@ -44,10 +44,10 @@ export const onHand: Comparison = {
   source: "Open source (MIT)",
   images: "Yes",
   search: "Yes, by text or source app",
-  pins: "Yes, kept until you remove them",
-  ocr: "Coming in 1.1.0",
+  pins: "Yes, with named boards",
+  ocr: "Yes, on your Mac",
   sync: "No. History stays on your Mac",
-  exclusions: "Yes. Common password managers skipped by default",
+  exclusions: "Yes. Password managers skipped; card numbers, SSNs, and keys never saved",
   shortcuts: "⌘⇧Space to open (changeable), ⌘1–9 to copy",
   requires: "macOS 14 or later, Apple silicon or Intel",
 };
@@ -60,7 +60,7 @@ export const alternatives: Alternative[] = [
     summary: "Free, open-source, keyboard-first clipboard manager.",
     status: "Actively maintained. Version 2.7.1 shipped in August 2026.",
     verdict:
-      "Maccy is a great app, and it’s the closest thing to On Hand. Both are free, MIT-licensed, local-only, and need macOS 14. Maccy already searches text in images. The real difference is feel: Maccy is a compact popup you drive with ⇧⌘C, while On Hand is a menu bar window with previews, filters, and a keep-open mode.",
+      "Maccy is a great app, and it’s the closest thing to On Hand. Both are free, MIT-licensed, local-only, need macOS 14, and search text in images. The real difference is feel: Maccy is a compact popup you drive with ⇧⌘C, while On Hand is a menu bar window with previews, filters, and a keep-open mode.",
     chooseThem: [
       "You want the most established free option, with years of releases and a large community.",
       "You want to paste straight from the list with ⌥1–9, or paste without formatting from a shortcut.",
