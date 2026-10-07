@@ -134,7 +134,8 @@ final class AppModel {
             isRecognizing = false
             let sensitive = preferences.skipSensitive ? SensitiveContent.detect(in: text) : nil
             do {
-                if let sensitive, !clip.isPinned {
+                let isPinned = clips.first { $0.id == clip.id }?.isPinned ?? clip.isPinned
+                if let sensitive, !isPinned {
                     try store?.remove(clip.id)
                     previews.removeAllObjects()
                     onSkippedSensitive?(sensitive)
