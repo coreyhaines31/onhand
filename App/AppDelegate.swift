@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var panel: HistoryPanel?
     private var settingsWindow: NSWindow?
     private var previousApp: NSRunningApplication?
+    private var skipNoticeID = 0
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -25,6 +26,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         item.button?.target = self
         item.button?.action = #selector(togglePanel(_:))
         statusItem = item
+        model.onSkippedSensitive = { [weak self] kind in self?.showSkipNotice(kind) }
         KeyboardShortcuts.onKeyUp(for: .showHistory) { [weak self] in self?.togglePanel(nil) }
         if !model.preferences.hasStarted || ProcessInfo.processInfo.arguments.contains("--demo") {
             showPanel()
@@ -34,6 +36,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         showPanel()
         return true
+    }
+
+    private func showSkipNotice(_ kind: SensitiveContent) {
+        guard let button = statusItem?.button else { return }
+        skipNoticeID += 1
+        let id = skipNoticeID
+        let image = NSImage(systemSymbolName: "hand.raised.fill", accessibilityDescription: "Clip not saved")
+        image?.isTemplate = true
+        button.image = image
+        button.toolTip = "Didn’t save a \(kind.rawValue)"
+        button.setAccessibilityLabel("On Hand didn’t save a \(kind.rawValue)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            guard let self, id == self.skipNoticeID, let button = self.statusItem?.button else { return }
+            button.image = BrandIcon.image(size: 19)
+            button.toolTip = "On Hand — clipboard history"
+            button.setAccessibilityLabel(nil)
+        }
     }
 
     @objc private func togglePanel(_ sender: Any?) {

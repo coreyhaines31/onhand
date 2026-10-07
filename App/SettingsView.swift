@@ -40,9 +40,14 @@ struct SettingsView: View {
             }
             Section("Privacy") {
                 Toggle("Pause capture", isOn: Binding(get: { model.isPaused }, set: { _ in model.togglePause() }))
+                Toggle("Don’t save card numbers, Social Security numbers, or secret keys",
+                       isOn: $preferences.skipSensitive)
+                    .onChange(of: preferences.skipSensitive) { model.removeSensitiveTextClips() }
                 Text("""
                      History is stored locally on this Mac. Nothing is uploaded. Password-marked and temporary clips \
-                     are skipped, but apps do not mark every secret. Pause before copying sensitive information.
+                     are skipped, and On Hand checks text and screenshots for card numbers, Social Security numbers, \
+                     and secret keys. It can’t recognize every secret, so pause before copying other private \
+                     information.
                      """)
                     .font(.caption).foregroundStyle(.secondary)
                 ExcludedAppsView(preferences: preferences)
