@@ -24,6 +24,7 @@ final class AppModel {
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
     private var lastPrune = Date.distantPast
+    private var lastCapture: (id: String, change: Int)?
     private var isRecognizing = false
     private let previews = NSCache<NSString, NSImage>()
 
@@ -146,6 +147,22 @@ final class AppModel {
         }
     }
 
+    /// Clears the system clipboard and deletes the clip On Hand saved from it, unless that clip is pinned.
+    func forgetLastCopy() {
+        let board = NSPasteboard.general
+        perform {
+            if let lastCapture, lastCapture.change == board.changeCount,
+               clips.first(where: { $0.id == lastCapture.id })?.isPinned == false {
+                try store?.remove(lastCapture.id)
+                previews.removeAllObjects()
+            }
+            lastCapture = nil
+            board.clearContents()
+            lastChange = board.changeCount
+            reload()
+        }
+    }
+
     func removeSensitiveTextClips() {
         guard preferences.skipSensitive else { return }
         perform {
@@ -191,7 +208,10 @@ extension AppModel {
         }
         perform {
             let id = try store?.insert(text: text, image: image, source: source?.localizedName ?? "Unknown app")
-            if id != nil { reload() }
+            if let id {
+                lastCapture = (id, expectedChange)
+                reload()
+            }
             if image != nil { recognizePendingImages() }
         }
     }

@@ -26,7 +26,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         item.button?.target = self
         item.button?.action = #selector(togglePanel(_:))
         statusItem = item
-        model.onSkippedSensitive = { [weak self] kind in self?.showSkipNotice(kind) }
+        model.onSkippedSensitive = { [weak self] kind in self?.showNotice("Didn’t save a \(kind.rawValue)") }
+        KeyboardShortcuts.onKeyUp(for: .forgetLastCopy) { [weak self] in
+            self?.model.forgetLastCopy()
+            self?.showNotice("Forgot your last copy")
+        }
         KeyboardShortcuts.onKeyUp(for: .showHistory) { [weak self] in self?.togglePanel(nil) }
         if !model.preferences.hasStarted || ProcessInfo.processInfo.arguments.contains("--demo") {
             showPanel()
@@ -38,15 +42,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         return true
     }
 
-    private func showSkipNotice(_ kind: SensitiveContent) {
+    private func showNotice(_ message: String) {
         guard let button = statusItem?.button else { return }
         skipNoticeID += 1
         let id = skipNoticeID
-        let image = NSImage(systemSymbolName: "hand.raised.fill", accessibilityDescription: "Clip not saved")
+        let image = NSImage(systemSymbolName: "hand.raised.fill", accessibilityDescription: message)
         image?.isTemplate = true
         button.image = image
-        button.toolTip = "Didn’t save a \(kind.rawValue)"
-        button.setAccessibilityLabel("On Hand didn’t save a \(kind.rawValue)")
+        button.toolTip = message
+        button.setAccessibilityLabel("On Hand: \(message)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self, id == self.skipNoticeID, let button = self.statusItem?.button else { return }
             button.image = BrandIcon.image(size: 19)

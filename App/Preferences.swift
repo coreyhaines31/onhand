@@ -4,6 +4,8 @@ import OnHandCore
 
 extension KeyboardShortcuts.Name {
     static let showHistory = Self("showHistory", default: .init(.space, modifiers: [.command, .shift]))
+    static let forgetLastCopy = Self("forgetLastCopy",
+                                     default: .init(.delete, modifiers: [.control, .option, .command]))
 }
 
 @MainActor

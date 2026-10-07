@@ -7,6 +7,8 @@ struct ShortcutHelp: View {
             Text("Keyboard shortcuts").font(.headline)
             shortcut("Open or close On Hand",
                      KeyboardShortcuts.getShortcut(for: .showHistory)?.description ?? "Not set")
+            shortcut("Forget last copy",
+                     KeyboardShortcuts.getShortcut(for: .forgetLastCopy)?.description ?? "Not set")
             Divider()
             shortcut("Select a clip", "↑ ↓")
             shortcut("Copy selected clip", "Return")

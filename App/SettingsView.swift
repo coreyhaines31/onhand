@@ -15,6 +15,7 @@ struct SettingsView: View {
         Form {
             Section("General") {
                 KeyboardShortcuts.Recorder("Open On Hand:", name: .showHistory)
+                KeyboardShortcuts.Recorder("Forget last copy:", name: .forgetLastCopy)
                 Toggle("Keep history open while switching apps", isOn: $preferences.keepOpen)
                 Toggle("Launch at login", isOn: $launchAtLogin)
                     .onChange(of: launchAtLogin) { _, enabled in
