@@ -5,6 +5,7 @@ import { siteUrl } from "@/lib/site";
 const paths = [
   "/",
   "/mac-clipboard-history",
+  "/best-clipboard-managers-for-mac",
   "/alternatives",
   ...alternatives.map(({ slug }) => `/alternatives/${slug}`),
   "/install",

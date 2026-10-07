@@ -37,6 +37,8 @@ export default function Alternatives() {
           ))}
         </ul>
         <p>
+          Want a recommendation? See{" "}
+          <Link href="/best-clipboard-managers-for-mac">the best clipboard managers for Mac</Link>.
           Not sure you need one? Read{" "}
           <Link href="/mac-clipboard-history">how to see clipboard history on Mac</Link>, including
           what macOS Tahoe has built in.
