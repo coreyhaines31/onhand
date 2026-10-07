@@ -69,7 +69,8 @@ public final class HistoryStore {
         return name
     }
 
-    public func renameBoard(_ name: String, to newName: String) throws {
+    @discardableResult
+    public func renameBoard(_ name: String, to newName: String) throws -> String {
         let newName = try Self.boardName(newName)
         let taken = try boards().contains {
             $0.caseInsensitiveCompare(newName) == .orderedSame && $0.caseInsensitiveCompare(name) != .orderedSame
@@ -79,6 +80,7 @@ public final class HistoryStore {
             try db.execute("UPDATE boards SET name = ? WHERE name = ?", [.text(newName), .text(name)])
             try db.execute("UPDATE clips SET board = ? WHERE board = ?", [.text(newName), .text(name)])
         }
+        return newName
     }
 
     /// Deletes a board. Its clips stay pinned.

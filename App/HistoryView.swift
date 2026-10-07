@@ -6,6 +6,10 @@ struct HistoryView: View {
     let onCopy: (Clip) -> Void
     let onSettings: () -> Void
     @State private var showingShortcuts = false
+    @State private var creatingBoard = false
+    @State private var renamingBoard: String?
+    @State private var boardName = ""
+    @State private var boardClip: Clip?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -34,6 +38,22 @@ struct HistoryView: View {
         }
         .onChange(of: model.query) { model.selectedID = model.visibleClips.first?.id }
         .onChange(of: model.filter) { model.selectedID = model.visibleClips.first?.id }
+        .onChange(of: model.board) { model.selectedID = model.visibleClips.first?.id }
+        .alert("New board", isPresented: $creatingBoard) {
+            TextField("Name", text: $boardName)
+            Button("Create") { model.createBoard(boardName, pinning: boardClip) }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(boardClip == nil ? "Group pinned clips, like snippets or addresses."
+                                  : "The clip will be pinned to it.")
+        }
+        .alert("Rename board", isPresented: Binding(
+            get: { renamingBoard != nil }, set: { if !$0 { renamingBoard = nil } }
+        )) {
+            TextField("Name", text: $boardName)
+            Button("Rename") { if let renamingBoard { model.renameBoard(renamingBoard, to: boardName) } }
+            Button("Cancel", role: .cancel) {}
+        }
         .onMoveCommand { direction in move(direction) }
         .alert("On Hand needs attention", isPresented: Binding(
             get: { model.errorMessage != nil }, set: { if !$0 { model.errorMessage = nil } }
@@ -85,6 +105,7 @@ struct HistoryView: View {
             Picker("Show", selection: $model.filter) {
                 ForEach(["All", "Pinned", "Links", "Images"], id: \.self) { Text($0).tag($0) }
             }.pickerStyle(.segmented).labelsHidden()
+            if model.filter == "Pinned" { boardBar }
             HStack {
                 Text(model.query.isEmpty ? "Clipboard history" : "Search results")
                     .font(.subheadline.weight(.medium))
@@ -93,6 +114,38 @@ struct HistoryView: View {
                     .font(.caption).monospacedDigit()
             }.foregroundStyle(.secondary)
         }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 6)
+    }
+
+    private var boardBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                boardChip("All pinned", selected: model.board == nil) { model.board = nil }
+                ForEach(model.boards, id: \.self) { name in
+                    boardChip(name, selected: model.board == name) { model.board = name }
+                        .contextMenu {
+                            Button("Rename…") { boardName = name; renamingBoard = name }
+                            Button("Delete Board", role: .destructive) { model.deleteBoard(name) }
+                        }
+                }
+                Button { newBoard(pinning: nil) } label: { Image(systemName: "plus").font(.caption) }
+                    .buttonStyle(.borderless).help("New board").accessibilityLabel("New board")
+            }
+        }
+    }
+
+    private func boardChip(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title).font(.caption).padding(.horizontal, 10).padding(.vertical, 4)
+                .foregroundStyle(selected ? Color.accentColor : .primary)
+                .background(selected ? Color.accentColor.opacity(0.14) : Color.primary.opacity(0.06), in: Capsule())
+        }
+        .buttonStyle(.plain).accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    private func newBoard(pinning clip: Clip?) {
+        boardName = ""
+        boardClip = clip
+        creatingBoard = true
     }
 
     private var history: some View {
@@ -114,6 +167,8 @@ struct HistoryView: View {
                                         selected: model.selectedID == clip.id, copied: model.copiedID == clip.id,
                                         image: clip.kind == .image ? model.preview(clip) : nil,
                                         onCopy: { onCopy(clip) }, onPin: { model.pin(clip) },
+                                        boards: model.boards, onPinToBoard: { model.pin(clip, to: $0) },
+                                        onNewBoard: { newBoard(pinning: clip) },
                                         onDelete: { model.delete(clip) },
                                         onPreview: { model.selectedID = clip.id; model.previewID = clip.id })
                                     .id(clip.id)
@@ -163,10 +218,14 @@ struct HistoryView: View {
 
     private var emptyTitle: String {
         if !model.query.isEmpty { return "Nothing here by that name." }
+        if model.filter == "Pinned", model.board != nil { return "Nothing on this board yet." }
         return model.filter == "Pinned" ? "Keep your favorites close." : "Ready when you copy."
     }
     private var emptyDetail: String {
         if !model.query.isEmpty { return "Try a different word or the name of the app you copied from." }
+        if model.filter == "Pinned", model.board != nil {
+            return "Right-click any clip and choose Pin to Board."
+        }
         if model.filter == "Pinned" { return "Pin any clip to keep it beyond your history limit." }
         return "Copy some text, a link, or an image. It will be waiting right here."
     }

@@ -10,6 +10,9 @@ struct ClipRow: View {
     let image: NSImage?
     let onCopy: () -> Void
     let onPin: () -> Void
+    let boards: [String]
+    let onPinToBoard: (String?) -> Void
+    let onNewBoard: () -> Void
     let onDelete: () -> Void
     let onPreview: () -> Void
     @State private var hovering = false
@@ -28,6 +31,7 @@ struct ClipRow: View {
                             Text("·")
                             Text(clip.createdAt, style: .relative)
                             if clip.isPinned { Image(systemName: "pin.fill").foregroundStyle(Color.accentColor) }
+                            if let board = clip.board { Text(board) }
                         }.font(.caption).foregroundStyle(.secondary).lineLimit(1)
                     }.frame(maxWidth: .infinity, alignment: .leading)
                 }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
@@ -55,6 +59,15 @@ struct ClipRow: View {
             Button("Copy", action: onCopy)
             Button("Preview", action: onPreview)
             Button(clip.isPinned ? "Unpin" : "Pin", action: onPin)
+            Menu("Pin to Board") {
+                ForEach(boards, id: \.self) { board in
+                    Button { onPinToBoard(board) } label: {
+                        if clip.board == board { Label(board, systemImage: "checkmark") } else { Text(board) }
+                    }
+                }
+                if !boards.isEmpty { Divider() }
+                Button("New Board…", action: onNewBoard)
+            }
             Divider()
             Button("Delete", role: .destructive, action: onDelete)
         }
