@@ -29,6 +29,14 @@ Complete release QA and merge the tested feature PR into `cf/development`. Creat
 
 Before replacing an existing release, test an upgrade from the previous signed version. The original ad-hoc developer preview has no updater; its users must install the first signed release manually. Confirm the update archive's signature matches the public key embedded in the app, and verify the public download checksum after publishing.
 
+After the release is published, point the Homebrew cask at it:
+
+```sh
+bash scripts/update-cask.sh 1.2.0
+```
+
+The script reads the checksum from the release's `SHA256SUMS.txt`, updates `Casks/onhand.rb` in `coreyhaines31/homebrew-tap` (adding it from `scripts/homebrew/onhand.rb` on first run), and pushes. The cask sets `auto_updates true`, so Homebrew users also receive Sparkle updates in the app.
+
 Do not overwrite published versioned archives. A changed binary requires a new version and build number.
 
 ## Website
