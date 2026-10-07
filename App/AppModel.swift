@@ -19,10 +19,12 @@ final class AppModel {
     var searchFocusRequest = 0
     var copiedID: String?
     var copySequence = 0
+    var onSkippedSensitive: ((SensitiveContent) -> Void)?
     private var store: HistoryStore?
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
     private var lastPrune = Date.distantPast
+    private var lastCapture: (id: String, change: Int)?
     private var isRecognizing = false
     private let previews = NSCache<NSString, NSImage>()
 
@@ -46,6 +48,7 @@ final class AppModel {
                 try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: file.path)
             }
             reload()
+            removeSensitiveTextClips()
             recognizePendingImages()
         } catch { errorMessage = "Could not open clipboard history. \(error.localizedDescription)" }
         if !isDemo {
@@ -129,11 +132,47 @@ final class AppModel {
         Task {
             let text = await Task.detached(priority: .utility) { TextRecognizer.text(in: data) }.value
             isRecognizing = false
+            let sensitive = preferences.skipSensitive ? SensitiveContent.detect(in: text) : nil
             do {
-                try store?.setRecognizedText(text, for: clip.id)
+                let isPinned = clips.first { $0.id == clip.id }?.isPinned ?? clip.isPinned
+                if let sensitive, !isPinned {
+                    try store?.remove(clip.id)
+                    previews.removeAllObjects()
+                    onSkippedSensitive?(sensitive)
+                } else {
+                    try store?.setRecognizedText(sensitive == nil ? text : "", for: clip.id)
+                }
             } catch { return }
             reload()
             recognizePendingImages()
+        }
+    }
+
+    /// Clears the system clipboard and deletes the clip On Hand saved from it, unless that clip is pinned.
+    func forgetLastCopy() {
+        let board = NSPasteboard.general
+        perform {
+            if let lastCapture, lastCapture.change == board.changeCount,
+               clips.first(where: { $0.id == lastCapture.id })?.isPinned == false {
+                try store?.remove(lastCapture.id)
+                previews.removeAllObjects()
+            }
+            lastCapture = nil
+            board.clearContents()
+            lastChange = board.changeCount
+            reload()
+        }
+    }
+
+    func removeSensitiveTextClips() {
+        guard preferences.skipSensitive else { return }
+        perform {
+            let sensitive = clips.filter {
+                !$0.isPinned && $0.kind != .image && SensitiveContent.detect(in: $0.text) != nil
+            }
+            guard !sensitive.isEmpty else { return }
+            for clip in sensitive { try store?.remove(clip.id) }
+            reload()
         }
     }
 
@@ -164,9 +203,16 @@ extension AppModel {
            data.count <= 10_000_000, NSImage(data: data) != nil { image = data }
         let text = image == nil ? (board.string(forType: .string) ?? "") : ""
         guard board.changeCount == expectedChange else { return }
+        if preferences.skipSensitive, let sensitive = SensitiveContent.detect(in: text) {
+            onSkippedSensitive?(sensitive)
+            return
+        }
         perform {
             let id = try store?.insert(text: text, image: image, source: source?.localizedName ?? "Unknown app")
-            if id != nil { reload() }
+            if let id {
+                lastCapture = (id, expectedChange)
+                reload()
+            }
             if image != nil { recognizePendingImages() }
         }
     }
