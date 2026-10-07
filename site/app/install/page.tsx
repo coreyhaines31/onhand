@@ -39,6 +39,11 @@ export default function Install() {
           Choose “Start keeping my clipboard.” Only new copies are captured.
         </li>
       </ol>
+      <h2>Install with Homebrew</h2>
+      <p>
+        If you use Homebrew, run <code>brew install --cask coreyhaines31/tap/onhand</code>. It
+        installs the same signed app, which keeps itself up to date.
+      </p>
       <h2>Everyday use</h2>
       <p>
         Press <strong>⌘⇧Space</strong> to open history. Search for a word or

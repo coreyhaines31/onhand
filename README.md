@@ -4,6 +4,14 @@ Everything you copy, close at hand.
 
 A native, local-first clipboard manager for macOS 14+. Built with Swift 6, SwiftUI/AppKit, SQLite, KeyboardShortcuts, and Sparkle. The website uses Next.js, React, and TypeScript and is ready for Vercel.
 
+## Install
+
+Download the signed app from [onhandformac.com](https://onhandformac.com), or install it with Homebrew:
+
+```sh
+brew install --cask coreyhaines31/tap/onhand
+```
+
 ## Features
 
 - Menu bar access and a customizable global shortcut (⌘⇧Space by default).
