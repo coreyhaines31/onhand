@@ -136,9 +136,9 @@ export default function Home() {
           <Search size={25} strokeWidth={1.5} />
           <h2>Find the link you lost.</h2>
           <p>
-            Search a word you remember or the app you copied from, even text
-            inside a screenshot. Filter by type and preview a clip before you
-            copy it back.
+            Search a word you remember or the app you copied from, even{" "}
+            <a href="/features/search-text-in-images">text inside a screenshot</a>.
+            Filter by type and preview a clip before you copy it back.
           </p>
         </article>
         <article>
