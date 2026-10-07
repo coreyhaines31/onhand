@@ -27,13 +27,16 @@ final class Database {
         )
         """)
         try execute("CREATE INDEX IF NOT EXISTS clips_created ON clips(created DESC)")
-        if try !columns("clips").contains("ocr") { try execute("ALTER TABLE clips ADD COLUMN ocr TEXT") }
+        let existing = try columns("clips")
+        if !existing.contains("ocr") { try execute("ALTER TABLE clips ADD COLUMN ocr TEXT") }
+        if !existing.contains("board") { try execute("ALTER TABLE clips ADD COLUMN board TEXT") }
+        try execute("CREATE TABLE IF NOT EXISTS boards (name TEXT PRIMARY KEY COLLATE NOCASE, created REAL NOT NULL)")
     }
 
     deinit { sqlite3_close(handle) }
 
     enum Value {
-        case text(String), blob(Data), number(Double), integer(Int)
+        case text(String), blob(Data), number(Double), integer(Int), null
     }
 
     func execute(_ sql: String, _ values: [Value] = []) throws {
@@ -58,8 +61,21 @@ final class Database {
                 text: string(statement, 2), data: payload, source: string(statement, 4),
                 createdAt: Date(timeIntervalSince1970: sqlite3_column_double(statement, 5)),
                 isPinned: sqlite3_column_int(statement, 6) != 0,
-                recognizedText: sqlite3_column_type(statement, 7) == SQLITE_NULL ? nil : string(statement, 7)
+                recognizedText: sqlite3_column_type(statement, 7) == SQLITE_NULL ? nil : string(statement, 7),
+                board: sqlite3_column_type(statement, 8) == SQLITE_NULL ? nil : string(statement, 8)
             ))
+        }
+    }
+
+    func strings(_ sql: String, _ values: [Value] = []) throws -> [String] {
+        let statement = try prepare(sql, values)
+        defer { sqlite3_finalize(statement) }
+        var result: [String] = []
+        while true {
+            let status = sqlite3_step(statement)
+            if status == SQLITE_DONE { return result }
+            guard status == SQLITE_ROW else { throw error() }
+            result.append(string(statement, 0))
         }
     }
 
@@ -103,6 +119,7 @@ final class Database {
                 }
             case .number(let number): status = sqlite3_bind_double(statement, index, number)
             case .integer(let integer): status = sqlite3_bind_int64(statement, index, Int64(integer))
+            case .null: status = sqlite3_bind_null(statement, index)
             }
             if status != SQLITE_OK {
                 sqlite3_finalize(statement)

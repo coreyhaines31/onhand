@@ -45,7 +45,54 @@ public final class HistoryStore {
     }
 
     public func togglePin(_ id: String) throws {
-        try db.execute("UPDATE clips SET pinned = 1 - pinned WHERE id = ?", [.text(id)])
+        try db.execute("UPDATE clips SET pinned = 1 - pinned, board = NULL WHERE id = ?", [.text(id)])
+    }
+
+    /// Pins a clip, optionally to a board. Passing nil keeps it pinned without a board.
+    public func pin(_ id: String, to board: String?) throws {
+        try db.execute("UPDATE clips SET pinned = 1, board = ? WHERE id = ?",
+                       [board.map { .text($0) } ?? .null, .text(id)])
+    }
+
+    public func boards() throws -> [String] {
+        try db.strings("SELECT name FROM boards ORDER BY created, name")
+    }
+
+    @discardableResult
+    public func createBoard(_ name: String, date: Date = Date()) throws -> String {
+        let name = try Self.boardName(name)
+        if let existing = try boards().first(where: { $0.caseInsensitiveCompare(name) == .orderedSame }) {
+            return existing
+        }
+        try db.execute("INSERT INTO boards(name, created) VALUES(?, ?)",
+                       [.text(name), .number(date.timeIntervalSince1970)])
+        return name
+    }
+
+    public func renameBoard(_ name: String, to newName: String) throws {
+        let newName = try Self.boardName(newName)
+        let taken = try boards().contains {
+            $0.caseInsensitiveCompare(newName) == .orderedSame && $0.caseInsensitiveCompare(name) != .orderedSame
+        }
+        guard !taken else { throw StorageError(message: "A board named “\(newName)” already exists.") }
+        try db.transaction {
+            try db.execute("UPDATE boards SET name = ? WHERE name = ?", [.text(newName), .text(name)])
+            try db.execute("UPDATE clips SET board = ? WHERE board = ?", [.text(newName), .text(name)])
+        }
+    }
+
+    /// Deletes a board. Its clips stay pinned.
+    public func deleteBoard(_ name: String) throws {
+        try db.transaction {
+            try db.execute("DELETE FROM boards WHERE name = ?", [.text(name)])
+            try db.execute("UPDATE clips SET board = NULL WHERE board = ?", [.text(name)])
+        }
+    }
+
+    private static func boardName(_ name: String) throws -> String {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { throw StorageError(message: "Give the board a name.") }
+        return String(trimmed.prefix(40))
     }
 
     public func remove(_ id: String) throws {
@@ -61,10 +108,11 @@ public final class HistoryStore {
     }
 
     public static func filtered(_ clips: [Clip], query: String, pinnedOnly: Bool = false,
-                                kind: Clip.Kind? = nil) -> [Clip] {
+                                kind: Clip.Kind? = nil, board: String? = nil) -> [Clip] {
         let words = query.split(whereSeparator: \.isWhitespace).map(String.init)
         return clips.filter { clip in
-            (!pinnedOnly || clip.isPinned) && (kind == nil || clip.kind == kind) && words.allSatisfy {
+            (!pinnedOnly || clip.isPinned) && (kind == nil || clip.kind == kind)
+                && (board == nil || clip.board == board) && words.allSatisfy {
                 [clip.text, clip.source, clip.title, clip.recognizedText ?? ""].joined(separator: " ")
                     .localizedStandardContains($0)
             }
