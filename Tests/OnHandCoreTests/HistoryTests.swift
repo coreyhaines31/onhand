@@ -132,3 +132,45 @@ import Testing
     #expect(try store.all().first?.isPinned == true)
     #expect(try store.nextImageNeedingRecognition()?.id == "a")
 }
+
+@Test func pinboardsGroupPinnedClips() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let snippet = try #require(try store.insert(text: "Thanks for reaching out!", source: "Mail"))
+    let address = try #require(try store.insert(text: "1 Infinite Loop", source: "Notes"))
+    try store.createBoard("  Snippets ", date: Date(timeIntervalSince1970: 1))
+    try store.createBoard("Addresses", date: Date(timeIntervalSince1970: 2))
+    #expect(try store.createBoard("snippets") == "Snippets")
+    #expect(try store.boards() == ["Snippets", "Addresses"])
+    try store.pin(snippet, to: "Snippets")
+    try store.pin(address, to: nil)
+    let clips = try store.all()
+    #expect(clips.filter { $0.isPinned }.count == 2)
+    #expect(HistoryStore.filtered(clips, query: "", pinnedOnly: true, board: "Snippets").map(\.id) == [snippet])
+    #expect(HistoryStore.filtered(clips, query: "", pinnedOnly: true).count == 2)
+}
+
+@Test func renamingAndDeletingBoardsKeepsClipsPinned() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let id = try #require(try store.insert(text: "Reply", source: "Mail"))
+    try store.createBoard("Replies")
+    try store.createBoard("Other")
+    try store.pin(id, to: "Replies")
+    #expect(throws: StorageError.self) { try store.renameBoard("Replies", to: "other") }
+    #expect(throws: StorageError.self) { try store.createBoard("   ") }
+    try store.renameBoard("Replies", to: "Canned replies")
+    #expect(try store.all()[0].board == "Canned replies")
+    try store.deleteBoard("Canned replies")
+    #expect(try store.boards() == ["Other"])
+    #expect(try store.all()[0].isPinned)
+    #expect(try store.all()[0].board == nil)
+}
+
+@Test func unpinningLeavesTheBoard() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let id = try #require(try store.insert(text: "Reply", source: "Mail"))
+    try store.createBoard("Replies")
+    try store.pin(id, to: "Replies")
+    try store.togglePin(id)
+    #expect(try store.all()[0].isPinned == false)
+    #expect(try store.all()[0].board == nil)
+}

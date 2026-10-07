@@ -7,6 +7,8 @@ import OnHandCore
 final class AppModel {
     let preferences: Preferences
     private(set) var clips: [Clip] = []
+    private(set) var boards: [String] = []
+    var board: String?
     var isPaused: Bool {
         get { preferences.isPaused }
         set { preferences.isPaused = newValue }
@@ -60,7 +62,8 @@ final class AppModel {
 
     var visibleClips: [Clip] {
         HistoryStore.filtered(clips, query: query, pinnedOnly: filter == "Pinned",
-                              kind: filter == "Images" ? .image : (filter == "Links" ? .link : nil))
+                              kind: filter == "Images" ? .image : (filter == "Links" ? .link : nil),
+                              board: filter == "Pinned" ? board : nil)
     }
 
     var selectedClip: Clip? {
@@ -85,12 +88,34 @@ final class AppModel {
         perform {
             try store?.prune(olderThan: Date().addingTimeInterval(-Double(preferences.retentionDays) * 86_400))
             clips = try store?.all() ?? []
+            boards = try store?.boards() ?? []
+            if let board, !boards.contains(board) { self.board = nil }
             if !visibleClips.contains(where: { $0.id == selectedID }) { selectedID = visibleClips.first?.id }
             if !clips.contains(where: { $0.id == previewID }) { previewID = nil }
         }
     }
 
     func pin(_ clip: Clip) { perform { try store?.togglePin(clip.id); reload() } }
+    func pin(_ clip: Clip, to board: String?) { perform { try store?.pin(clip.id, to: board); reload() } }
+
+    func createBoard(_ name: String, pinning clip: Clip? = nil) {
+        perform {
+            guard let store else { return }
+            let created = try store.createBoard(name)
+            if let clip { try store.pin(clip.id, to: created) }
+            reload()
+        }
+    }
+
+    func renameBoard(_ name: String, to newName: String) {
+        perform {
+            guard let renamed = try store?.renameBoard(name, to: newName) else { return }
+            if board == name { board = renamed }
+            reload()
+        }
+    }
+
+    func deleteBoard(_ name: String) { perform { try store?.deleteBoard(name); reload() } }
     func delete(_ clip: Clip) { perform { try store?.remove(clip.id); previews.removeAllObjects(); reload() } }
     func clear(keepPinned: Bool) {
         perform { try store?.clear(keepPinned: keepPinned); previews.removeAllObjects(); reload() }
@@ -229,7 +254,9 @@ extension AppModel {
             let id = try store?.insert(text: sample.0, source: sample.1,
                                       date: Date().addingTimeInterval(-Double(index * 120)))
             if index == 0, let id { try store?.togglePin(id) }
+            if index == 4, let id, let board = try store?.createBoard("Snippets") { try store?.pin(id, to: board) }
         }
+        try store?.createBoard("Addresses")
         if let image = Self.demoImage(text: "Order #4021 · Ships Thursday") {
             try store?.insert(image: image, source: "Screenshot", date: Date().addingTimeInterval(-60))
         }
