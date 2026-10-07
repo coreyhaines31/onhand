@@ -254,7 +254,9 @@ extension AppModel {
             let id = try store?.insert(text: sample.0, source: sample.1,
                                       date: Date().addingTimeInterval(-Double(index * 120)))
             if index == 0, let id { try store?.togglePin(id) }
+            if index == 4, let id, let board = try store?.createBoard("Snippets") { try store?.pin(id, to: board) }
         }
+        try store?.createBoard("Addresses")
         if let image = Self.demoImage(text: "Order #4021 · Ships Thursday") {
             try store?.insert(image: image, source: "Screenshot", date: Date().addingTimeInterval(-60))
         }
