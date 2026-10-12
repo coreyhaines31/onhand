@@ -23,7 +23,7 @@ struct HistoryView: View {
                                onCopy: { onCopy(clip) }, onPin: { model.pin(clip) })
             } else {
                 searchBar
-                if !model.recording { pausedBanner }
+                if model.isPaused { pausedBanner }
                 filters
                 history
                 Divider()
