@@ -633,7 +633,7 @@ kbd {
   flex: 1;
   min-height: 0;
   padding: 16px;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   overflow-y: auto;
   font-size: 13px;
   white-space: pre-wrap;
@@ -1046,13 +1046,13 @@ kbd {
   background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--line);
 }
-.document .copy-block code {
+.copy-block code {
   display: block;
   padding: 0;
   background: none;
   font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .copy-block button {
   position: absolute;
@@ -1067,4 +1067,48 @@ kbd {
 }
 .copy-block button:hover {
   color: var(--blue);
+}
+.quick-install {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 70px;
+  padding-block: 80px 0;
+}
+.quick-install > div {
+  min-width: 0;
+}
+.quick-install h2 {
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.9px;
+  font-weight: 600;
+}
+.quick-install p {
+  margin: 16px 0 18px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.quick-install a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--blue);
+}
+.quick-install h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+.quick-install .copy-block + h3 {
+  margin-top: 20px;
+}
+@media (max-width: 800px) {
+  .quick-install {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-block: 48px 0;
+  }
 }

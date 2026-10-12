@@ -9,8 +9,10 @@ import {
   Search,
 } from "lucide-react";
 import ClipboardDemo from "@/components/clipboard-demo";
+import CopyBlock from "@/components/copy-block";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
+import { agentPrompt, brewCommand } from "@/lib/install";
 import { downloadUrl as download, siteUrl, sourceUrl as source } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -172,6 +174,25 @@ export default function Home() {
         <a href="/privacy">
           Read the privacy policy <ArrowUpRight size={14} />
         </a>
+      </section>
+      <section id="install" className="quick-install wrap" aria-label="Install from the command line">
+        <div>
+          <h2>Install in one line.</h2>
+          <p>
+            Use Homebrew, or paste the prompt into Claude Code, Codex, or
+            another coding agent. It checks your Mac, verifies the download, and
+            opens On Hand.
+          </p>
+          <a href="/install">
+            More install options <ArrowUpRight size={14} />
+          </a>
+        </div>
+        <div>
+          <h3>Homebrew</h3>
+          <CopyBlock text={brewCommand} label="Homebrew install command" />
+          <h3>Coding agent prompt</h3>
+          <CopyBlock text={agentPrompt} label="coding agent prompt" />
+        </div>
       </section>
       <section id="questions" className="faq wrap">
         <h2>Before you download.</h2>
