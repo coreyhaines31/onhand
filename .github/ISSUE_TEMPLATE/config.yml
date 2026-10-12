@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/coreyhaines31/onhand/security
+    about: Report vulnerabilities privately, not as a public issue.
+  - name: Getting started and troubleshooting
+    url: https://github.com/coreyhaines31/onhand#troubleshooting
+    about: Answers to common questions, like why new copies aren't showing up.
