@@ -1,85 +1,118 @@
 # On Hand
 
-Everything you copy, close at hand.
+**Copy it once. Find it again.** On Hand is a free, open-source clipboard manager for Mac. It remembers the text, links, and images you copy, so you can search for them later and copy them back, and it keeps everything on your Mac.
 
-A native, local-first clipboard manager for macOS 14+. Built with Swift 6, SwiftUI/AppKit, SQLite, KeyboardShortcuts, and Sparkle. The website uses Next.js, React, and TypeScript and is ready for Vercel.
+<p align="center">
+  <img src="docs/images/history.png" alt="On Hand's history panel listing recent clips" width="360">
+</p>
+
+- **Search everything you copied**, including the text inside screenshots.
+- **Pin what you reuse** and group pins into boards, like Snippets or Addresses.
+- **Keyboard first:** open history from any app with ⌘⇧Space.
+- **Private by default:** no account, no sync, no analytics. Card numbers, Social Security numbers, and secret keys are never saved.
+
+[Website](https://onhandformac.com) · [Download](https://onhandformac.com/download) · [Releases](https://github.com/coreyhaines31/onhand/releases)
+
+## Requirements
+
+macOS 14 Sonoma or later, on Apple silicon or Intel.
 
 ## Install
 
-Download the signed app from [onhandformac.com](https://onhandformac.com), or install it with Homebrew:
+**Download:** get the latest release from [onhandformac.com](https://onhandformac.com/download), unzip it, and move **On Hand.app** to your Applications folder. The app is signed and notarized by Apple.
+
+**Homebrew:**
 
 ```sh
 brew install --cask coreyhaines31/tap/onhand
 ```
 
-## Features
+On Hand updates itself. Check anytime from ⋯ › Settings › Check for updates.
 
-- Menu bar access and a customizable global shortcut (⌘⇧Space by default).
-- Persistent text, link, and image history with deduplication.
-- Search by content or source app; filter pinned clips, links, or images.
-- Pin, preview, copy, or delete individual clips. The compact native panel follows the design of Spare and Midnight Oil.
-- Arrow keys and Return to copy; ⌘1–9 copies numbered results in the current search/filter. Paste normally with ⌘V.
-- ⌘O previews, ⌘P pins, and ⌘F focuses search. An in-app keyboard reference shows every shortcut.
-- Optional keep-open mode leaves history visible across app switches, with brief copy confirmation.
-- Explicit first-run opt-in, persistent pause, an excluded-app picker, and retention settings.
-- Launch at login through macOS ServiceManagement.
-- No account, telemetry, clipboard upload, or Accessibility permission needed.
+## Getting started
 
-## Build and run
+1. **Open On Hand** from Applications. A paperclip appears in your menu bar and the history window opens.
+2. **Choose "Start keeping my clipboard."** On Hand only saves things you copy from now on. It never imports what was on your clipboard before.
+3. **Copy something** in any app, the way you normally would.
+4. **Press ⌘⇧Space** (or click the paperclip) to open your history. Type to search, then press Return to copy a clip back.
+5. **Paste with ⌘V** in the app you're working in. On Hand switches you back to it automatically.
 
-Install full Xcode, XcodeGen, and SwiftLint. The Makefile uses `/Applications/Xcode.app/Contents/Developer` without changing the machine's selected toolchain.
+To have On Hand start with your Mac, turn on **Launch at login** in Settings.
+
+## Everyday use
+
+| Shortcut | What it does |
+|---|---|
+| ⌘⇧Space | Open or close history from any app (change it in Settings) |
+| ↑ ↓, then Return | Select a clip and copy it |
+| ⌘1–⌘9 | Copy one of the first nine results |
+| ⌘F | Search |
+| ⌘O | Preview the selected clip |
+| ⌘P | Pin or unpin the selected clip |
+| Esc | Leave a preview, or close history |
+| ⌃⌥⌘⌫ | Forget your last copy: deletes it from history and clears the clipboard |
+
+- **Filter** with the All, Pinned, Links, and Images tabs.
+- **Pin to a board:** right-click a clip and choose **Pin to Board**. Under **Pinned**, click a board to see just its clips. Pinned clips never expire.
+- **Find a screenshot by its text:** search for any word in it. Preview an image to select and copy its text.
+- **Copy several clips into another app:** turn on ⋯ › **Keep Window Open While Switching Apps**.
+- **Delete a clip:** right-click it and choose **Delete**.
+- **Pause capture** with the pause button in the header before copying something private.
+
+<p align="center">
+  <img src="docs/images/screenshot-text.png" alt="Previewing a copied screenshot with its recognized text" width="300">
+  &nbsp;
+  <img src="docs/images/pinboards.png" alt="Pinned clips grouped into boards" width="300">
+</p>
+
+## Privacy
+
+- **Everything stays on your Mac.** History is a local database in `~/Library/Application Support/OnHand`. Nothing is uploaded, and the app has no analytics. Text in images is recognized on your Mac with Apple's Vision framework.
+- **Sensitive copies are skipped.** On Hand ignores clipboard items that apps mark as concealed or temporary. It also excludes 1Password, Bitwarden, Apple Passwords, Dashlane, and LastPass by default, and doesn't save card numbers, US Social Security numbers, or common secret keys, including ones inside screenshots.
+- **These checks can't catch everything.** Addresses, passwords you type yourself, and other private details can still be saved. Pause capture first, or press ⌃⌥⌘⌫ to forget a copy.
+- **You control retention.** Unpinned clips expire after 7 days by default; choose 1, 7, 30, or 90 days in Settings. History holds up to 500 clips or 50 MB.
+
+Read the full [privacy policy](https://onhandformac.com/privacy).
+
+## Troubleshooting
+
+**Nothing new shows up in history.** Check whether capture is paused: a banner says so under the search field. Click **Resume**. Copies from excluded apps (Settings › Privacy) and copied files are never saved.
+
+**⌘⇧Space doesn't open On Hand.** Another app may use the same shortcut. Pick a different one in Settings › Open On Hand.
+
+**macOS asks whether On Hand can paste from other apps.** Choose **Allow**. On Hand needs to read the clipboard to save your history. You can change this later in System Settings › Privacy & Security.
+
+**I can't see the paperclip in the menu bar.** Your menu bar may be full or hiding icons. Press ⌘⇧Space instead, or open On Hand again from Applications.
+
+**A copy I expected was skipped.** On Hand skips text over 1 MB, images over 10 MB, and anything that looks like a card number, Social Security number, or secret key. The menu bar icon briefly shows a raised hand when it skips one of those. You can turn this off in Settings › Privacy.
+
+Something else? [Open an issue](https://github.com/coreyhaines31/onhand/issues/new/choose). Please describe the problem without pasting your real clipboard history.
+
+## Uninstall
+
+Quit On Hand from ⋯ › Settings, then drag **On Hand.app** to the Trash. To also delete your history and settings, remove:
+
+```
+~/Library/Application Support/OnHand
+~/Library/Preferences/com.onhandformac.OnHand.plist
+```
+
+With Homebrew, `brew uninstall --zap --cask onhand` does all of this.
+
+## Build from source
+
+You need macOS 14+, Xcode 16 or later, and [Homebrew](https://brew.sh).
 
 ```sh
+git clone https://github.com/coreyhaines31/onhand.git
+cd onhand
 brew install xcodegen swiftlint
-make test
-make lint
 make app
 open "dist/On Hand.app"
 ```
 
-`make app` generates the Xcode project, resolves pinned dependencies, creates the app icon, builds a release app, and applies an ad-hoc signature. The resulting app is for local development, not a notarized public distribution. The default local build uses the host architecture; the release script builds a universal binary.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for tests, project layout, and how to submit changes.
 
-The window appears on first launch. After onboarding, use the menu bar icon or ⌘⇧Space. Double-clicking the running app opens history. Selecting a clip copies it and returns focus to the previous application; press ⌘V to paste. Use the chevron to preview a clip without losing your search. In preview, Return copies, ⌘P pins, and Escape or ⌘[ goes back. Right-click a clip for deletion. Menu bar clicks open history beneath the icon; the global shortcut opens it centered. Enable Keep window open in the toolbar or Settings to reuse several clips across apps. Copying returns focus to the last destination app while keeping history visible. The global shortcut focuses an inactive open window without resetting your search; Escape still dismisses it.
+## License
 
-For a screenshot with synthetic data and no access to the real history, quit the app and run:
-
-```sh
-open "dist/On Hand.app" --args --demo
-```
-
-Demo mode uses an in-memory database, separate preferences, and no clipboard monitoring. Demo copy buttons still write the selected sample to the system clipboard.
-
-## Storage and privacy
-
-History is in `~/Library/Application Support/OnHand/history.sqlite`. The directory is owner-only and the database is mode `0600`. SQLite secure deletion is enabled; user backups and the current system clipboard are outside On Hand's control. The database is not separately encrypted; use FileVault for disk protection.
-
-History is capped at 500 items and 50 MB of content. New items evict the oldest unpinned entries. If pinned items fill the limit, capture fails visibly without deleting pins. Unpinned clips expire after 7 days by default (configurable to 1, 7, 30, or 90 days). Cleanup happens at startup, on refresh, and roughly once a minute while running.
-
-Concealed, transient, and autogenerated pasteboard types are ignored. Common password-manager apps are excluded by default. Use Add app in Settings to choose other applications; bundle identifiers remain available for advanced editing. This does not detect arbitrary secrets or guarantee that every password is excluded. Pause before copying sensitive content.
-
-Text clips over 1 MB, images over 10 MB, copied file references, and unsupported clipboard formats are skipped. Rich text is stored as plain text. Images retain their PNG or TIFF data; copy-back uses TIFF. Capture polls every 0.6 seconds, so copies made faster than that can be missed. The existing system clipboard is not imported on startup or resume.
-
-## Website
-
-```sh
-cd site
-npm ci
-npm run dev       # http://onhand.localhost:1355
-npm run lint
-npm run typecheck
-npm run build
-```
-
-Node 22+ is supported. The preview runs through portless. For Vercel, import this repository and set the root directory to `site`; no environment variables or database are required. Set the custom domain only after registering it.
-
-Public downloads are versioned GitHub release assets. The browser demo uses sample clips and only writes to the clipboard after a click; it never reads it. The website uses Fathom Analytics on production deployments; the native app has no analytics.
-
-## Distribution
-
-See [RELEASING.md](RELEASING.md) for cloud-managed Developer ID signing, notarization, universal builds, and signed Sparkle updates. Private signing keys stay in Keychain. Release builds include a public update key and GitHub-hosted feed; local developer builds leave Sparkle inactive.
-
-## License and commercial direction
-
-MIT; commercial use is allowed. The local app can remain open source while optional hosted sync, managed team services, or separate commercial extensions are offered later. MIT releases cannot be retroactively made proprietary. No sync or paid licensing is implemented in this MVP.
-
-Source, issues, and releases are public at https://github.com/coreyhaines31/onhand. The original developer preview must be replaced manually with the first signed release to receive future updates.
+[MIT](LICENSE). Free to use, modify, and share.
