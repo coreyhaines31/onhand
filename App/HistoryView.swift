@@ -75,25 +75,28 @@ struct HistoryView: View {
             Text(model.previewID == nil ? "On Hand" : "Clip preview").font(.headline)
             Spacer()
             if model.preferences.hasStarted {
-                Button { model.preferences.keepOpen.toggle() } label: {
-                    Image(systemName: "rectangle.on.rectangle")
-                        .foregroundStyle(model.preferences.keepOpen ? Color.accentColor : .secondary)
-                }
-                .buttonStyle(.borderless).help("Keep window open while switching apps")
-                .accessibilityLabel("Keep window open")
-                .accessibilityValue(model.preferences.keepOpen ? "On" : "Off")
                 Button { model.togglePause() } label: {
-                    Image(systemName: model.recording ? "pause" : "play")
+                    Image(systemName: model.recording ? "pause.circle" : "play.circle").font(.system(size: 15))
                 }
                 .buttonStyle(.borderless)
                 .help(model.recording ? "Pause capture" : "Resume capture")
                 .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
             }
-            Button { showingShortcuts.toggle() } label: { Image(systemName: "keyboard") }
-                .buttonStyle(.borderless).help("Keyboard shortcuts").accessibilityLabel("Keyboard shortcuts")
-                .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
-            Button(action: onSettings) { Image(systemName: "gearshape") }
-                .buttonStyle(.borderless).help("Settings").accessibilityLabel("Settings")
+            Menu {
+                if model.preferences.hasStarted {
+                    Toggle("Keep Window Open While Switching Apps", isOn: Binding(
+                        get: { model.preferences.keepOpen }, set: { model.preferences.keepOpen = $0 }
+                    ))
+                }
+                Button("Keyboard Shortcuts") { DispatchQueue.main.async { showingShortcuts = true } }
+                Divider()
+                Button("Settings…", action: onSettings)
+            } label: {
+                Image(systemName: "ellipsis.circle").font(.system(size: 15))
+            }
+            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
+            .help("More").accessibilityLabel("More")
+            .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
         }.padding(.horizontal, 16).padding(.vertical, 12)
     }
 
