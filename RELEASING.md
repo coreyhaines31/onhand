@@ -27,7 +27,7 @@ The stable update feed is `https://github.com/coreyhaines31/onhand/releases/late
 
 Complete release QA and merge the tested feature PR into `cf/development`. Create the version tag from that exact commit, then publish the generated ZIP, appcast, and checksum as a GitHub release. The latest-release feed requires a regular release, not a draft or prerelease.
 
-Before replacing an existing release, test an upgrade from the previous signed version. The original ad-hoc developer preview has no updater; its users must install the first signed release manually. Confirm the update archive's signature matches the public key embedded in the app, and verify the public download checksum after publishing.
+Before replacing an existing release, test an upgrade from the previous signed version. Confirm the update archive's signature matches the public key embedded in the app, and verify the public download checksum after publishing.
 
 After the release is published, point the Homebrew cask at it:
 
@@ -41,7 +41,7 @@ Do not overwrite published versioned archives. A changed binary requires a new v
 
 ## Website
 
-The website links to versioned GitHub release assets and the public source repository. Update the download URL when publishing a new version. Keep compatibility and installation copy aligned with the tested release.
+The website's `/download` route redirects to the latest release's `OnHand-<version>.zip` (cached for an hour), so it needs no change per release. Keep compatibility, installation, and privacy copy aligned with the tested release.
 
 Run `npm --prefix site run lint`, `npm --prefix site run typecheck`, and `npm --prefix site run build` before deploying. Fathom is enabled only for Vercel production builds. Deploy from the repository root with `vercel deploy --cwd site --prod --scope coreys-apps`.
 
