@@ -183,6 +183,9 @@ struct HistoryView: View {
                                         onPreview: { model.selectedID = clip.id; model.previewID = clip.id })
                                     .id(clip.id)
                             }
+                            if model.query.isEmpty, model.filter == "All", model.visibleClips.count < 4 {
+                                HistoryHint()
+                            }
                         }.padding(.horizontal, 8).padding(.bottom, 8)
                     }.onChange(of: model.selectedID) { _, id in
                         if let id { proxy.scrollTo(id, anchor: .center) }
