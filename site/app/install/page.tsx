@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CopyBlock from "@/components/copy-block";
+import { agentPrompt, brewCommand, terminalCommand } from "@/lib/install";
 import { downloadUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Install On Hand on your Mac",
@@ -40,10 +42,22 @@ export default function Install() {
         </li>
       </ol>
       <h2>Install with Homebrew</h2>
+      <CopyBlock text={brewCommand} label="Homebrew install command" />
+      <p>It installs the same signed app, which keeps itself up to date.</p>
+      <h2>Install from the Terminal</h2>
       <p>
-        If you use Homebrew, run <code>brew install --cask coreyhaines31/tap/onhand</code>. It
-        installs the same signed app, which keeps itself up to date.
+        Without Homebrew, this downloads the latest release, checks Apple’s
+        signature, installs it in Applications, and opens it. It stops if On
+        Hand is already installed; installed copies update themselves.
       </p>
+      <CopyBlock text={terminalCommand} label="Terminal install command" />
+      <h2>Install with a coding agent</h2>
+      <p>
+        Paste this into Claude Code, Codex, or another coding agent. It checks
+        your macOS version, asks before replacing an existing copy, verifies the
+        download, and opens On Hand.
+      </p>
+      <CopyBlock text={agentPrompt} label="coding agent prompt" />
       <h2>Everyday use</h2>
       <p>
         Press <strong>⌘⇧Space</strong> to open history. Search for a word or
@@ -53,12 +67,13 @@ export default function Install() {
       <p>
         Use <strong>⌘1–9</strong> to copy a numbered result, <strong>⌘O</strong>{" "}
         to preview, <strong>⌘P</strong> to pin, and <strong>⌘F</strong> to
-        search. The keyboard button in On Hand shows the shortcut reference.
+        search. <strong>⌃⌥⌘⌫</strong> forgets your last copy. The full list is
+        under ⋯ › Keyboard Shortcuts.
       </p>
       <p>
-        Turn on “Keep window open” to reuse several clips across apps. In
-        Settings, you can change the global shortcut, choose excluded apps,
-        adjust retention, pause capture, or clear history.
+        Turn on ⋯ › Keep Window Open While Switching Apps to reuse several clips
+        across apps. In Settings, you can change the shortcut, choose excluded
+        apps, adjust retention, turn on launch at login, or clear history.
       </p>
       <h2>Build it yourself</h2>
       <p>

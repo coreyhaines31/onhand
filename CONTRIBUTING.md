@@ -23,6 +23,20 @@ make app       # builds dist/On Hand.app
 
 The Makefile uses `/Applications/Xcode.app` directly, so it works even if `xcode-select` points somewhere else. `make app` generates the Xcode project with XcodeGen, resolves the pinned Swift packages, renders the app icon, and builds a release app with an ad-hoc signature for local use. Local builds don't check for updates.
 
+### Set up with a coding agent
+
+Paste this into Claude Code, Codex, or another coding agent:
+
+```text
+Set up On Hand (https://github.com/coreyhaines31/onhand) for development on this Mac.
+1. Check that macOS is 14 or later and that Xcode 16 or later is installed in /Applications. Stop and tell me if not.
+2. Clone the repository and install the build tools with `brew install xcodegen swiftlint`.
+3. Run `make test`, `make lint`, and `make app`, and show me any failures.
+4. Quit any installed copy of On Hand, then run `open "dist/On Hand.app" --args --demo`
+   so the app runs with sample clips and never reads my real clipboard history.
+5. Read CONTRIBUTING.md and summarize the ground rules before making any changes.
+```
+
 ## Run it without touching your history
 
 Quit any running copy of On Hand first, then:
