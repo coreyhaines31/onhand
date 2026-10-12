@@ -23,6 +23,7 @@ struct HistoryView: View {
                                onCopy: { onCopy(clip) }, onPin: { model.pin(clip) })
             } else {
                 searchBar
+                if !model.recording { pausedBanner }
                 filters
                 history
                 Divider()
@@ -100,6 +101,19 @@ struct HistoryView: View {
         HistorySearchField(text: $model.query, focusRequest: model.searchFocusRequest,
                            onSubmit: copySelected, onMove: move)
             .frame(height: 24).padding(.horizontal, 16).padding(.top, 14)
+    }
+
+    private var pausedBanner: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "pause.circle.fill").foregroundStyle(.orange)
+            Text("Capture is paused. New copies aren’t saved.")
+            Spacer()
+            Button("Resume") { model.togglePause() }.controlSize(.small)
+        }
+        .font(.callout)
+        .padding(.horizontal, 10).padding(.vertical, 7)
+        .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal, 16).padding(.top, 10)
     }
 
     private var filters: some View {
