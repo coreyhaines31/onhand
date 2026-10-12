@@ -35,6 +35,39 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         if !model.preferences.hasStarted || ProcessInfo.processInfo.arguments.contains("--demo") {
             showPanel()
         }
+        if ProcessInfo.processInfo.arguments.contains("--demo"), let path = Self.argument("--snapshot") {
+            stageSnapshot()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+                self?.writeSnapshot(to: path)
+                NSApp.terminate(nil)
+            }
+        }
+    }
+
+    /// Demo-only: `--snapshot PATH` with optional `--filter NAME`, `--board NAME`, `--query TEXT`, `--preview`
+    /// saves the panel as a PNG, for screenshots and design review.
+    private func stageSnapshot() {
+        if let filter = Self.argument("--filter") { model.filter = filter }
+        if let board = Self.argument("--board") { model.board = board }
+        if let query = Self.argument("--query") { model.query = query }
+        guard ProcessInfo.processInfo.arguments.contains("--preview") else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self else { return }
+            model.previewID = model.visibleClips.first?.id
+        }
+    }
+
+    private func writeSnapshot(to path: String) {
+        guard let view = panel?.contentView,
+              let bitmap = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return }
+        view.cacheDisplay(in: view.bounds, to: bitmap)
+        try? bitmap.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: path))
+    }
+
+    private static func argument(_ name: String) -> String? {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: name), arguments.indices.contains(index + 1) else { return nil }
+        return arguments[index + 1]
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

@@ -37,7 +37,8 @@ final class AppModel {
             if isDemo {
                 store = try HistoryStore(path: ":memory:")
                 preferences.hasStarted = true
-                isPaused = true
+                // The demo never polls the clipboard, so it can show either state safely.
+                isPaused = ProcessInfo.processInfo.arguments.contains("--paused")
                 try seedDemo()
             } else {
                 let folder = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
