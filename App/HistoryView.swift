@@ -117,19 +117,10 @@ struct HistoryView: View {
     }
 
     private var filters: some View {
-        VStack(spacing: 12) {
-            Picker("Show", selection: $model.filter) {
-                ForEach(["All", "Pinned", "Links", "Images"], id: \.self) { Text($0).tag($0) }
-            }.pickerStyle(.segmented).labelsHidden()
+        VStack(spacing: 10) {
+            FilterTabs(selection: $model.filter, options: ["All", "Pinned", "Links", "Images"])
             if model.filter == "Pinned" { boardBar }
-            HStack {
-                Text(model.query.isEmpty ? "Clipboard history" : "Search results")
-                    .font(.subheadline.weight(.medium))
-                Spacer()
-                Text(model.visibleClips.count == 1 ? "1 item" : "\(model.visibleClips.count) items")
-                    .font(.caption).monospacedDigit()
-            }.foregroundStyle(.secondary)
-        }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 6)
+        }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 8)
     }
 
     private var boardBar: some View {
@@ -203,6 +194,9 @@ struct HistoryView: View {
             Circle().fill(model.recording ? Color.green : .orange).frame(width: 5, height: 5)
             Text(model.recording ? "Capturing · On this Mac only" : "Capture paused")
                 .foregroundStyle(.secondary)
+            Text("·").foregroundStyle(.tertiary)
+            Text(model.visibleClips.count == 1 ? "1 item" : "\(model.visibleClips.count) items")
+                .foregroundStyle(.secondary).monospacedDigit()
             Spacer()
             Text(model.copiedID == nil ? "↑↓ select  ↵ copy" : "Copied · ⌘V to paste")
                 .foregroundStyle(model.copiedID == nil ? Color.secondary : Color.accentColor)
