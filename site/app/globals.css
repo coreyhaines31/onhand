@@ -1034,3 +1034,37 @@ kbd {
 .roundup th[scope="row"] {
   white-space: nowrap;
 }
+.copy-block {
+  position: relative;
+  margin: 12px 0 16px;
+}
+.copy-block pre {
+  margin: 0;
+  padding: 14px 72px 14px 16px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.document .copy-block code {
+  display: block;
+  padding: 0;
+  background: none;
+  font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.copy-block button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+}
+.copy-block button:hover {
+  color: var(--blue);
+}
