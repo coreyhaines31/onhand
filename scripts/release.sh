@@ -62,4 +62,8 @@ ditto -c -k --sequesterRsrc --keepParent "$app" "$RELEASE_DIR/updates/OnHand-$VE
   --link 'https://onhandformac.com' "$RELEASE_DIR/updates"
 "$SPARKLE_BIN/sign_update" --account "$SPARKLE_ACCOUNT" "$RELEASE_DIR/updates/appcast.xml"
 (cd "$RELEASE_DIR/updates" && shasum -a 256 "OnHand-$VERSION.zip" > SHA256SUMS.txt)
+# A version-less copy lets onhandformac.com/download point at releases/latest/download/OnHand.zip.
+# It lives outside updates/ so generate_appcast never lists it as a separate update.
+cp "$RELEASE_DIR/updates/OnHand-$VERSION.zip" "$RELEASE_DIR/OnHand.zip"
 printf 'Signed release and update feed ready: %s/updates\n' "$RELEASE_DIR"
+printf 'Also upload the stable download: %s/OnHand.zip\n' "$RELEASE_DIR"

@@ -25,7 +25,15 @@ The stable update feed is `https://github.com/coreyhaines31/onhand/releases/late
 
 ## Publish
 
-Complete release QA and merge the tested feature PR into `cf/development`. Create the version tag from that exact commit, then publish the generated ZIP, appcast, and checksum as a GitHub release. The latest-release feed requires a regular release, not a draft or prerelease.
+Complete release QA and merge the tested feature PR into `cf/development`. Create the version tag from that exact commit, then publish the generated ZIP, appcast, checksum, and the version-less `OnHand.zip` as a GitHub release:
+
+```sh
+R=dist/release.XXXXXX   # the directory release.sh printed
+gh release create v1.2.0 --target "$(git rev-parse HEAD)" --title "On Hand 1.2.0" --notes-file notes.md \
+  "$R/updates/OnHand-1.2.0.zip" "$R/updates/appcast.xml" "$R/updates/SHA256SUMS.txt" "$R/OnHand.zip"
+```
+
+`onhandformac.com/download` redirects to `releases/latest/download/OnHand.zip`, so a release without `OnHand.zip` breaks the website download. The latest-release feed requires a regular release, not a draft or prerelease.
 
 Before replacing an existing release, test an upgrade from the previous signed version. Confirm the update archive's signature matches the public key embedded in the app, and verify the public download checksum after publishing.
 
@@ -41,7 +49,7 @@ Do not overwrite published versioned archives. A changed binary requires a new v
 
 ## Website
 
-The website's `/download` route redirects to the latest release's `OnHand-<version>.zip` (cached for an hour), so it needs no change per release. Keep compatibility, installation, and privacy copy aligned with the tested release.
+The website's `/download` route redirects to `releases/latest/download/OnHand.zip`, so it needs no change per release as long as each release includes that asset. Keep compatibility, installation, and privacy copy aligned with the tested release.
 
 Run `npm --prefix site run lint`, `npm --prefix site run typecheck`, and `npm --prefix site run build` before deploying. Fathom is enabled only for Vercel production builds. Deploy from the repository root with `vercel deploy --cwd site --prod --scope coreys-apps`.
 
