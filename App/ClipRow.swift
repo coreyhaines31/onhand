@@ -30,8 +30,10 @@ struct ClipRow: View {
                             Text(clip.source)
                             Text("·")
                             Text(clip.createdAt, style: .relative)
-                            if clip.isPinned { Image(systemName: "pin.fill").foregroundStyle(Color.accentColor) }
-                            if let board = clip.board { Text(board) }
+                            if let board = clip.board {
+                                Text("·")
+                                Text(board)
+                            }
                         }.font(.caption).foregroundStyle(.secondary).lineLimit(1)
                     }.frame(maxWidth: .infinity, alignment: .leading)
                 }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
