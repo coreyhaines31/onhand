@@ -47,7 +47,8 @@ export default function Install() {
       <h2>Install from the Terminal</h2>
       <p>
         Without Homebrew, this downloads the latest release, checks Apple’s
-        signature, installs it in Applications, and opens it.
+        signature, installs it in Applications, and opens it. It stops if On
+        Hand is already installed; installed copies update themselves.
       </p>
       <CopyBlock text={terminalCommand} label="Terminal install command" />
       <h2>Install with a coding agent</h2>
