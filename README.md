@@ -3,7 +3,7 @@
 **Copy it once. Find it again.** On Hand is a free, open-source clipboard manager for Mac. It remembers the text, links, and images you copy, so you can search for them later and copy them back, and it keeps everything on your Mac.
 
 <p align="center">
-  <img src="docs/images/history.png" alt="On Hand's history panel listing recent clips" width="360">
+  <img src="docs/images/history.png" alt="On Hand's history panel listing recent clips" width="400">
 </p>
 
 - **Search everything you copied**, including the text inside screenshots.
@@ -60,9 +60,9 @@ To have On Hand start with your Mac, turn on **Launch at login** in Settings.
 - **Pause capture** with the pause button in the header before copying something private.
 
 <p align="center">
-  <img src="docs/images/screenshot-text.png" alt="Previewing a copied screenshot with its recognized text" width="300">
+  <img src="docs/images/screenshot-text.png" alt="Previewing a copied screenshot with its recognized text" width="330">
   &nbsp;
-  <img src="docs/images/pinboards.png" alt="Pinned clips grouped into boards" width="300">
+  <img src="docs/images/pinboards.png" alt="Pinned clips grouped into boards" width="330">
 </p>
 
 ## Privacy
