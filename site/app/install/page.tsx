@@ -66,12 +66,13 @@ export default function Install() {
       <p>
         Use <strong>⌘1–9</strong> to copy a numbered result, <strong>⌘O</strong>{" "}
         to preview, <strong>⌘P</strong> to pin, and <strong>⌘F</strong> to
-        search. The keyboard button in On Hand shows the shortcut reference.
+        search. <strong>⌃⌥⌘⌫</strong> forgets your last copy. The full list is
+        under ⋯ › Keyboard Shortcuts.
       </p>
       <p>
-        Turn on “Keep window open” to reuse several clips across apps. In
-        Settings, you can change the global shortcut, choose excluded apps,
-        adjust retention, pause capture, or clear history.
+        Turn on ⋯ › Keep Window Open While Switching Apps to reuse several clips
+        across apps. In Settings, you can change the shortcut, choose excluded
+        apps, adjust retention, turn on launch at login, or clear history.
       </p>
       <h2>Build it yourself</h2>
       <p>
