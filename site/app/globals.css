@@ -211,6 +211,35 @@ h1 span,
   color: #14243b;
   background: #fff;
 }
+.agent-install {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.agent-install button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #ffffffcc;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+}
+.agent-install button:hover {
+  color: var(--blue);
+  border-color: #c9dcf5;
+}
+.agent-install a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 .download-note {
   font-size: 11px;
   color: var(--muted);
@@ -746,7 +775,8 @@ kbd {
   .hero-copy {
     text-align: center;
   }
-  .hero-actions {
+  .hero-actions,
+  .agent-install {
     justify-content: center;
   }
   h1,

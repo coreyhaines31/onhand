@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import ClipboardDemo from "@/components/clipboard-demo";
 import CopyBlock from "@/components/copy-block";
+import CopyPromptButton from "@/components/copy-prompt-button";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
 import { agentPrompt, brewCommand } from "@/lib/install";
@@ -117,6 +118,7 @@ export default function Home() {
               View source code
             </a>
           </div>
+          <CopyPromptButton text={agentPrompt} />
           <p className="download-note">
             Free · Apple silicon and Intel · macOS 14+
             <br />
