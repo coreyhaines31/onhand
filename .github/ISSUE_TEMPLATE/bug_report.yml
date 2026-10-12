@@ -1,0 +1,49 @@
+name: Bug report
+description: Something in On Hand isn't working.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. **Please don't paste your real clipboard history** or screenshots of it. Use made-up examples instead.
+        For security problems, use [private reporting](https://github.com/coreyhaines31/onhand/security) instead of an issue.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Copy some text in Notes
+        2. Press ⌘⇧Space
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: On Hand version
+      description: Shown at the bottom of ⋯ › Settings.
+      placeholder: "1.2.0"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "macOS 26.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install it?
+      options:
+        - Downloaded from onhandformac.com or GitHub
+        - Homebrew
+        - Built from source
