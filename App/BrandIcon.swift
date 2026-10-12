@@ -2,33 +2,43 @@ import AppKit
 
 @MainActor
 enum BrandIcon {
+    /// The filled mark on a tile for the app icon, or the paperclip template glyph for the menu bar and in-app headers.
     static func image(size: CGFloat, appIcon: Bool = false) -> NSImage {
-        let image = NSImage(size: NSSize(width: size, height: size))
-        image.lockFocus()
-        let transform = NSAffineTransform()
-        transform.translateX(by: 0, yBy: size)
-        transform.scaleX(by: size / 64, yBy: -size / 64)
-        transform.concat()
-        if appIcon {
-            let tile = NSBezierPath(roundedRect: NSRect(x: 4, y: 4, width: 56, height: 56),
-                                    xRadius: 14, yRadius: 14)
-            NSGradient(starting: .white, ending: NSColor(calibratedRed: 0.76, green: 0.81, blue: 0.89, alpha: 1))?
-                .draw(in: tile, angle: 65)
-            NSColor.white.withAlphaComponent(0.9).setStroke()
-            tile.lineWidth = 0.7
-            tile.stroke()
+        guard appIcon else { return glyph(size: size) }
+        let image = NSImage(size: NSSize(width: size, height: size), flipped: false) { rect in
+            drawAppIcon(in: rect)
+            return true
         }
-        let ink = appIcon ? NSColor(calibratedRed: 0.22, green: 0.27, blue: 0.36, alpha: 1) : .black
-        ink.setFill()
-        drawSlip()
-        drawPocket()
-        image.unlockFocus()
-        image.isTemplate = !appIcon
         image.accessibilityDescription = "On Hand"
         return image
     }
 
-    private static func drawSlip() {
+    /// SF Symbols in the menu bar use a 15pt glyph in a 19pt slot; scale from that for other sizes.
+    private static func glyph(size: CGFloat) -> NSImage {
+        let configuration = NSImage.SymbolConfiguration(pointSize: size * 15 / 19, weight: .regular)
+        let image = NSImage(systemSymbolName: "paperclip", accessibilityDescription: "On Hand")?
+            .withSymbolConfiguration(configuration) ?? NSImage(size: NSSize(width: size, height: size))
+        image.isTemplate = true
+        return image
+    }
+
+    private static func drawAppIcon(in rect: NSRect) {
+        let transform = NSAffineTransform()
+        transform.translateX(by: 0, yBy: rect.height)
+        transform.scaleX(by: rect.width / 64, yBy: -rect.height / 64)
+        transform.concat()
+        let tile = NSBezierPath(roundedRect: NSRect(x: 4, y: 4, width: 56, height: 56), xRadius: 14, yRadius: 14)
+        NSGradient(starting: .white, ending: NSColor(calibratedRed: 0.76, green: 0.81, blue: 0.89, alpha: 1))?
+            .draw(in: tile, angle: 65)
+        NSColor.white.withAlphaComponent(0.9).setStroke()
+        tile.lineWidth = 0.7
+        tile.stroke()
+        NSColor(calibratedRed: 0.22, green: 0.27, blue: 0.36, alpha: 1).setFill()
+        slip().fill()
+        pocket().fill()
+    }
+
+    private static func slip() -> NSBezierPath {
         let slip = NSBezierPath()
         slip.move(to: NSPoint(x: 23, y: 20))
         slip.line(to: NSPoint(x: 40, y: 12))
@@ -41,10 +51,10 @@ enum BrandIcon {
         slip.curve(to: NSPoint(x: 23, y: 20), controlPoint1: NSPoint(x: 20, y: 27),
                    controlPoint2: NSPoint(x: 19, y: 22))
         slip.close()
-        slip.fill()
+        return slip
     }
 
-    private static func drawPocket() {
+    private static func pocket() -> NSBezierPath {
         let pocket = NSBezierPath()
         pocket.move(to: NSPoint(x: 18, y: 23))
         pocket.curve(to: NSPoint(x: 13, y: 29), controlPoint1: NSPoint(x: 15, y: 23),
@@ -64,6 +74,6 @@ enum BrandIcon {
         pocket.curve(to: NSPoint(x: 18, y: 23), controlPoint1: NSPoint(x: 19, y: 30),
                      controlPoint2: NSPoint(x: 16, y: 27))
         pocket.close()
-        pocket.fill()
+        return pocket
     }
 }
