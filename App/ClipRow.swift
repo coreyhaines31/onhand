@@ -29,7 +29,7 @@ struct ClipRow: View {
                         HStack(spacing: 6) {
                             Text(clip.source)
                             Text("·")
-                            Text(clip.createdAt, style: .relative)
+                            Text(ClipAge.label(for: clip.createdAt))
                             if let board = clip.board {
                                 Text("·")
                                 Text(board)
