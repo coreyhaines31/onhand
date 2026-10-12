@@ -29,8 +29,10 @@ struct HistoryView: View {
                 footer
             }
         }
-        .frame(width: HandLayout.width, height: HandLayout.height)
+        .frame(width: HandLayout.width)
+        .frame(minHeight: HandLayout.height, maxHeight: .infinity)
         .background(Color(nsColor: .windowBackgroundColor))
+        .ignoresSafeArea()
         .task(id: model.copySequence) {
             guard model.copiedID != nil else { return }
             try? await Task.sleep(for: .seconds(3))
