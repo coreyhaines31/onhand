@@ -29,14 +29,16 @@ struct ClipRow: View {
                         HStack(spacing: 6) {
                             Text(clip.source)
                             Text("·")
-                            Text(clip.createdAt, style: .relative)
-                            if clip.isPinned { Image(systemName: "pin.fill").foregroundStyle(Color.accentColor) }
-                            if let board = clip.board { Text(board) }
+                            Text(ClipAge.label(for: clip.createdAt))
+                            if let board = clip.board {
+                                Text("·")
+                                Text(board)
+                            }
                         }.font(.caption).foregroundStyle(.secondary).lineLimit(1)
                     }.frame(maxWidth: .infinity, alignment: .leading)
                 }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
             }.buttonStyle(.plain).help("Copy to clipboard")
-            if let shortcut {
+            if let shortcut, hovering || selected {
                 Text("⌘\(shortcut)").font(.system(size: 10)).monospacedDigit().foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
@@ -47,13 +49,12 @@ struct ClipRow: View {
                 Image(systemName: clip.isPinned ? "pin.fill" : "pin")
                     .foregroundStyle(clip.isPinned ? Color.accentColor : .secondary)
             }
-            .buttonStyle(.plain).opacity(hovering || clip.isPinned || selected ? 1 : 0.3)
+            .buttonStyle(.plain).opacity(hovering || clip.isPinned || selected ? 1 : 0)
             .accessibilityLabel(clip.isPinned ? "Unpin clip" : "Pin clip")
         }
         .padding(.horizontal, 8).padding(.vertical, 9)
         .background(selected ? Color.accentColor.opacity(0.1) : (hovering ? Color.primary.opacity(0.035) : .clear),
-                    in: RoundedRectangle(cornerRadius: 6))
-        .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(selected ? Color.accentColor.opacity(0.25) : .clear))
+                    in: RoundedRectangle(cornerRadius: 8))
         .onHover { hovering = $0 }
         .contextMenu {
             Button("Copy", action: onCopy)

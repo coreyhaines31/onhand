@@ -23,14 +23,17 @@ struct HistoryView: View {
                                onCopy: { onCopy(clip) }, onPin: { model.pin(clip) })
             } else {
                 searchBar
+                if model.isPaused { pausedBanner }
                 filters
                 history
                 Divider()
                 footer
             }
         }
-        .frame(width: HandLayout.width, height: HandLayout.height)
+        .frame(width: HandLayout.width)
+        .frame(minHeight: HandLayout.height, maxHeight: .infinity)
         .background(Color(nsColor: .windowBackgroundColor))
+        .ignoresSafeArea()
         .task(id: model.copySequence) {
             guard model.copiedID != nil else { return }
             try? await Task.sleep(for: .seconds(3))
@@ -72,25 +75,28 @@ struct HistoryView: View {
             Text(model.previewID == nil ? "On Hand" : "Clip preview").font(.headline)
             Spacer()
             if model.preferences.hasStarted {
-                Button { model.preferences.keepOpen.toggle() } label: {
-                    Image(systemName: "rectangle.on.rectangle")
-                        .foregroundStyle(model.preferences.keepOpen ? Color.accentColor : .secondary)
-                }
-                .buttonStyle(.borderless).help("Keep window open while switching apps")
-                .accessibilityLabel("Keep window open")
-                .accessibilityValue(model.preferences.keepOpen ? "On" : "Off")
                 Button { model.togglePause() } label: {
-                    Image(systemName: model.recording ? "pause" : "play")
+                    Image(systemName: model.recording ? "pause.circle" : "play.circle").font(.system(size: 15))
                 }
                 .buttonStyle(.borderless)
                 .help(model.recording ? "Pause capture" : "Resume capture")
                 .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
             }
-            Button { showingShortcuts.toggle() } label: { Image(systemName: "keyboard") }
-                .buttonStyle(.borderless).help("Keyboard shortcuts").accessibilityLabel("Keyboard shortcuts")
-                .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
-            Button(action: onSettings) { Image(systemName: "gearshape") }
-                .buttonStyle(.borderless).help("Settings").accessibilityLabel("Settings")
+            Menu {
+                if model.preferences.hasStarted {
+                    Toggle("Keep Window Open While Switching Apps", isOn: Binding(
+                        get: { model.preferences.keepOpen }, set: { model.preferences.keepOpen = $0 }
+                    ))
+                }
+                Button("Keyboard Shortcuts") { DispatchQueue.main.async { showingShortcuts = true } }
+                Divider()
+                Button("Settings…", action: onSettings)
+            } label: {
+                Image(systemName: "ellipsis.circle").font(.system(size: 15))
+            }
+            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
+            .help("More").accessibilityLabel("More")
+            .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
         }.padding(.horizontal, 16).padding(.vertical, 12)
     }
 
@@ -100,20 +106,24 @@ struct HistoryView: View {
             .frame(height: 24).padding(.horizontal, 16).padding(.top, 14)
     }
 
+    private var pausedBanner: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "pause.circle.fill").foregroundStyle(.orange)
+            Text("Capture is paused. New copies aren’t saved.")
+            Spacer()
+            Button("Resume") { model.togglePause() }.controlSize(.small)
+        }
+        .font(.callout)
+        .padding(.horizontal, 10).padding(.vertical, 7)
+        .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal, 16).padding(.top, 10)
+    }
+
     private var filters: some View {
-        VStack(spacing: 12) {
-            Picker("Show", selection: $model.filter) {
-                ForEach(["All", "Pinned", "Links", "Images"], id: \.self) { Text($0).tag($0) }
-            }.pickerStyle(.segmented).labelsHidden()
+        VStack(spacing: 10) {
+            FilterTabs(selection: $model.filter, options: ["All", "Pinned", "Links", "Images"])
             if model.filter == "Pinned" { boardBar }
-            HStack {
-                Text(model.query.isEmpty ? "Clipboard history" : "Search results")
-                    .font(.subheadline.weight(.medium))
-                Spacer()
-                Text(model.visibleClips.count == 1 ? "1 item" : "\(model.visibleClips.count) items")
-                    .font(.caption).monospacedDigit()
-            }.foregroundStyle(.secondary)
-        }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 6)
+        }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 8)
     }
 
     private var boardBar: some View {
@@ -173,6 +183,9 @@ struct HistoryView: View {
                                         onPreview: { model.selectedID = clip.id; model.previewID = clip.id })
                                     .id(clip.id)
                             }
+                            if model.query.isEmpty, model.filter == "All", model.visibleClips.count < 4 {
+                                HistoryHint()
+                            }
                         }.padding(.horizontal, 8).padding(.bottom, 8)
                     }.onChange(of: model.selectedID) { _, id in
                         if let id { proxy.scrollTo(id, anchor: .center) }
@@ -187,6 +200,9 @@ struct HistoryView: View {
             Circle().fill(model.recording ? Color.green : .orange).frame(width: 5, height: 5)
             Text(model.recording ? "Capturing · On this Mac only" : "Capture paused")
                 .foregroundStyle(.secondary)
+            Text("·").foregroundStyle(.tertiary)
+            Text(model.visibleClips.count == 1 ? "1 item" : "\(model.visibleClips.count) items")
+                .foregroundStyle(.secondary).monospacedDigit()
             Spacer()
             Text(model.copiedID == nil ? "↑↓ select  ↵ copy" : "Copied · ⌘V to paste")
                 .foregroundStyle(model.copiedID == nil ? Color.secondary : Color.accentColor)
