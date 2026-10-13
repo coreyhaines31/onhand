@@ -16,7 +16,8 @@ struct AppListView: View {
                 VStack(spacing: 0) {
                     ForEach(list.sorted(), id: \.self) { identifier in
                         HStack(spacing: 8) {
-                            Image(systemName: "app").foregroundStyle(.secondary)
+                            appIcon(identifier).resizable().frame(width: 18, height: 18)
+                                .accessibilityHidden(true)
                             Text(appName(identifier)).lineLimit(1).help(identifier)
                             Spacer()
                             Button { remove(identifier) } label: { Image(systemName: "minus.circle") }
@@ -54,6 +55,14 @@ struct AppListView: View {
     }
 
     private var list: Set<String> { Preferences.identifiers(identifiers) }
+
+    /// The app's own icon, so the list doesn't read as a column of checkboxes.
+    private func appIcon(_ identifier: String) -> Image {
+        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: identifier) else {
+            return Image(systemName: "questionmark.app.dashed")
+        }
+        return Image(nsImage: NSWorkspace.shared.icon(forFile: url.path))
+    }
 
     private func appName(_ identifier: String) -> String {
         guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: identifier) else {
