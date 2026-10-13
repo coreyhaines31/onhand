@@ -130,6 +130,7 @@ import Testing
     sqlite3_close(handle)
     let store = try HistoryStore(path: path)
     #expect(try store.all().first?.isPinned == true)
+    #expect(try store.all().first?.isSent == false)
     #expect(try store.nextImageNeedingRecognition()?.id == "a")
 }
 
@@ -204,4 +205,15 @@ import Testing
     let image = Data(repeating: 7, count: 16)
     #expect(try store.insert(image: image, source: "Test") == HistoryStore.id(image: image))
     #expect(HistoryStore.id(text: "Hello") != HistoryStore.id(text: "Hello "))
+}
+
+@Test func sentMessagesAreMarkedAndKeepTheMarkWhenCopied() throws {
+    let store = try HistoryStore(path: ":memory:")
+    try store.insert(text: "On my way", source: "Slack", sent: true)
+    try store.insert(text: "Copied text", source: "Safari")
+    #expect(HistoryStore.filtered(try store.all(), query: "", sentOnly: true).map(\.text) == ["On my way"])
+    try store.insert(text: "On my way", source: "Notes", date: Date().addingTimeInterval(5))
+    let clips = try store.all()
+    #expect(clips.count == 2)
+    #expect(clips.first { $0.text == "On my way" }?.isSent == true)
 }

@@ -10,6 +10,7 @@
 - **Pin what you reuse** and group pins into boards, like Snippets or Addresses.
 - **Keyboard first:** open history from any app with ⌘⇧Space.
 - **Private by default:** no account, no sync, no analytics. Card numbers, Social Security numbers, and secret keys are never saved.
+- **Keeps what you send, if you want it to:** turn on Sent messages and On Hand also saves what you send in apps you choose, like Slack, so you can find a message again or bring it back with ⌃⌥↑.
 - **Works with AI agents:** the `onhand` command lets Claude Code, Codex, or a script search and reuse your clips from Terminal.
 
 [Website](https://onhandformac.com) · [Download](https://onhandformac.com/download) · [Releases](https://github.com/coreyhaines31/onhand/releases)
@@ -72,6 +73,7 @@ To have On Hand start with your Mac, turn on **Launch at login** in Settings.
 | ⌘P | Pin or unpin the selected clip |
 | Esc | Leave a preview, or close history |
 | ⌃⌥⌘⌫ | Forget your last copy: deletes it from history and clears the clipboard |
+| ⌃⌥↑ / ⌃⌥↓ | In a message box, step back and forward through what you sent from that app (when Sent messages is on) |
 
 - **Filter** with the All, Pinned, Links, and Images tabs.
 - **Pin to a board:** right-click a clip and choose **Pin to Board**. Under **Pinned**, click a board to see just its clips. Pinned clips never expire.
@@ -79,6 +81,15 @@ To have On Hand start with your Mac, turn on **Launch at login** in Settings.
 - **Copy several clips into another app:** turn on ⋯ › **Keep Window Open While Switching Apps**.
 - **Delete a clip:** right-click it and choose **Delete**.
 - **Pause capture** with the pause button in the header before copying something private.
+
+### Sent messages
+
+Like ↑ in Terminal, but for every app you choose. Turn it on in ⋯ › Settings › **Sent messages**, then add the apps you send from, such as Slack, Messages, or Claude.
+
+- **What it saves:** when a message box empties after you send, On Hand saves what was in it as a clip labeled *Sent*. Find them under the **Sent** tab, or search like any other clip.
+- **Bring one back:** in a message box, press ⌃⌥↑ to fill in your last message from that app, again for the one before, and ⌃⌥↓ to go forward. Change the shortcuts in Settings.
+- **What it needs:** Accessibility access, which macOS asks for when you turn it on. On Hand uses it only to read the message box in the apps you listed. It never records keystrokes, and password fields are skipped. A message you delete all at once may also be saved.
+- **Where it works:** apps with standard text fields, including Slack, Messages, and Claude. Some apps don't share their text fields with macOS, and On Hand can't see messages sent from those.
 
 <p align="center">
   <img src="docs/images/screenshot-text.png" alt="Previewing a copied screenshot with its recognized text" width="330">
@@ -100,7 +111,7 @@ onhand pause                       # stop saving copies; `onhand resume` to star
 ```
 
 - **IDs** come from `onhand search`. Any unique start of one works, like a short Git hash.
-- **Everything else:** `unpin`, `boards`, `delete`, `forget-last` (clears the clipboard and deletes it from history), and `status`. Run `onhand help` for details.
+- **Everything else:** `unpin`, `boards`, `delete`, `forget-last` (clears the clipboard and deletes it from history), and `status`. `search --sent` lists only messages you sent. Run `onhand help` for details.
 - **`--json`** on `search`, `get`, `boards`, and `status` prints JSON for scripts.
 - It works whether or not On Hand is running, and the app picks up changes right away. `get --image out.png` saves an image clip.
 
@@ -124,6 +135,7 @@ Anything your agent reads with `onhand` is sent to its AI provider, like any fil
 - **Everything stays on your Mac.** History is a local database in `~/Library/Application Support/OnHand`. Nothing is uploaded, and the app has no analytics. Text in images is recognized on your Mac with Apple's Vision framework.
 - **Sensitive copies are skipped.** On Hand ignores clipboard items that apps mark as concealed or temporary. It also excludes 1Password, Bitwarden, Apple Passwords, Dashlane, and LastPass by default, and doesn't save card numbers, US Social Security numbers, or common secret keys, including ones inside screenshots.
 - **These checks can't catch everything.** Addresses, passwords you type yourself, and other private details can still be saved. Pause capture first, or press ⌃⌥⌘⌫ to forget a copy.
+- **Sent messages are off by default.** When you turn them on, On Hand reads only the message box in the apps you choose, never records keystrokes, skips password fields, and checks what you send for card numbers, Social Security numbers, and secret keys like any copy.
 - **Agents only see what they ask for.** The `onhand` command doesn't send anything anywhere itself, but whatever an AI agent reads with it goes to that agent's provider.
 - **You control retention.** Unpinned clips expire after 7 days by default; choose 1, 7, 30, or 90 days in Settings. History holds up to 500 clips or 50 MB.
 

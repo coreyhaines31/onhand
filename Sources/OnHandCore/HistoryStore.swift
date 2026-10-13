@@ -18,7 +18,7 @@ public final class HistoryStore {
 
     @discardableResult
     public func insert(text: String = "", image: Data? = nil, source: String,
-                       date: Date = Date()) throws -> String? {
+                       date: Date = Date(), sent: Bool = false) throws -> String? {
         let payload = image ?? Data()
         guard image != nil || !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
         guard payload.count <= 10_000_000, text.utf8.count <= 1_000_000 else { return nil }
@@ -26,10 +26,11 @@ public final class HistoryStore {
         let id = Self.id(text: text, image: image)
         return try db.transaction {
             try db.execute("""
-            INSERT INTO clips(id, kind, text, payload, source, created) VALUES(?, ?, ?, ?, ?, ?)
-            ON CONFLICT(id) DO UPDATE SET source=excluded.source, created=excluded.created
+            INSERT INTO clips(id, kind, text, payload, source, created, sent) VALUES(?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET source=excluded.source, created=excluded.created,
+                sent=MAX(sent, excluded.sent)
             """, [.text(id), .text(kind.rawValue), .text(text), .blob(payload),
-                  .text(source), .number(date.timeIntervalSince1970)])
+                  .text(source), .number(date.timeIntervalSince1970), .integer(sent ? 1 : 0)])
             try enforceLimits(protecting: id)
             return id
         }
@@ -128,10 +129,10 @@ public final class HistoryStore {
     }
 
     public static func filtered(_ clips: [Clip], query: String, pinnedOnly: Bool = false,
-                                kind: Clip.Kind? = nil, board: String? = nil) -> [Clip] {
+                                kind: Clip.Kind? = nil, board: String? = nil, sentOnly: Bool = false) -> [Clip] {
         let words = query.split(whereSeparator: \.isWhitespace).map(String.init)
         return clips.filter { clip in
-            (!pinnedOnly || clip.isPinned) && (kind == nil || clip.kind == kind)
+            (!pinnedOnly || clip.isPinned) && (!sentOnly || clip.isSent) && (kind == nil || clip.kind == kind)
                 && (board == nil || clip.board == board) && words.allSatisfy {
                 [clip.text, clip.source, clip.title, clip.recognizedText ?? ""].joined(separator: " ")
                     .localizedStandardContains($0)

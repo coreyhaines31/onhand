@@ -101,7 +101,8 @@ export default function CommandLine() {
         </table>
         <p>
           <code>search</code> takes <code>--kind text|link|image</code>, <code>--pinned</code>,{" "}
-          <code>--board NAME</code>, and <code>--limit N</code> (10 by default, at most 50). Run{" "}
+          <code>--sent</code> (messages you sent, when Sent messages is on), <code>--board NAME</code>,
+          and <code>--limit N</code> (10 by default, at most 50). Run{" "}
           <code>onhand help</code> for the full list.
         </p>
 

@@ -28,6 +28,10 @@ struct ClipRow: View {
                             .foregroundStyle(.primary)
                         HStack(spacing: 6) {
                             Text(clip.source)
+                            if clip.isSent {
+                                Text("·")
+                                Text("Sent")
+                            }
                             Text("·")
                             Text(ClipAge.label(for: clip.createdAt))
                             if let board = clip.board {

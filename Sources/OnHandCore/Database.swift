@@ -30,6 +30,7 @@ final class Database {
         let existing = try columns("clips")
         if !existing.contains("ocr") { try execute("ALTER TABLE clips ADD COLUMN ocr TEXT") }
         if !existing.contains("board") { try execute("ALTER TABLE clips ADD COLUMN board TEXT") }
+        if !existing.contains("sent") { try execute("ALTER TABLE clips ADD COLUMN sent INTEGER NOT NULL DEFAULT 0") }
         try execute("CREATE TABLE IF NOT EXISTS boards (name TEXT PRIMARY KEY COLLATE NOCASE, created REAL NOT NULL)")
     }
 
@@ -62,7 +63,8 @@ final class Database {
                 createdAt: Date(timeIntervalSince1970: sqlite3_column_double(statement, 5)),
                 isPinned: sqlite3_column_int(statement, 6) != 0,
                 recognizedText: sqlite3_column_type(statement, 7) == SQLITE_NULL ? nil : string(statement, 7),
-                board: sqlite3_column_type(statement, 8) == SQLITE_NULL ? nil : string(statement, 8)
+                board: sqlite3_column_type(statement, 8) == SQLITE_NULL ? nil : string(statement, 8),
+                isSent: sqlite3_column_int(statement, 9) != 0
             ))
         }
     }

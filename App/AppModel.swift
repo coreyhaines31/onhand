@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import KeyboardShortcuts
 import OnHandCore
 
 @MainActor
@@ -22,6 +23,8 @@ final class AppModel {
     var copiedID: String?
     var copySequence = 0
     var onSkippedSensitive: ((SensitiveContent) -> Void)?
+    let sentCapture = SentCapture()
+    private let isDemo = ProcessInfo.processInfo.arguments.contains("--demo")
     private var store: HistoryStore?
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
@@ -39,6 +42,7 @@ final class AppModel {
                 preferences.hasStarted = true
                 // The demo never polls the clipboard, so it can show either state safely.
                 isPaused = ProcessInfo.processInfo.arguments.contains("--paused")
+                preferences.saveSent = true
                 try seedDemo()
             } else {
                 try FileManager.default.createDirectory(at: HistoryLocation.folder(), withIntermediateDirectories: true,
@@ -52,6 +56,8 @@ final class AppModel {
             recognizePendingImages()
         } catch { errorMessage = "Could not open clipboard history. \(error.localizedDescription)" }
         if !isDemo {
+            sentCapture.onSent = { [weak self] text, app in self?.saveSent(text, from: app) }
+            syncSentCapture()
             timer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { [weak self] _ in
                 Task { @MainActor in self?.poll() }
             }
@@ -61,7 +67,7 @@ final class AppModel {
     var visibleClips: [Clip] {
         HistoryStore.filtered(clips, query: query, pinnedOnly: filter == "Pinned",
                               kind: filter == "Images" ? .image : (filter == "Links" ? .link : nil),
-                              board: filter == "Pinned" ? board : nil)
+                              board: filter == "Pinned" ? board : nil, sentOnly: filter == "Sent")
     }
 
     var selectedClip: Clip? {
@@ -75,6 +81,7 @@ final class AppModel {
     func start() {
         lastChange = NSPasteboard.general.changeCount
         preferences.hasStarted = true
+        syncSentCapture()
     }
 
     func togglePause() { setPaused(!isPaused) }
@@ -82,6 +89,41 @@ final class AppModel {
     func setPaused(_ paused: Bool) {
         lastChange = NSPasteboard.general.changeCount
         isPaused = paused
+        syncSentCapture()
+    }
+
+    /// Watches message fields only while capture is on, in the apps chosen in Settings, minus excluded apps.
+    func syncSentCapture() {
+        sentCapture.allowedApps = preferences.sentAppIDs.subtracting(preferences.exclusions)
+        // Demo mode never reads anything real, including message boxes.
+        sentCapture.isEnabled = !isDemo && preferences.saveSent && recording
+        // Leave ⌃⌥↑ and ⌃⌥↓ to other apps unless sent history is on.
+        if sentCapture.isEnabled {
+            KeyboardShortcuts.enable(.recallOlder, .recallNewer)
+        } else {
+            KeyboardShortcuts.disable(.recallOlder, .recallNewer)
+        }
+        if !preferences.saveSent, filter == "Sent" { filter = "All" }
+    }
+
+    private func saveSent(_ text: String, from app: String) {
+        guard recording else { return }
+        if preferences.skipSensitive, let sensitive = SensitiveContent.detect(in: text) {
+            onSkippedSensitive?(sensitive)
+            return
+        }
+        perform {
+            try store?.insert(text: text, source: app, sent: true)
+            reload()
+        }
+    }
+
+    /// Fills the message field with an earlier message sent from the same app. False if there's nothing to fill.
+    func recallSent(older: Bool) -> Bool {
+        guard let app = sentCapture.watchedApp else { return false }
+        let history = clips.filter { $0.isSent && $0.source == app }
+            .sorted { $0.createdAt < $1.createdAt }.map(\.text)
+        return sentCapture.recall(older: older, history: history)
     }
 
     func reload() {
@@ -265,6 +307,8 @@ extension AppModel {
             if index == 4, let id, let board = try store?.createBoard("Snippets") { try store?.pin(id, to: board) }
         }
         try store?.createBoard("Addresses")
+        try store?.insert(text: "Running five minutes late, save me a seat!", source: "Slack",
+                          date: Date().addingTimeInterval(-180), sent: true)
         if let image = Self.demoImage(text: "Order #4021 · Ships Thursday") {
             try store?.insert(image: image, source: "Screenshot", date: Date().addingTimeInterval(-60))
         }

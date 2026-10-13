@@ -2,36 +2,39 @@ import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct ExcludedAppsView: View {
-    @Bindable var preferences: Preferences
+struct AppListView: View {
+    let title: String
+    let emptyText: String
+    @Binding var identifiers: String
     @State private var choosingApps = false
     @State private var errorMessage: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Do not keep clips from these apps").font(.headline)
+            Text(title).font(.headline)
             ScrollView {
                 VStack(spacing: 0) {
-                    ForEach(preferences.exclusions.sorted(), id: \.self) { identifier in
+                    ForEach(list.sorted(), id: \.self) { identifier in
                         HStack(spacing: 8) {
-                            Image(systemName: "app").foregroundStyle(.secondary)
+                            appIcon(identifier).resizable().frame(width: 18, height: 18)
+                                .accessibilityHidden(true)
                             Text(appName(identifier)).lineLimit(1).help(identifier)
                             Spacer()
                             Button { remove(identifier) } label: { Image(systemName: "minus.circle") }
                                 .buttonStyle(.borderless).foregroundStyle(.secondary)
-                                .accessibilityLabel("Stop excluding \(appName(identifier))")
+                                .accessibilityLabel("Remove \(appName(identifier))")
                         }.padding(.vertical, 6)
                     }
-                    if preferences.exclusions.isEmpty {
-                        Text("No excluded apps").foregroundStyle(.secondary).padding(.vertical, 8)
+                    if list.isEmpty {
+                        Text(emptyText).foregroundStyle(.secondary).padding(.vertical, 8)
                     }
                 }
             }.frame(height: 135)
             Button("Add app…", systemImage: "plus") { choosingApps = true }
             DisclosureGroup("Edit bundle identifiers") {
-                TextEditor(text: $preferences.excludedApps)
+                TextEditor(text: $identifiers)
                     .font(.system(size: 11, design: .monospaced)).frame(height: 70)
-                    .border(.quaternary).accessibilityLabel("Excluded app bundle identifiers")
+                    .border(.quaternary).accessibilityLabel("\(title): bundle identifiers")
             }.font(.caption)
         }
         .fileImporter(isPresented: $choosingApps, allowedContentTypes: [.applicationBundle],
@@ -43,12 +46,22 @@ struct ExcludedAppsView: View {
                     errorMessage = "One of these apps has no bundle identifier. Choose a macOS application."
                     return
                 }
-                preferences.excludedApps = preferences.exclusions.union(identifiers).sorted().joined(separator: "\n")
+                self.identifiers = list.union(identifiers).sorted().joined(separator: "\n")
             } catch { errorMessage = error.localizedDescription }
         }
         .alert("Could not add app", isPresented: Binding(
             get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } }
         )) { Button("OK") { errorMessage = nil } } message: { Text(errorMessage ?? "") }
+    }
+
+    private var list: Set<String> { Preferences.identifiers(identifiers) }
+
+    /// The app's own icon, so the list doesn't read as a column of checkboxes.
+    private func appIcon(_ identifier: String) -> Image {
+        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: identifier) else {
+            return Image(systemName: "questionmark.app.dashed")
+        }
+        return Image(nsImage: NSWorkspace.shared.icon(forFile: url.path))
     }
 
     private func appName(_ identifier: String) -> String {
@@ -59,6 +72,6 @@ struct ExcludedAppsView: View {
     }
 
     private func remove(_ identifier: String) {
-        preferences.excludedApps = preferences.exclusions.subtracting([identifier]).sorted().joined(separator: "\n")
+        identifiers = list.subtracting([identifier]).sorted().joined(separator: "\n")
     }
 }

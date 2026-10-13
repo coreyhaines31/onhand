@@ -11,6 +11,8 @@ public struct Clip: Identifiable, Equatable, Sendable {
     public let isPinned: Bool
     public var recognizedText: String?
     public var board: String?
+    /// Saved because you sent it from a text field, not because you copied it.
+    public var isSent = false
 
     public var title: String {
         if kind == .image { return "Image" }
