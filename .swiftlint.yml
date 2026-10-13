@@ -1,5 +1,6 @@
 included:
   - App
+  - CLI
   - Sources/OnHandCore
   - Tests
 excluded:
