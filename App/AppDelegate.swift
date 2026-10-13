@@ -32,6 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             self?.showNotice("Forgot your last copy")
         }
         KeyboardShortcuts.onKeyUp(for: .showHistory) { [weak self] in self?.togglePanel(nil) }
+        if !ProcessInfo.processInfo.arguments.contains("--demo") { observeCommandLine() }
         if !model.preferences.hasStarted || ProcessInfo.processInfo.arguments.contains("--demo") {
             showPanel()
         }
@@ -41,6 +42,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                 self?.writeSnapshot(to: path)
                 NSApp.terminate(nil)
             }
+        }
+    }
+
+    /// The `onhand` command edits history directly, then tells the app to catch up.
+    private func observeCommandLine() {
+        let center = DistributedNotificationCenter.default()
+        for name in [AppSignal.historyChanged, AppSignal.pauseChanged, AppSignal.forgetLastCopy] {
+            center.addObserver(self, selector: #selector(commandLineSignal(_:)), name: name, object: nil,
+                               suspensionBehavior: .deliverImmediately)
+        }
+    }
+
+    @objc private func commandLineSignal(_ notification: Notification) {
+        switch notification.name {
+        case AppSignal.pauseChanged:
+            guard let paused = notification.userInfo?["paused"] as? Bool else { return }
+            model.setPaused(paused)
+        case AppSignal.forgetLastCopy:
+            model.forgetLastCopy()
+            showNotice("Forgot your last copy")
+        default: model.reloadAfterOutsideChange()
         }
     }
 
