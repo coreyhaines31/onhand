@@ -5,7 +5,8 @@ import ComparisonTable from "@/components/comparison-table";
 import DownloadCta from "@/components/download-cta";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
-import { alternatives, checkedOn, findAlternative } from "@/lib/alternatives";
+import { alternatives, checkedOn, checkedOnISO, findAlternative } from "@/lib/alternatives";
+import { siteUrl } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const alternative = findAlternative((await params).slug);
   if (!alternative) return {};
   const title = `${alternative.name} Alternative for Mac: On Hand vs ${alternative.name}`;
-  const description = `Compare ${alternative.name} and On Hand, a free, open-source clipboard manager for Mac. Price, features, and when to choose each.`;
+  const description = `${alternative.summary} How ${alternative.name} compares with On Hand, a free, open-source Mac clipboard manager, and when to choose each.`;
   const url = `/alternatives/${alternative.slug}`;
   return {
     title: { absolute: title },
@@ -34,11 +35,36 @@ export default async function AlternativePage({ params }: Props) {
   if (!alternative) notFound();
   const { name } = alternative;
   const others = alternatives.filter((other) => other.slug !== alternative.slug);
+  const url = `${siteUrl}/alternatives/${alternative.slug}`;
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: `A free ${name} alternative for Mac`,
+      description: alternative.verdict,
+      url,
+      dateModified: checkedOnISO,
+      author: { "@type": "Person", name: "Corey Haines" },
+      image: `${siteUrl}/opengraph-image`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Compare", item: `${siteUrl}/alternatives` },
+        { "@type": "ListItem", position: 2, name: `${name} alternative`, item: url },
+      ],
+    },
+  ];
 
   return (
     <>
       <SiteNav />
       <main className="document article wrap">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+        />
         <Link className="back" href="/alternatives">
           ← All clipboard managers
         </Link>

@@ -8,7 +8,7 @@ import { siteUrl } from "@/lib/site";
 
 const title = "The Best Clipboard Managers for Mac in 2026";
 const description =
-  "An honest guide to the best clipboard managers for Mac: free and open-source picks, apps that sync with iPhone, launcher add-ons, and what macOS Tahoe has built in.";
+  "An honest guide to the best clipboard managers for Mac: free and open-source picks, apps that sync with iPhone, launchers, and what macOS Tahoe has built in.";
 
 export const metadata: Metadata = {
   title: { absolute: title },

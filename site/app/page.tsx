@@ -78,6 +78,13 @@ const structuredData = [
     image: `${siteUrl}/opengraph-image`,
     operatingSystem: "macOS 14 or later",
     applicationCategory: "UtilitiesApplication",
+    featureList: [
+      "Searchable history of copied text, links, and images",
+      "Search the text inside copied screenshots",
+      "Pinned clips grouped into boards",
+      "Skips card numbers, Social Security numbers, and secret keys",
+      "onhand command-line tool for scripts and AI agents",
+    ],
     downloadUrl: `${siteUrl}${download}`,
     license: "https://opensource.org/licenses/MIT",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

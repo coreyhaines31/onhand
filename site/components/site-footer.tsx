@@ -11,6 +11,7 @@ export default function SiteFooter() {
         <Link href="/mac-clipboard-history">Mac clipboard history</Link>
         <Link href="/features/search-text-in-images">Search screenshots</Link>
         <Link href="/features/command-line">Command line</Link>
+        <Link href="/best-clipboard-managers-for-mac">Best clipboard managers</Link>
         <Link href="/alternatives">Compare</Link>
         <Link href="/install">Install</Link>
         <Link href="/privacy">Privacy</Link>
