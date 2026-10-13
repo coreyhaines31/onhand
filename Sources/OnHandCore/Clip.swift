@@ -16,4 +16,11 @@ public struct Clip: Identifiable, Equatable, Sendable {
         if kind == .image { return "Image" }
         return text.split(whereSeparator: \.isNewline).first.map(String.init) ?? text
     }
+
+    /// One line of at most `length` characters; for an image, its recognized text.
+    public func preview(length: Int = 80) -> String {
+        let source = kind == .image ? (recognizedText ?? "") : text
+        let line = source.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+        return line.count > length ? String(line.prefix(length - 1)) + "…" : line
+    }
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CopyBlock from "@/components/copy-block";
-import { agentPrompt, brewCommand, terminalCommand } from "@/lib/install";
+import { agentPrompt, brewCommand, cliLinkCommand, terminalCommand } from "@/lib/install";
 import { downloadUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Install On Hand on your Mac",
@@ -74,6 +74,17 @@ export default function Install() {
         Turn on ⋯ › Keep Window Open While Switching Apps to reuse several clips
         across apps. In Settings, you can change the shortcut, choose excluded
         apps, adjust retention, turn on launch at login, or clear history.
+      </p>
+      <h2>Use it from the command line</h2>
+      <p>
+        The <code>onhand</code> command lets you or an AI agent search history,
+        read a clip, copy it back, or pause capture from Terminal. Homebrew
+        links it for you. If you downloaded the app, link it once:
+      </p>
+      <CopyBlock text={cliLinkCommand} label="link command" />
+      <p>
+        See <Link href="/features/command-line">every command</Link> and the
+        line to add to your agent’s instructions.
       </p>
       <h2>Build it yourself</h2>
       <p>

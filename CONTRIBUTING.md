@@ -62,6 +62,7 @@ Combine it with `--filter Pinned`, `--board Snippets`, `--query coffee`, `--prev
 | `Sources/OnHandCore/` | The core library: SQLite history store, capture rules, sensitive-content detection, on-device text recognition. No UI. |
 | `Tests/OnHandCoreTests/` | Swift Testing tests for the core library (`make test`). |
 | `App/` | The macOS app: menu bar item, history panel (SwiftUI), settings, updates. |
+| `CLI/` | The `onhand` command. It's bundled at `On Hand.app/Contents/MacOS/onhand` and reads the same history file. |
 | `Resources/` | App icon and `Info.plist`. |
 | `project.yml` | XcodeGen spec: app target, version numbers, and pinned dependencies (KeyboardShortcuts, Sparkle). |
 | `scripts/` | Local build, app icon rendering, release, and Homebrew cask scripts. |
@@ -72,6 +73,14 @@ Combine it with `--filter Pinned`, `--board Snippets`, `--query coffee`, `--prev
 The app polls the general pasteboard about every 0.6 seconds. Each new copy is checked against `CapturePolicy` (concealed, transient, and auto-generated types, plus excluded apps) and `SensitiveContent` (card numbers, US Social Security numbers, secret keys) before it's saved. Images are saved first, then read in the background with `TextRecognizer`; if their text matches `SensitiveContent`, the image is deleted.
 
 History lives in `~/Library/Application Support/OnHand/history.sqlite`: owner-only permissions, SQLite secure delete on, not separately encrypted. It's capped at 500 clips and 50 MB, evicting the oldest unpinned clips first. Text over 1 MB, images over 10 MB, and copied files are skipped. Rich text is saved as plain text. New columns are added automatically when an older history file is opened, so add a test that opens an old-format file whenever you change the schema.
+
+To try the command against throwaway history instead of yours, point it at another home folder. Preferences, like pause, still use your real ones:
+
+```sh
+mkdir -p /tmp/onhand-home/Library/Application\ Support/OnHand
+touch /tmp/onhand-home/Library/Application\ Support/OnHand/history.sqlite
+CFFIXED_USER_HOME=/tmp/onhand-home "dist/On Hand.app/Contents/MacOS/onhand" status
+```
 
 ## Making a change
 

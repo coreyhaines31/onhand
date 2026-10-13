@@ -174,3 +174,34 @@ import Testing
     #expect(try store.all()[0].isPinned == false)
     #expect(try store.all()[0].board == nil)
 }
+
+@Test func clipLookupAcceptsUniqueIDPrefixes() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let id = try #require(try store.insert(text: "Hello", source: "Test"))
+    #expect(try store.clip(matching: id).text == "Hello")
+    #expect(try store.clip(matching: String(id.prefix(8)).uppercased()).id == id)
+    #expect(throws: StorageError.self) { try store.clip(matching: "abc") }
+    #expect(throws: StorageError.self) { try store.clip(matching: "zzzzzzzz") }
+    #expect(throws: StorageError.self) { try store.clip(matching: "%%%%") }
+    let other = String(id.prefix(4)) == "0000" ? "ffff" : "0000"
+    #expect(throws: StorageError.self) { try store.clip(matching: other + "0000") }
+}
+
+@Test func unpinClearsBoard() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let id = try #require(try store.insert(text: "Hello", source: "Test"))
+    try store.pin(id, to: try store.createBoard("Snippets"))
+    try store.unpin(id)
+    let clip = try store.clip(matching: id)
+    #expect(!clip.isPinned)
+    #expect(clip.board == nil)
+}
+
+@Test func idMatchesSavedClip() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let link = "https://example.com"
+    #expect(try store.insert(text: link, source: "Test") == HistoryStore.id(text: link))
+    let image = Data(repeating: 7, count: 16)
+    #expect(try store.insert(image: image, source: "Test") == HistoryStore.id(image: image))
+    #expect(HistoryStore.id(text: "Hello") != HistoryStore.id(text: "Hello "))
+}

@@ -23,8 +23,7 @@ public final class HistoryStore {
         guard image != nil || !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
         guard payload.count <= 10_000_000, text.utf8.count <= 1_000_000 else { return nil }
         let kind: Clip.Kind = image != nil ? .image : Self.kind(for: text)
-        let signature = Data(kind.rawValue.utf8) + (image ?? Data(text.utf8))
-        let id = SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined()
+        let id = Self.id(text: text, image: image)
         return try db.transaction {
             try db.execute("""
             INSERT INTO clips(id, kind, text, payload, source, created) VALUES(?, ?, ?, ?, ?, ?)
@@ -52,6 +51,25 @@ public final class HistoryStore {
     public func pin(_ id: String, to board: String?) throws {
         try db.execute("UPDATE clips SET pinned = 1, board = ? WHERE id = ?",
                        [board.map { .text($0) } ?? .null, .text(id)])
+    }
+
+    /// Finds a clip by its full ID or a unique prefix of at least 4 characters, like a short Git hash.
+    public func clip(matching prefix: String) throws -> Clip {
+        let prefix = prefix.lowercased()
+        guard prefix.count >= 4, prefix.count <= 64, prefix.allSatisfy(\.isHexDigit) else {
+            throw StorageError(message: "“\(prefix)” isn’t a clip ID.")
+        }
+        let matches = try db.clips("SELECT * FROM clips WHERE substr(id, 1, ?) = ? LIMIT 2",
+                                   [.integer(prefix.count), .text(prefix)])
+        guard matches.count == 1 else {
+            throw StorageError(message: matches.isEmpty ? "No clip has the ID “\(prefix)”."
+                               : "More than one clip starts with “\(prefix)”. Use more of the ID.")
+        }
+        return matches[0]
+    }
+
+    public func unpin(_ id: String) throws {
+        try db.execute("UPDATE clips SET pinned = 0, board = NULL WHERE id = ?", [.text(id)])
     }
 
     public func boards() throws -> [String] {
@@ -133,6 +151,13 @@ public final class HistoryStore {
         guard clips.count <= maximumCount, bytes <= maximumBytes else {
             throw StorageError(message: "History is full of pinned clips. Unpin or delete a clip to make room.")
         }
+    }
+
+    /// The ID a copy is saved under, so the same text or image is only kept once.
+    public static func id(text: String = "", image: Data? = nil) -> String {
+        let kind: Clip.Kind = image != nil ? .image : kind(for: text)
+        let signature = Data(kind.rawValue.utf8) + (image ?? Data(text.utf8))
+        return SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined()
     }
 
     private static func kind(for text: String) -> Clip.Kind {

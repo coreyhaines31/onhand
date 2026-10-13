@@ -966,6 +966,9 @@ kbd {
   border-collapse: collapse;
   font-size: 14px;
 }
+.document table + p {
+  margin-top: 18px;
+}
 .document th,
 .document td {
   text-align: left;
@@ -1120,6 +1123,13 @@ kbd {
   font-size: 15px;
   line-height: 1.7;
   color: var(--muted);
+}
+.quick-install p code {
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface);
+  padding: 2px 5px;
+  border-radius: 4px;
 }
 .quick-install a {
   display: inline-flex;

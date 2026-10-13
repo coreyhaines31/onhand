@@ -6,6 +6,7 @@ const paths = [
   "/",
   "/mac-clipboard-history",
   "/features/search-text-in-images",
+  "/features/command-line",
   "/best-clipboard-managers-for-mac",
   "/alternatives",
   ...alternatives.map(({ slug }) => `/alternatives/${slug}`),

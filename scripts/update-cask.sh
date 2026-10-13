@@ -17,6 +17,12 @@ CASK="$TAP/Casks/onhand.rb"
 # The first run adds the cask from scripts/homebrew.
 [ -f "$CASK" ] || cp "$TEMPLATE" "$CASK"
 sed -i '' -e "s/^  version \".*\"/  version \"$VERSION\"/" -e "s/^  sha256 \".*\"/  sha256 \"$SHA\"/" "$CASK"
+# Casks from before 1.3.0 don't link the onhand command yet.
+if ! grep -q '^  binary ' "$CASK"; then
+  sed -i '' '/^  app "On Hand.app"$/a\
+  binary "#{appdir}/On Hand.app/Contents/MacOS/onhand"
+' "$CASK"
+fi
 git -C "$TAP" add Casks/onhand.rb
 if git -C "$TAP" diff --cached --quiet; then
   echo "Cask already at $VERSION"

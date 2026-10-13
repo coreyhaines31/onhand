@@ -41,12 +41,9 @@ final class AppModel {
                 isPaused = ProcessInfo.processInfo.arguments.contains("--paused")
                 try seedDemo()
             } else {
-                let folder = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
-                                                        appropriateFor: nil, create: true)
-                    .appendingPathComponent("OnHand", isDirectory: true)
-                try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true,
+                try FileManager.default.createDirectory(at: HistoryLocation.folder(), withIntermediateDirectories: true,
                                                         attributes: [.posixPermissions: 0o700])
-                let file = folder.appendingPathComponent("history.sqlite")
+                let file = try HistoryLocation.file()
                 store = try HistoryStore(path: file.path)
                 try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: file.path)
             }
@@ -80,9 +77,11 @@ final class AppModel {
         preferences.hasStarted = true
     }
 
-    func togglePause() {
+    func togglePause() { setPaused(!isPaused) }
+
+    func setPaused(_ paused: Bool) {
         lastChange = NSPasteboard.general.changeCount
-        isPaused.toggle()
+        isPaused = paused
     }
 
     func reload() {
@@ -94,6 +93,12 @@ final class AppModel {
             if !visibleClips.contains(where: { $0.id == selectedID }) { selectedID = visibleClips.first?.id }
             if !clips.contains(where: { $0.id == previewID }) { previewID = nil }
         }
+    }
+
+    /// Another process, like the `onhand` command, changed the history file.
+    func reloadAfterOutsideChange() {
+        previews.removeAllObjects()
+        reload()
     }
 
     func pin(_ clip: Clip) { perform { try store?.togglePin(clip.id); reload() } }
@@ -132,7 +137,7 @@ final class AppModel {
             }
             item.setData(tiff, forType: .tiff)
         } else { item.setString(clip.text, forType: .string) }
-        item.setString("com.onhandformac.OnHand", forType: NSPasteboard.PasteboardType("org.nspasteboard.source"))
+        item.setString(HistoryLocation.bundleID, forType: Self.sourceType)
         board.clearContents()
         let success = board.writeObjects([item])
         lastChange = board.changeCount
@@ -222,7 +227,9 @@ extension AppModel {
             .union((board.pasteboardItems ?? []).flatMap { $0.types.map(\.rawValue) })
         guard CapturePolicy.allows(types: types, sourceBundleID: source?.bundleIdentifier,
                                    excludedApps: preferences.exclusions),
-              !types.contains(NSPasteboard.PasteboardType.fileURL.rawValue) else { return }
+              !types.contains(NSPasteboard.PasteboardType.fileURL.rawValue),
+              // Clips copied back with the `onhand` command are already in history.
+              board.string(forType: Self.sourceType) != HistoryLocation.bundleID else { return }
         let expectedChange = board.changeCount
         var image: Data?
         if let data = board.data(forType: .png) ?? board.data(forType: .tiff),
@@ -262,6 +269,8 @@ extension AppModel {
             try store?.insert(image: image, source: "Screenshot", date: Date().addingTimeInterval(-60))
         }
     }
+
+    static let sourceType = NSPasteboard.PasteboardType("org.nspasteboard.source")
 
     private static func demoImage(text: String) -> Data? {
         guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 720, pixelsHigh: 240,
