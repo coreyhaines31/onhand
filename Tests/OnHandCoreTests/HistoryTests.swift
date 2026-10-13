@@ -196,3 +196,12 @@ import Testing
     #expect(!clip.isPinned)
     #expect(clip.board == nil)
 }
+
+@Test func idMatchesSavedClip() throws {
+    let store = try HistoryStore(path: ":memory:")
+    let link = "https://example.com"
+    #expect(try store.insert(text: link, source: "Test") == HistoryStore.id(text: link))
+    let image = Data(repeating: 7, count: 16)
+    #expect(try store.insert(image: image, source: "Test") == HistoryStore.id(image: image))
+    #expect(HistoryStore.id(text: "Hello") != HistoryStore.id(text: "Hello "))
+}

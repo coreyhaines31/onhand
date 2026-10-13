@@ -20,5 +20,4 @@ public enum AppSignal {
     public static let historyChanged = Notification.Name("com.onhandformac.OnHand.historyChanged")
     /// userInfo carries `paused` as a Bool.
     public static let pauseChanged = Notification.Name("com.onhandformac.OnHand.pauseChanged")
-    public static let forgetLastCopy = Notification.Name("com.onhandformac.OnHand.forgetLastCopy")
 }

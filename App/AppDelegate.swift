@@ -48,22 +48,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     /// The `onhand` command edits history directly, then tells the app to catch up.
     private func observeCommandLine() {
         let center = DistributedNotificationCenter.default()
-        for name in [AppSignal.historyChanged, AppSignal.pauseChanged, AppSignal.forgetLastCopy] {
+        for name in [AppSignal.historyChanged, AppSignal.pauseChanged] {
             center.addObserver(self, selector: #selector(commandLineSignal(_:)), name: name, object: nil,
                                suspensionBehavior: .deliverImmediately)
         }
     }
 
     @objc private func commandLineSignal(_ notification: Notification) {
-        switch notification.name {
-        case AppSignal.pauseChanged:
+        if notification.name == AppSignal.pauseChanged {
             guard let paused = notification.userInfo?["paused"] as? Bool else { return }
             model.setPaused(paused)
-        case AppSignal.forgetLastCopy:
-            model.forgetLastCopy()
-            showNotice("Forgot your last copy")
-        default: model.reloadAfterOutsideChange()
-        }
+        } else { model.reloadAfterOutsideChange() }
     }
 
     /// Demo-only: `--snapshot PATH` with optional `--filter NAME`, `--board NAME`, `--query TEXT`, `--preview`
