@@ -32,6 +32,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             self?.showNotice("Forgot your last copy")
         }
         KeyboardShortcuts.onKeyUp(for: .showHistory) { [weak self] in self?.togglePanel(nil) }
+        for (name, older) in [(KeyboardShortcuts.Name.recallOlder, true), (.recallNewer, false)] {
+            KeyboardShortcuts.onKeyDown(for: name) { [weak self] in
+                guard let self, !self.model.recallSent(older: older) else { return }
+                self.showNotice("No sent messages to bring back here")
+            }
+        }
+        model.syncSentCapture()
         if !ProcessInfo.processInfo.arguments.contains("--demo") { observeCommandLine() }
         if !model.preferences.hasStarted || ProcessInfo.processInfo.arguments.contains("--demo") {
             showPanel()

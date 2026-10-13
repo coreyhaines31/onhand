@@ -51,10 +51,13 @@ struct SettingsView: View {
                      information.
                      """)
                     .font(.caption).foregroundStyle(.secondary)
-                ExcludedAppsView(preferences: preferences)
+                AppListView(title: "Do not keep clips from these apps", emptyText: "No excluded apps",
+                            identifiers: $preferences.excludedApps)
+                    .onChange(of: preferences.excludedApps) { model.syncSentCapture() }
                 Toggle("Include pinned clips when clearing", isOn: $includePinned)
                 Button("Clear history…", role: .destructive) { clearing = true }
             }
+            SentSettingsView(model: model)
             Section {
                 HStack {
                     Text("On Hand \(version)").foregroundStyle(.secondary)
