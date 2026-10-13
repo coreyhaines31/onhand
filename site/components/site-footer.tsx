@@ -10,6 +10,7 @@ export default function SiteFooter() {
       <div>
         <Link href="/mac-clipboard-history">Mac clipboard history</Link>
         <Link href="/features/search-text-in-images">Search screenshots</Link>
+        <Link href="/features/command-line">Command line</Link>
         <Link href="/alternatives">Compare</Link>
         <Link href="/install">Install</Link>
         <Link href="/privacy">Privacy</Link>
