@@ -24,6 +24,7 @@ final class AppModel {
     var copySequence = 0
     var onSkippedSensitive: ((SensitiveContent) -> Void)?
     let sentCapture = SentCapture()
+    private let isDemo = ProcessInfo.processInfo.arguments.contains("--demo")
     private var store: HistoryStore?
     private var timer: Timer?
     private var lastChange = NSPasteboard.general.changeCount
@@ -94,7 +95,8 @@ final class AppModel {
     /// Watches message fields only while capture is on, in the apps chosen in Settings, minus excluded apps.
     func syncSentCapture() {
         sentCapture.allowedApps = preferences.sentAppIDs.subtracting(preferences.exclusions)
-        sentCapture.isEnabled = preferences.saveSent && recording
+        // Demo mode never reads anything real, including message boxes.
+        sentCapture.isEnabled = !isDemo && preferences.saveSent && recording
         // Leave ⌃⌥↑ and ⌃⌥↓ to other apps unless sent history is on.
         if sentCapture.isEnabled {
             KeyboardShortcuts.enable(.recallOlder, .recallNewer)
