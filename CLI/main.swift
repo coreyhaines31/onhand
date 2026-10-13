@@ -6,7 +6,7 @@ let usage = """
 onhand: search and reuse your On Hand clipboard history from Terminal.
 
 Usage:
-  onhand search [WORDS...] [--kind text|link|image] [--pinned] [--board NAME] [--limit N] [--json]
+  onhand search [WORDS...] [--kind text|link|image] [--pinned] [--sent] [--board NAME] [--limit N] [--json]
   onhand get ID [--image FILE] [--json]
   onhand copy ID
   onhand pin ID [--board NAME]
@@ -20,6 +20,7 @@ Usage:
 
 Commands:
   search       List clips containing all the words, newest first, with one-line previews.
+               --sent lists only messages you sent (when Sent messages is on in Settings).
                Leave out the words to list recent clips. Shows 10 by default, at most 50.
   get          Print a clip's full text. For an image, print the text On Hand found in it;
                --image saves the image itself as a PNG.
@@ -55,7 +56,7 @@ struct Arguments {
 
 let valueOptions: Set = ["--kind", "--board", "--limit", "--image"]
 let commandOptions: [String: Set<String>] = [
-    "search": ["--kind", "--pinned", "--board", "--limit", "--json"], "get": ["--image", "--json"],
+    "search": ["--kind", "--pinned", "--sent", "--board", "--limit", "--json"], "get": ["--image", "--json"],
     "copy": [], "pin": ["--board"], "unpin": [], "boards": ["--json"], "delete": [], "forget-last": [],
     "pause": [], "resume": [], "status": ["--json"]
 ]
@@ -148,6 +149,7 @@ struct ClipSummary: Encodable {
     let copiedAt: Date
     let pinned: Bool
     let board: String?
+    let sent: Bool
 
     init(_ clip: Clip) {
         id = clip.id
@@ -157,6 +159,7 @@ struct ClipSummary: Encodable {
         copiedAt = clip.createdAt
         pinned = clip.isPinned
         board = clip.board
+        sent = clip.isSent
     }
 }
 
@@ -169,6 +172,7 @@ struct ClipDetail: Encodable {
     let copiedAt: Date
     let pinned: Bool
     let board: String?
+    let sent: Bool
 }
 
 // MARK: - Commands
@@ -191,7 +195,7 @@ func search(_ arguments: Arguments) {
     }
     let matches = HistoryStore.filtered(clips, query: arguments.words.joined(separator: " "),
                                         pinnedOnly: arguments.flags.contains("--pinned") || board != nil,
-                                        kind: kind)
+                                        kind: kind, sentOnly: arguments.flags.contains("--sent"))
         .filter { clip in board.map { clip.board?.caseInsensitiveCompare($0) == .orderedSame } ?? true }
     let shown = Array(matches.prefix(limit))
     if arguments.json { return printJSON(shown.map(ClipSummary.init)) }
@@ -200,7 +204,8 @@ func search(_ arguments: Arguments) {
     for clip in shown {
         let pin = clip.isPinned ? (clip.board ?? "Pinned") : ""
         let preview = clip.preview(length: 70)
-        print(shortID(clip), padded(clip.kind.rawValue, 6), padded(ClipAge.label(for: clip.createdAt), 9),
+        let type = clip.isSent ? "sent" : clip.kind.rawValue
+        print(shortID(clip), padded(type, 6), padded(ClipAge.label(for: clip.createdAt), 9),
               padded(clip.source, 13), padded(pin, 11), preview.isEmpty ? "(no text found)" : preview)
     }
     if matches.count > shown.count {
@@ -222,7 +227,8 @@ func get(_ arguments: Arguments) {
     if arguments.json {
         return printJSON(ClipDetail(id: clip.id, kind: clip.kind.rawValue, text: clip.text,
                                     recognizedText: clip.recognizedText, source: clip.source,
-                                    copiedAt: clip.createdAt, pinned: clip.isPinned, board: clip.board))
+                                    copiedAt: clip.createdAt, pinned: clip.isPinned, board: clip.board,
+                                    sent: clip.isSent))
     }
     guard clip.kind == .image else { return print(clip.text) }
     switch clip.recognizedText {
