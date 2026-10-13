@@ -17,6 +17,7 @@ final class SentCapture {
     private var field: AXUIElement?
     private var focused: AXUIElement?
     private var lastValue = ""
+    private var lastTitle: String?
     private var ignoreChangesUntil = Date.distantPast
     private var recallIndex: Int?
     private var timer: Timer?
@@ -116,6 +117,7 @@ final class SentCapture {
               let value = Self.text(of: element), value.utf16.count <= Self.largestField else { return }
         field = element
         lastValue = value
+        lastTitle = windowTitle()
         if let observer {
             AXObserverAddNotification(observer, element, kAXValueChangedNotification as CFString,
                                       Unmanaged.passUnretained(self).toOpaque())
@@ -126,7 +128,11 @@ final class SentCapture {
         guard let field, let value = Self.text(of: field), value != lastValue else { return }
         let previous = lastValue.trimmingCharacters(in: .whitespacesAndNewlines)
         lastValue = value
-        guard Date() >= ignoreChangesUntil else { return }
+        // Switching to another conversation swaps in that conversation's (often empty) draft. The window title
+        // names the conversation in apps like Slack and Messages, so an emptying that changes it isn't a send.
+        let title = windowTitle()
+        defer { lastTitle = title }
+        guard Date() >= ignoreChangesUntil, title == lastTitle else { return }
         // Emptying in one step is a send; shrinking a character at a time to empty is deleting.
         guard value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, previous.count > 1 else {
             if !value.isEmpty { recallIndex = nil }
@@ -156,6 +162,11 @@ final class SentCapture {
     }
 
     var watchedApp: String? { field == nil ? nil : appName }
+
+    private func windowTitle() -> String? {
+        guard let appElement, let window = Self.element(appElement, kAXFocusedWindowAttribute) else { return nil }
+        return Self.attribute(window, kAXTitleAttribute) as? String
+    }
 
     private static func attribute(_ element: AXUIElement, _ name: String) -> CFTypeRef? {
         var value: CFTypeRef?
