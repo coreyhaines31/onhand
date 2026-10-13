@@ -121,7 +121,8 @@ struct HistoryView: View {
 
     private var filters: some View {
         VStack(spacing: 10) {
-            FilterTabs(selection: $model.filter, options: ["All", "Pinned", "Links", "Images"])
+            FilterTabs(selection: $model.filter, options: model.preferences.saveSent
+                       ? ["All", "Pinned", "Links", "Images", "Sent"] : ["All", "Pinned", "Links", "Images"])
             if model.filter == "Pinned" { boardBar }
         }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 8)
     }
@@ -235,6 +236,7 @@ struct HistoryView: View {
     private var emptyTitle: String {
         if !model.query.isEmpty { return "Nothing here by that name." }
         if model.filter == "Pinned", model.board != nil { return "Nothing on this board yet." }
+        if model.filter == "Sent" { return "Nothing sent yet." }
         return model.filter == "Pinned" ? "Keep your favorites close." : "Ready when you copy."
     }
     private var emptyDetail: String {
@@ -243,6 +245,9 @@ struct HistoryView: View {
             return "Right-click any clip and choose Pin to Board."
         }
         if model.filter == "Pinned" { return "Pin any clip to keep it beyond your history limit." }
+        if model.filter == "Sent" {
+            return "Messages you send in the apps you chose in Settings show up here."
+        }
         return "Copy some text, a link, or an image. It will be waiting right here."
     }
     private func copySelected() {
