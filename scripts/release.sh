@@ -23,8 +23,10 @@ trap 'cp "$PLIST_BACKUP" Resources/Info.plist' EXIT
 xcodebuild -project OnHand.xcodeproj -scheme OnHand -configuration Release \
   -derivedDataPath .build-release -archivePath "$RELEASE_DIR/OnHand.xcarchive" \
   ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO archive
-codesign --force --sign - --options runtime \
-  "$RELEASE_DIR/OnHand.xcarchive/Products/Applications/On Hand.app"
+archived="$RELEASE_DIR/OnHand.xcarchive/Products/Applications/On Hand.app"
+# Sign the bundled onhand command first; the app's signature covers nested code.
+codesign --force --sign - --options runtime "$archived/Contents/MacOS/onhand"
+codesign --force --sign - --options runtime "$archived"
 export RELEASE_DIR APPLE_TEAM_ID
 python3 - <<'PY'
 import os
