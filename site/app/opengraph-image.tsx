@@ -21,9 +21,9 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20, fontSize: 40, fontWeight: 600 }}>
-          <svg width="72" height="72" viewBox="0 0 64 64" fill="#38455c">
-            <path d="M23 20L40 12C42 11 44 12 45 15L48 25C49 28 47 30 44 29L24 27C20 27 19 22 23 20Z" />
-            <path d="M18 23C15 23 13 25 13 29V38C13 49 20 54 31 54H33C44 54 51 49 51 38V29C51 28 51 27 50 26C52 31 48 33 44 32L23 30C19 30 16 27 18 23Z" />
+          <svg width="72" height="72" viewBox="0 0 64 64" fill="none" stroke="#38455c" strokeWidth="4.4"
+            strokeLinecap="round" strokeLinejoin="round">
+            <path transform="rotate(40 32 32)" d="M23 47V20a9 9 0 0 1 18 0v25a6.5 6.5 0 0 1-13 0V24a4 4 0 0 1 8 0v15" />
           </svg>
           On Hand
         </div>
