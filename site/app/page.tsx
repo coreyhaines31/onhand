@@ -55,6 +55,11 @@ const faqs: { question: string; answer: string; link?: { href: string; label: st
     link: { href: "/features/command-line", label: "See how the command works" },
   },
   {
+    question: "Can it save messages I send?",
+    answer:
+      "Yes, if you turn on Sent messages in Settings. In apps you choose, like Slack or Messages, On Hand saves what you send so you can find it again, and ⌃⌥↑ brings your last message back into the box, like ↑ in Terminal. It needs Accessibility access, reads only the message box, never records keystrokes, and skips password fields.",
+  },
+  {
     question: "Does it sync between Macs?",
     answer:
       "No. Your history stays on the Mac where you copied it. On Hand has no cloud sync.",

@@ -15,7 +15,7 @@ export default function Privacy() {
       <SiteNav />
       <main className="document wrap">
         <h1>Your clipboard stays local.</h1>
-        <p>On Hand 1.3.0 · Updated October 13, 2026</p>
+        <p>On Hand 1.4.0 · Updated October 13, 2026</p>
         <h2>What the app stores</h2>
         <p>
           On Hand stores text, links, and images locally in your Mac’s Application
@@ -52,6 +52,16 @@ export default function Privacy() {
           saved. Pause capture before copying sensitive information, or press
           ⌃⌥⌘⌫ to forget your last copy, which also clears the system clipboard.
           Clearing On Hand’s history does not clear backups.
+        </p>
+        <h2>Sent messages</h2>
+        <p>
+          Sent messages are off until you turn them on in Settings. Then, in the
+          apps you choose, On Hand uses macOS Accessibility access to read the
+          message box you’re typing in, and saves its text when it empties after
+          you send. It doesn’t record keystrokes, doesn’t watch other apps, and
+          skips password fields. Sent messages are stored, checked for sensitive
+          information, and expire like any other clip. A message you delete all
+          at once may also be saved; delete it from history like any clip.
         </p>
         <h2>The onhand command</h2>
         <p>
