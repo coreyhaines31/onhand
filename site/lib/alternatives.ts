@@ -38,6 +38,7 @@ export const comparisonRows: { key: keyof Comparison; label: string }[] = [
 ];
 
 export const checkedOn = "October 6, 2026";
+export const checkedOnISO = "2026-10-06";
 
 export const onHand: Comparison = {
   price: "Free",

@@ -5,7 +5,7 @@ import ComparisonTable from "@/components/comparison-table";
 import DownloadCta from "@/components/download-cta";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
-import { alternatives, checkedOn, findAlternative } from "@/lib/alternatives";
+import { alternatives, checkedOn, checkedOnISO, findAlternative } from "@/lib/alternatives";
 import { siteUrl } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -43,7 +43,7 @@ export default async function AlternativePage({ params }: Props) {
       headline: `A free ${name} alternative for Mac`,
       description: alternative.verdict,
       url,
-      dateModified: new Date(checkedOn).toISOString().slice(0, 10),
+      dateModified: checkedOnISO,
       author: { "@type": "Person", name: "Corey Haines" },
       image: `${siteUrl}/opengraph-image`,
     },
