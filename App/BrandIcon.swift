@@ -33,47 +33,31 @@ enum BrandIcon {
         NSColor.white.withAlphaComponent(0.9).setStroke()
         tile.lineWidth = 0.7
         tile.stroke()
-        NSColor(calibratedRed: 0.22, green: 0.27, blue: 0.36, alpha: 1).setFill()
-        slip().fill()
-        pocket().fill()
+        NSColor(calibratedRed: 0.22, green: 0.27, blue: 0.36, alpha: 1).setStroke()
+        let clip = paperclip()
+        clip.lineWidth = 3.6
+        clip.lineCapStyle = .round
+        clip.lineJoinStyle = .round
+        clip.stroke()
     }
 
-    private static func slip() -> NSBezierPath {
-        let slip = NSBezierPath()
-        slip.move(to: NSPoint(x: 23, y: 20))
-        slip.line(to: NSPoint(x: 40, y: 12))
-        slip.curve(to: NSPoint(x: 45, y: 15), controlPoint1: NSPoint(x: 42, y: 11),
-                   controlPoint2: NSPoint(x: 44, y: 12))
-        slip.line(to: NSPoint(x: 48, y: 25))
-        slip.curve(to: NSPoint(x: 44, y: 29), controlPoint1: NSPoint(x: 49, y: 28),
-                   controlPoint2: NSPoint(x: 47, y: 30))
-        slip.line(to: NSPoint(x: 24, y: 27))
-        slip.curve(to: NSPoint(x: 23, y: 20), controlPoint1: NSPoint(x: 20, y: 27),
-                   controlPoint2: NSPoint(x: 19, y: 22))
-        slip.close()
-        return slip
-    }
-
-    private static func pocket() -> NSBezierPath {
-        let pocket = NSBezierPath()
-        pocket.move(to: NSPoint(x: 18, y: 23))
-        pocket.curve(to: NSPoint(x: 13, y: 29), controlPoint1: NSPoint(x: 15, y: 23),
-                     controlPoint2: NSPoint(x: 13, y: 25))
-        pocket.line(to: NSPoint(x: 13, y: 38))
-        pocket.curve(to: NSPoint(x: 31, y: 54), controlPoint1: NSPoint(x: 13, y: 49),
-                     controlPoint2: NSPoint(x: 20, y: 54))
-        pocket.line(to: NSPoint(x: 33, y: 54))
-        pocket.curve(to: NSPoint(x: 51, y: 38), controlPoint1: NSPoint(x: 44, y: 54),
-                     controlPoint2: NSPoint(x: 51, y: 49))
-        pocket.line(to: NSPoint(x: 51, y: 29))
-        pocket.curve(to: NSPoint(x: 50, y: 26), controlPoint1: NSPoint(x: 51, y: 28),
-                     controlPoint2: NSPoint(x: 51, y: 27))
-        pocket.curve(to: NSPoint(x: 44, y: 32), controlPoint1: NSPoint(x: 52, y: 31),
-                     controlPoint2: NSPoint(x: 48, y: 33))
-        pocket.line(to: NSPoint(x: 23, y: 30))
-        pocket.curve(to: NSPoint(x: 18, y: 23), controlPoint1: NSPoint(x: 19, y: 30),
-                     controlPoint2: NSPoint(x: 16, y: 27))
-        pocket.close()
-        return pocket
+    /// A gem clip drawn in the 64-point icon grid (y grows downward), tilted like the menu bar symbol.
+    /// SF Symbols can't be used in app icons, so this is drawn here instead.
+    private static func paperclip() -> NSBezierPath {
+        let clip = NSBezierPath()
+        clip.move(to: NSPoint(x: 23, y: 47))
+        clip.line(to: NSPoint(x: 23, y: 20))
+        clip.appendArc(withCenter: NSPoint(x: 32, y: 20), radius: 9, startAngle: 180, endAngle: 0, clockwise: false)
+        clip.line(to: NSPoint(x: 41, y: 45))
+        clip.appendArc(withCenter: NSPoint(x: 34.5, y: 45), radius: 6.5, startAngle: 0, endAngle: 180, clockwise: false)
+        clip.line(to: NSPoint(x: 28, y: 24))
+        clip.appendArc(withCenter: NSPoint(x: 32, y: 24), radius: 4, startAngle: 180, endAngle: 0, clockwise: false)
+        clip.line(to: NSPoint(x: 36, y: 39))
+        let tilt = NSAffineTransform()
+        tilt.translateX(by: 32, yBy: 32)
+        tilt.rotate(byDegrees: 40)
+        tilt.translateX(by: -32, yBy: -32)
+        clip.transform(using: tilt as AffineTransform)
+        return clip
     }
 }
