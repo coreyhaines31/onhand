@@ -54,6 +54,25 @@ public final class HistoryStore {
                        [board.map { .text($0) } ?? .null, .text(id)])
     }
 
+    /// Finds a clip by its full ID or a unique prefix of at least 4 characters, like a short Git hash.
+    public func clip(matching prefix: String) throws -> Clip {
+        let prefix = prefix.lowercased()
+        guard prefix.count >= 4, prefix.count <= 64, prefix.allSatisfy(\.isHexDigit) else {
+            throw StorageError(message: "“\(prefix)” isn’t a clip ID.")
+        }
+        let matches = try db.clips("SELECT * FROM clips WHERE substr(id, 1, ?) = ? LIMIT 2",
+                                   [.integer(prefix.count), .text(prefix)])
+        guard matches.count == 1 else {
+            throw StorageError(message: matches.isEmpty ? "No clip has the ID “\(prefix)”."
+                               : "More than one clip starts with “\(prefix)”. Use more of the ID.")
+        }
+        return matches[0]
+    }
+
+    public func unpin(_ id: String) throws {
+        try db.execute("UPDATE clips SET pinned = 0, board = NULL WHERE id = ?", [.text(id)])
+    }
+
     public func boards() throws -> [String] {
         try db.strings("SELECT name FROM boards ORDER BY created, name")
     }
