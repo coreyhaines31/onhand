@@ -339,7 +339,7 @@ func status(_ arguments: Arguments) {
     } else {
         print(paused ? "Paused. Run `onhand resume` to save copies again." : "Saving copies.")
     }
-    print("\(state.clips) clips in history, \(state.pinned) pinned.")
+    print("\(state.clips == 1 ? "1 clip" : "\(state.clips) clips") in history, \(state.pinned) pinned.")
 }
 
 // MARK: - Main
