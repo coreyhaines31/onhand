@@ -966,6 +966,9 @@ kbd {
   border-collapse: collapse;
   font-size: 14px;
 }
+.document table + p {
+  margin-top: 18px;
+}
 .document th,
 .document td {
   text-align: left;
