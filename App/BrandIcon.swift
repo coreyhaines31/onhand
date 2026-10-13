@@ -2,7 +2,7 @@ import AppKit
 
 @MainActor
 enum BrandIcon {
-    /// The filled mark on a tile for the app icon, or the paperclip template glyph for the menu bar and in-app headers.
+    /// The paperclip on a tile for the app icon, or the paperclip template glyph for the menu bar and in-app headers.
     static func image(size: CGFloat, appIcon: Bool = false) -> NSImage {
         guard appIcon else { return glyph(size: size) }
         let image = NSImage(size: NSSize(width: size, height: size), flipped: false) { rect in
