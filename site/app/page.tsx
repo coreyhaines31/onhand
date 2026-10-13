@@ -13,7 +13,7 @@ import CopyBlock from "@/components/copy-block";
 import CopyPromptButton from "@/components/copy-prompt-button";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
-import { agentPrompt, brewCommand } from "@/lib/install";
+import { agentInstruction, agentPrompt, brewCommand, cliExamples } from "@/lib/install";
 import { downloadUrl as download, siteUrl, sourceUrl as source } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -47,6 +47,12 @@ const faqs: { question: string; answer: string; link?: { href: string; label: st
     question: "Does it capture passwords?",
     answer:
       "On Hand skips concealed and temporary clipboard items and excludes several common password managers by default. It also won’t save card numbers, Social Security numbers, or secret keys, including in screenshots. It can’t recognize every secret, so pause capture before copying other private information, or press ⌃⌥⌘⌫ to forget your last copy.",
+  },
+  {
+    question: "Can AI agents use my clipboard history?",
+    answer:
+      "Yes, when you let them. On Hand includes the onhand command, so Claude Code, Codex, or a script can search your history, read a clip or the text in a screenshot, copy it back, or pause capture from Terminal. Whatever an agent reads goes to its AI provider, so search shows only one-line previews and the full text comes one clip at a time.",
+    link: { href: "/features/command-line", label: "See how the command works" },
   },
   {
     question: "Does it sync between Macs?",
@@ -194,6 +200,26 @@ export default function Home() {
           <CopyBlock text={brewCommand} label="Homebrew install command" />
           <h3>Coding agent prompt</h3>
           <CopyBlock text={agentPrompt} label="coding agent prompt" />
+        </div>
+      </section>
+      <section id="agents" className="quick-install wrap" aria-label="Use On Hand from AI agents">
+        <div>
+          <h2>Let your agent find it.</h2>
+          <p>
+            The <code>onhand</code> command lets Claude Code, Codex, or any
+            script search your history, read the text in a screenshot, and
+            copy a clip back, right from Terminal. Add one line to your
+            agent’s instructions and it knows where to look.
+          </p>
+          <a href="/features/command-line">
+            How the command works <ArrowUpRight size={14} />
+          </a>
+        </div>
+        <div>
+          <h3>Add to CLAUDE.md or AGENTS.md</h3>
+          <CopyBlock text={agentInstruction} label="agent instruction" />
+          <h3>Or run it yourself</h3>
+          <CopyBlock text={cliExamples} label="onhand examples" />
         </div>
       </section>
       <section id="questions" className="faq wrap">
