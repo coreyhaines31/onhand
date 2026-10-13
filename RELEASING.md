@@ -19,7 +19,7 @@ Update `MARKETING_VERSION` and monotonically increase `CURRENT_PROJECT_VERSION` 
 APPLE_TEAM_ID=YOUR_TEAM_ID NOTARY_PROFILE=YOUR_PROFILE bash scripts/release.sh
 ```
 
-The script runs lint and core tests, builds a universal archive, preserves hardened runtime in the archive signature, exports with cloud-managed Developer ID signing, submits to Apple's notary service, checks acceptance, staples the ticket, and verifies Gatekeeper. It creates a new `dist/release.XXXXXX/updates` directory with the versioned ZIP, signed appcast, and SHA-256 checksum. Release-specific plist changes are restored on exit.
+The script runs lint and core tests, builds a universal archive, preserves hardened runtime in the archive signature, exports with cloud-managed Developer ID signing, submits to Apple's notary service, checks acceptance, staples the ticket, verifies Gatekeeper, and checks that the bundled `onhand` command reports the same version. It creates a new `dist/release.XXXXXX/updates` directory with the versioned ZIP, signed appcast, and SHA-256 checksum. Release-specific plist changes are restored on exit.
 
 The stable update feed is `https://github.com/coreyhaines31/onhand/releases/latest/download/appcast.xml`. Override `SPARKLE_FEED_URL` only for isolated testing or an intentional migration. `SPARKLE_ACCOUNT` defaults to `onhand`. Local `make app` builds deliberately omit the update configuration.
 
@@ -43,7 +43,7 @@ After the release is published, point the Homebrew cask at it:
 bash scripts/update-cask.sh 1.2.0
 ```
 
-The script reads the checksum from the release's `SHA256SUMS.txt`, updates `Casks/onhand.rb` in `coreyhaines31/homebrew-tap` (adding it from `scripts/homebrew/onhand.rb` on first run), and pushes. The cask sets `auto_updates true`, so Homebrew users also receive Sparkle updates in the app.
+The script reads the checksum from the release's `SHA256SUMS.txt`, updates `Casks/onhand.rb` in `coreyhaines31/homebrew-tap` (adding it from `scripts/homebrew/onhand.rb` on first run, and adding the `binary` line that links `onhand` if it's missing), and pushes. The cask sets `auto_updates true`, so Homebrew users also receive Sparkle updates in the app.
 
 Do not overwrite published versioned archives. A changed binary requires a new version and build number.
 

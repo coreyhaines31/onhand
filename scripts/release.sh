@@ -55,6 +55,8 @@ xcrun stapler staple "$app"
 xcrun stapler validate "$app"
 spctl --assess --type execute --verbose "$app"
 VERSION=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$app/Contents/Info.plist")
+CLI_VERSION=$("$app/Contents/MacOS/onhand" --version)
+[ "$CLI_VERSION" = "$VERSION" ] || { echo "The onhand command reports $CLI_VERSION, not $VERSION"; exit 1; }
 mkdir -p "$RELEASE_DIR/updates"
 ditto -c -k --sequesterRsrc --keepParent "$app" "$RELEASE_DIR/updates/OnHand-$VERSION.zip"
 "$SPARKLE_BIN/generate_appcast" --account "$SPARKLE_ACCOUNT" \

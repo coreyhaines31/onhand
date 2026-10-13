@@ -16,6 +16,7 @@ cask "onhand" do
   depends_on macos: :sonoma
 
   app "On Hand.app"
+  binary "#{appdir}/On Hand.app/Contents/MacOS/onhand"
 
   zap trash: [
     "~/Library/Application Support/OnHand",
