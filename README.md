@@ -10,6 +10,7 @@
 - **Pin what you reuse** and group pins into boards, like Snippets or Addresses.
 - **Keyboard first:** open history from any app with ⌘⇧Space.
 - **Private by default:** no account, no sync, no analytics. Card numbers, Social Security numbers, and secret keys are never saved.
+- **Works with AI agents:** the `onhand` command lets Claude Code, Codex, or a script search and reuse your clips from Terminal.
 
 [Website](https://onhandformac.com) · [Download](https://onhandformac.com/download) · [Releases](https://github.com/coreyhaines31/onhand/releases)
 
@@ -85,11 +86,45 @@ To have On Hand start with your Mac, turn on **Launch at login** in Settings.
   <img src="docs/images/pinboards.png" alt="Pinned clips grouped into boards" width="330">
 </p>
 
+## Command line
+
+The `onhand` command searches and reuses your history from Terminal, so you, a script, or an AI agent can find something you copied without opening the panel.
+
+```sh
+onhand search invoice              # newest matching clips, one line each
+onhand search --kind link --limit 5
+onhand get 3f2a91c0                # the full text; for a screenshot, the text in it
+onhand copy 3f2a91c0               # put it back on the clipboard
+onhand pin 3f2a91c0 --board Snippets
+onhand pause                       # stop saving copies; `onhand resume` to start again
+```
+
+- **IDs** come from `onhand search`. Any unique start of one works, like a short Git hash.
+- **Everything else:** `unpin`, `boards`, `delete`, `forget-last` (clears the clipboard and deletes it from history), and `status`. Run `onhand help` for details.
+- **`--json`** on `search`, `get`, `boards`, and `status` prints JSON for scripts.
+- It works whether or not On Hand is running, and the app picks up changes right away. `get --image out.png` saves an image clip.
+
+**Installing the command:** Homebrew links it for you. If you installed another way, link it once:
+
+```sh
+sudo mkdir -p /usr/local/bin
+sudo ln -sf "/Applications/On Hand.app/Contents/MacOS/onhand" /usr/local/bin/onhand
+```
+
+**For AI agents:** add a line like this to your `CLAUDE.md` or `AGENTS.md`:
+
+```text
+On Hand keeps my clipboard history. When I mention something I copied earlier, find it with `onhand search <words>` and read it with `onhand get <id>`. Ask before deleting anything.
+```
+
+Anything your agent reads with `onhand` is sent to its AI provider, like any file it reads. `search` shows only a one-line preview of each clip; the full text comes from `get`, one clip at a time.
+
 ## Privacy
 
 - **Everything stays on your Mac.** History is a local database in `~/Library/Application Support/OnHand`. Nothing is uploaded, and the app has no analytics. Text in images is recognized on your Mac with Apple's Vision framework.
 - **Sensitive copies are skipped.** On Hand ignores clipboard items that apps mark as concealed or temporary. It also excludes 1Password, Bitwarden, Apple Passwords, Dashlane, and LastPass by default, and doesn't save card numbers, US Social Security numbers, or common secret keys, including ones inside screenshots.
 - **These checks can't catch everything.** Addresses, passwords you type yourself, and other private details can still be saved. Pause capture first, or press ⌃⌥⌘⌫ to forget a copy.
+- **Agents only see what they ask for.** The `onhand` command doesn't send anything anywhere itself, but whatever an AI agent reads with it goes to that agent's provider.
 - **You control retention.** Unpinned clips expire after 7 days by default; choose 1, 7, 30, or 90 days in Settings. History holds up to 500 clips or 50 MB.
 
 Read the full [privacy policy](https://onhandformac.com/privacy).
@@ -110,7 +145,7 @@ Something else? [Open an issue](https://github.com/coreyhaines31/onhand/issues/n
 
 ## Uninstall
 
-Quit On Hand from ⋯ › Settings, then drag **On Hand.app** to the Trash. To also delete your history and settings, remove:
+Quit On Hand from ⋯ › Settings, then drag **On Hand.app** to the Trash. If you linked the `onhand` command, also remove `/usr/local/bin/onhand`. To also delete your history and settings, remove:
 
 ```
 ~/Library/Application Support/OnHand
