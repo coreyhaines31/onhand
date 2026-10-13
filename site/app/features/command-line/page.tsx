@@ -9,7 +9,7 @@ import { siteUrl, sourceUrl } from "@/lib/site";
 
 const title = "Mac Clipboard History From the Command Line, for AI Agents";
 const description =
-  "The onhand command lets you, a script, or an AI agent like Claude Code or Codex search your Mac clipboard history, read the text in screenshots, and copy clips back from Terminal.";
+  "With the onhand command, you or an AI agent like Claude Code or Codex can search your Mac clipboard history, read text in screenshots, and copy clips back.";
 
 export const metadata: Metadata = {
   title: { absolute: title },

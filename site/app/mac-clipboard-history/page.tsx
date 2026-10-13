@@ -7,7 +7,7 @@ import { siteUrl } from "@/lib/site";
 
 const title = "How to See Clipboard History on Mac";
 const description =
-  "Macs only keep the last thing you copied, unless you’re on macOS Tahoe or use a clipboard manager. Here’s how to see your current clipboard, your clipboard history, and how to clear it.";
+  "Macs keep only your last copy unless you use macOS Tahoe or a clipboard manager. How to see your clipboard, your clipboard history, and how to clear it.";
 
 export const metadata: Metadata = {
   title,

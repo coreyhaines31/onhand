@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s · On Hand",
   },
   description:
-    "Find and reuse copied text, links, and images with On Hand, a native clipboard manager for Mac. Local history, pinned clips, and keyboard shortcuts. Free and open source.",
+    "On Hand is a free, open-source clipboard manager for Mac. Search and reuse the text, links, and images you copied, pin what you reuse, and keep it all local.",
   metadataBase: new URL(siteUrl),
   openGraph: { siteName: "On Hand", type: "website" },
   twitter: { card: "summary_large_image" },
