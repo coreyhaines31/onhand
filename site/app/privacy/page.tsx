@@ -15,7 +15,7 @@ export default function Privacy() {
       <SiteNav />
       <main className="document wrap">
         <h1>Your clipboard stays local.</h1>
-        <p>On Hand 1.1.0 · Updated October 7, 2026</p>
+        <p>On Hand 1.3.0 · Updated October 13, 2026</p>
         <h2>What the app stores</h2>
         <p>
           On Hand stores text, links, and images locally in your Mac’s Application
@@ -52,6 +52,16 @@ export default function Privacy() {
           saved. Pause capture before copying sensitive information, or press
           ⌃⌥⌘⌫ to forget your last copy, which also clears the system clipboard.
           Clearing On Hand’s history does not clear backups.
+        </p>
+        <h2>The onhand command</h2>
+        <p>
+          On Hand 1.3.0 and later include the <code>onhand</code> command, which
+          reads and changes your history from Terminal. It works only on your Mac
+          and sends nothing anywhere. If you let an AI agent, like Claude Code or
+          Codex, run it, whatever the agent reads is sent to that agent’s AI
+          provider, like any other file it opens. <code>onhand search</code> shows
+          one-line previews; the full text of a clip comes only from{" "}
+          <code>onhand get</code>.
         </p>
         <h2>What the website collects</h2>
         <p>
