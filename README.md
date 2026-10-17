@@ -59,7 +59,7 @@ On Hand updates itself. Check anytime from ⋯ › Settings › Check for update
 4. **Press ⌘⇧Space** (or click the paperclip) to open your history. Type to search, then press Return to copy a clip back.
 5. **Paste with ⌘V** in the app you're working in. On Hand switches you back to it automatically.
 
-To have On Hand start with your Mac, turn on **Launch at login** in Settings.
+On Hand starts with your Mac. To stop that, turn off **Launch at login** in Settings.
 
 ## Everyday use
 
