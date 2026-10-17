@@ -74,7 +74,7 @@ export default function Install() {
         <p>
           Turn on ⋯ › Keep Window Open While Switching Apps to reuse several clips
           across apps. In Settings, you can change the shortcut, choose excluded
-          apps, adjust retention, turn on launch at login, or clear history.
+          apps, adjust retention, turn off launch at login, or clear history.
         </p>
         <h2>Use it from the command line</h2>
         <p>
