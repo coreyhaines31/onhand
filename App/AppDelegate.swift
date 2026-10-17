@@ -1,6 +1,7 @@
 import AppKit
 import KeyboardShortcuts
 import OnHandCore
+import ServiceManagement
 import SwiftUI
 
 @MainActor
@@ -39,6 +40,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             }
         }
         model.syncSentCapture()
+        applyLaunchAtLoginDefault()
         if !ProcessInfo.processInfo.arguments.contains("--demo") { observeCommandLine() }
         if !model.preferences.hasStarted || ProcessInfo.processInfo.arguments.contains("--demo") {
             showPanel()
@@ -50,6 +52,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                 NSApp.terminate(nil)
             }
         }
+    }
+
+    /// Launch at login starts on, once, so turning it off in Settings sticks.
+    private func applyLaunchAtLoginDefault() {
+        #if !DEBUG
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: "appliedLaunchAtLoginDefault") else { return }
+        defaults.set(true, forKey: "appliedLaunchAtLoginDefault")
+        try? SMAppService.mainApp.register()
+        #endif
     }
 
     /// The `onhand` command edits history directly, then tells the app to catch up.
