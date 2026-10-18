@@ -13,6 +13,7 @@ const siblingApps: SiblingApp[] = [
   { name: "Midnight Oil", url: "https://midnightoil.app", tagline: "Keep your Mac awake" },
   { name: "Disk Forecast", url: "https://diskforecast.com", tagline: "Know before your Mac runs out of space" },
   { name: "Spare", url: "https://spareformac.com", tagline: "See what's using your Mac" },
+  { name: "Coat Check", url: "https://coatcheckformac.com", tagline: "Reach the menu bar icons the notch hides" },
 ];
 
 export default function SiteFooter() {
