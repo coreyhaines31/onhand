@@ -14,6 +14,7 @@ const siblingApps: SiblingApp[] = [
   { name: "Disk Forecast", url: "https://diskforecast.com", tagline: "Know before your Mac runs out of space" },
   { name: "Spare", url: "https://spareformac.com", tagline: "See what's using your Mac" },
   { name: "Coat Check", url: "https://coatcheckformac.com", tagline: "Reach the menu bar icons the notch hides" },
+  { name: "Fuel Gauge", url: "https://fuelgauge.app", tagline: "Know if you'll make it to reset" },
 ];
 
 export default function SiteFooter() {
