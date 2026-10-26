@@ -133,7 +133,7 @@ Anything your agent reads with `onhand` is sent to its AI provider, like any fil
 ## Privacy
 
 - **Everything stays on your Mac.** History is a local database in `~/Library/Application Support/OnHand`. Nothing is uploaded, and the app has no analytics. Text in images is recognized on your Mac with Apple's Vision framework.
-- **Sensitive copies are skipped.** On Hand ignores clipboard items that apps mark as concealed or temporary. It also excludes 1Password, Bitwarden, Apple Passwords, Dashlane, and LastPass by default, and doesn't save card numbers, US Social Security numbers, or common secret keys, including ones inside screenshots.
+- **Sensitive copies are skipped.** On Hand ignores clipboard items that apps mark as concealed or temporary. It also excludes 1Password, Bitwarden, Apple Passwords, Dashlane, and LastPass by default, and doesn't save card numbers, US Social Security numbers, or common secret keys, including ones inside screenshots. When you copy one as text, On Hand marks it as concealed within a quarter second, so other clipboard managers that respect that marker, like Maccy, usually skip it too, and clears it from the clipboard after 90 seconds (you can turn that off in Settings › Privacy).
 - **These checks can't catch everything.** Addresses, passwords you type yourself, and other private details can still be saved. Pause capture first, or press ⌃⌥⌘⌫ to forget a copy.
 - **Sent messages are off by default.** When you turn them on, On Hand reads only the message box in the apps you choose, never records keystrokes, skips password fields, and checks what you send for card numbers, Social Security numbers, and secret keys like any copy.
 - **Agents only see what they ask for.** The `onhand` command doesn't send anything anywhere itself, but whatever an AI agent reads with it goes to that agent's provider.
@@ -151,7 +151,7 @@ Read the full [privacy policy](https://onhandformac.com/privacy).
 
 **I can't see the paperclip in the menu bar.** Your menu bar may be full or hiding icons. Press ⌘⇧Space instead, or open On Hand again from Applications.
 
-**A copy I expected was skipped.** On Hand skips text over 1 MB, images over 10 MB, and anything that looks like a card number, Social Security number, or secret key. The menu bar icon briefly shows a raised hand when it skips one of those. You can turn this off in Settings › Privacy.
+**A copy I expected was skipped.** On Hand skips text over 1 MB, images over 10 MB, and anything that looks like a card number, Social Security number, or secret key. The menu bar icon briefly shows a raised hand when it skips one of those, and its tooltip names what it found, like a GitHub token. You can turn this off in Settings › Privacy.
 
 Something else? [Open an issue](https://github.com/coreyhaines31/onhand/issues/new/choose). Please describe the problem without pasting your real clipboard history.
 

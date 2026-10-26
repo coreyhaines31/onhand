@@ -58,7 +58,8 @@ final class AppModel {
         if !isDemo {
             sentCapture.onSent = { [weak self] text, app in self?.saveSent(text, from: app) }
             syncSentCapture()
-            timer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { [weak self] _ in
+            // Checking often lets On Hand conceal a secret before other clipboard managers poll (Maccy: 0.5s).
+            timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
                 Task { @MainActor in self?.poll() }
             }
         }
@@ -279,6 +280,7 @@ extension AppModel {
         let text = image == nil ? (board.string(forType: .string) ?? "") : ""
         guard board.changeCount == expectedChange else { return }
         if preferences.skipSensitive, let sensitive = SensitiveContent.detect(in: text) {
+            conceal(board, change: expectedChange)
             onSkippedSensitive?(sensitive)
             return
         }
@@ -289,6 +291,34 @@ extension AppModel {
                 reload()
             }
             if image != nil { recognizePendingImages() }
+        }
+    }
+
+    /// Rewrites the same clipboard contents with the concealed marker, so other clipboard managers skip them too.
+    private func conceal(_ board: NSPasteboard, change: Int) {
+        let copies = (board.pasteboardItems ?? []).map { item in
+            let copy = NSPasteboardItem()
+            for type in item.types {
+                if let data = item.data(forType: type) { copy.setData(data, forType: type) }
+            }
+            copy.setData(Data(), forType: Self.concealedType)
+            return copy
+        }
+        // Leave a newer copy alone.
+        guard !copies.isEmpty, board.changeCount == change else { return }
+        board.clearContents()
+        board.writeObjects(copies)
+        lastChange = board.changeCount
+        if preferences.clearSensitive { clearLater(board, change: board.changeCount) }
+    }
+
+    /// Clears the clipboard after 90 seconds if it still holds the concealed secret.
+    private func clearLater(_ board: NSPasteboard, change: Int) {
+        Task {
+            try? await Task.sleep(for: .seconds(90))
+            guard preferences.clearSensitive, board.changeCount == change else { return }
+            board.clearContents()
+            lastChange = board.changeCount
         }
     }
 
@@ -315,6 +345,7 @@ extension AppModel {
     }
 
     static let sourceType = NSPasteboard.PasteboardType("org.nspasteboard.source")
+    static let concealedType = NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")
 
     private static func demoImage(text: String) -> Data? {
         guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 720, pixelsHigh: 240,

@@ -20,6 +20,7 @@ final class Preferences {
     var retentionDays: Int { didSet { defaults.set(retentionDays, forKey: "retentionDays") } }
     var excludedApps: String { didSet { defaults.set(excludedApps, forKey: "excludedApps") } }
     var skipSensitive: Bool { didSet { defaults.set(skipSensitive, forKey: "skipSensitive") } }
+    var clearSensitive: Bool { didSet { defaults.set(clearSensitive, forKey: "clearSensitive") } }
     var saveSent: Bool { didSet { defaults.set(saveSent, forKey: "saveSent") } }
     var sentApps: String { didSet { defaults.set(sentApps, forKey: "sentApps") } }
 
@@ -30,6 +31,7 @@ final class Preferences {
         hasStarted = defaults.bool(forKey: "hasStarted")
         retentionDays = defaults.object(forKey: "retentionDays") as? Int ?? 7
         skipSensitive = defaults.object(forKey: "skipSensitive") as? Bool ?? true
+        clearSensitive = defaults.object(forKey: "clearSensitive") as? Bool ?? true
         saveSent = defaults.bool(forKey: "saveSent")
         sentApps = defaults.string(forKey: "sentApps") ?? ""
         excludedApps = defaults.string(forKey: "excludedApps")
