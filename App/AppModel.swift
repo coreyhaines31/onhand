@@ -309,6 +309,17 @@ extension AppModel {
         board.clearContents()
         board.writeObjects(copies)
         lastChange = board.changeCount
+        if preferences.clearSensitive { clearLater(board, change: board.changeCount) }
+    }
+
+    /// Clears the clipboard after 90 seconds if it still holds the concealed secret.
+    private func clearLater(_ board: NSPasteboard, change: Int) {
+        Task {
+            try? await Task.sleep(for: .seconds(90))
+            guard board.changeCount == change else { return }
+            board.clearContents()
+            lastChange = board.changeCount
+        }
     }
 
     private func seedDemo() throws {

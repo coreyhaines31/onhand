@@ -44,6 +44,8 @@ struct SettingsView: View {
                 Toggle("Don’t save card numbers, Social Security numbers, or secret keys",
                        isOn: $preferences.skipSensitive)
                     .onChange(of: preferences.skipSensitive) { model.removeSensitiveTextClips() }
+                Toggle("Clear them from the clipboard after 90 seconds", isOn: $preferences.clearSensitive)
+                    .disabled(!preferences.skipSensitive)
                 Text("""
                      History is stored locally on this Mac. Nothing is uploaded. Password-marked and temporary clips \
                      are skipped, and On Hand checks text and screenshots for card numbers, Social Security numbers, \
