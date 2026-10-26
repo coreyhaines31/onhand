@@ -127,7 +127,7 @@ export default function ProtectApiKeys() {
         <p>
           On Hand reads the text in images you copy so you can{" "}
           <Link href="/features/search-text-in-images">search your screenshots</Link>. If that text
-          contains a secret, the screenshot is deleted from history as soon as it’s read.
+          contains a secret, the screenshot is deleted from history as soon as it’s read, unless it’s pinned.
         </p>
 
         <h2>Questions</h2>
