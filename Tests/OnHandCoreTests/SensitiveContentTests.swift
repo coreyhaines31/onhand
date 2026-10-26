@@ -16,19 +16,20 @@ func detectsSocialSecurityNumbers(_ text: String) {
 
 // Fixtures are assembled at runtime so secret scanners don't mistake them for real keys.
 private let fakeKeyBody = String(repeating: "Ab3", count: 13)
-private let fakeSecretKeys: [String] = [
-    "AKIA" + "IOSFODNN7EXAMPLE",
-    ["sk", "live", fakeKeyBody].joined(separator: "_"),
-    ["ghp", fakeKeyBody].joined(separator: "_"),
-    "-----BEGIN OPENSSH " + "PRIVATE KEY-----",
-    ["sk", "ant", fakeKeyBody].joined(separator: "-"),
-    ["xoxb", "1234567890", fakeKeyBody].joined(separator: "-")
+private let fakeSecretKeys: [(String, String)] = [
+    ("AKIA" + "IOSFODNN7EXAMPLE", "AWS access key"),
+    (["sk", "live", fakeKeyBody].joined(separator: "_"), "Stripe secret key"),
+    (["ghp", fakeKeyBody].joined(separator: "_"), "GitHub token"),
+    ("-----BEGIN OPENSSH " + "PRIVATE KEY-----", "private key"),
+    (["sk", "ant", fakeKeyBody].joined(separator: "-"), "Anthropic API key"),
+    (["sk", "proj", fakeKeyBody].joined(separator: "-"), "OpenAI API key"),
+    (["xoxb", "1234567890", fakeKeyBody].joined(separator: "-"), "Slack token")
 ]
 private let fakePublishableKey = ["pk", "live", fakeKeyBody].joined(separator: "_")
 
 @Test(arguments: fakeSecretKeys)
-func detectsSecretKeys(_ text: String) {
-    #expect(SensitiveContent.detect(in: text) == .secretKey)
+func detectsSecretKeys(_ text: String, name: String) {
+    #expect(SensitiveContent.detect(in: text) == .secretKey(name))
 }
 
 @Test(arguments: [

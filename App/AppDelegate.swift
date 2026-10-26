@@ -27,7 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         item.button?.target = self
         item.button?.action = #selector(togglePanel(_:))
         statusItem = item
-        model.onSkippedSensitive = { [weak self] kind in self?.showNotice("Didn’t save a \(kind.rawValue)") }
+        model.onSkippedSensitive = { [weak self] kind in self?.showNotice("Didn’t save this \(kind.name)") }
         KeyboardShortcuts.onKeyUp(for: .forgetLastCopy) { [weak self] in
             self?.model.forgetLastCopy()
             self?.showNotice("Forgot your last copy")

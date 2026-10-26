@@ -1,10 +1,19 @@
 import Foundation
 
 /// On-device check for text that should never be kept in clipboard history.
-public enum SensitiveContent: String, Sendable {
-    case cardNumber = "card number"
-    case socialSecurityNumber = "Social Security number"
-    case secretKey = "secret key"
+public enum SensitiveContent: Equatable, Sendable {
+    case cardNumber
+    case socialSecurityNumber
+    /// Carries the kind of key, like "GitHub token".
+    case secretKey(String)
+
+    public var name: String {
+        switch self {
+        case .cardNumber: "card number"
+        case .socialSecurityNumber: "Social Security number"
+        case .secretKey(let name): name
+        }
+    }
 
     public static func detect(in text: String) -> SensitiveContent? {
         let range = NSRange(text.startIndex..., in: text)
@@ -19,24 +28,25 @@ public enum SensitiveContent: String, Sendable {
             return area != 0 && area != 666 && area < 900 && part(3) != 0 && part(4) != 0
         }
         if hasSSN { return .socialSecurityNumber }
-        if secretKeys.firstMatch(in: text, range: range) != nil { return .secretKey }
-        return nil
+        let key = secretKeys.first { $0.pattern.firstMatch(in: text, range: range) != nil }
+        return key.map { .secretKey($0.name) }
     }
 
     nonisolated(unsafe) private static let cardCandidates = expression(#"(?<![\d.-])(?:\d[ -]?){12,18}\d(?![\d.-])"#)
     nonisolated(unsafe) private static let socialSecurityNumbers =
         expression(#"(?<![\d-])(\d{3})([- ])(\d{2})\2(\d{4})(?![\d-])"#)
-    nonisolated(unsafe) private static let secretKeys = expression([
-        #"-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----"#,
-        #"\bAKIA[0-9A-Z]{16}\b"#,
-        #"\b[rs]k_live_[0-9A-Za-z]{20,}"#,
-        #"\bgh[pousr]_[A-Za-z0-9]{36,}"#,
-        #"\bgithub_pat_[A-Za-z0-9_]{40,}"#,
-        #"\bxox[abprs]-[A-Za-z0-9-]{10,}"#,
-        #"\bsk-ant-[A-Za-z0-9_-]{20,}"#,
-        #"\bsk-(?:proj-)?[A-Za-z0-9_-]{32,}"#,
-        #"\bAIza[0-9A-Za-z_-]{35}\b"#
-    ].joined(separator: "|"))
+    // Checked in order, so specific prefixes come before the general ones they overlap.
+    nonisolated(unsafe) private static let secretKeys: [(name: String, pattern: NSRegularExpression)] = [
+        ("private key", #"-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----"#),
+        ("AWS access key", #"\bAKIA[0-9A-Z]{16}\b"#),
+        ("Stripe secret key", #"\b[rs]k_live_[0-9A-Za-z]{20,}"#),
+        ("GitHub token", #"\bgh[pousr]_[A-Za-z0-9]{36,}"#),
+        ("GitHub token", #"\bgithub_pat_[A-Za-z0-9_]{40,}"#),
+        ("Slack token", #"\bxox[abprs]-[A-Za-z0-9-]{10,}"#),
+        ("Anthropic API key", #"\bsk-ant-[A-Za-z0-9_-]{20,}"#),
+        ("OpenAI API key", #"\bsk-(?:proj-)?[A-Za-z0-9_-]{32,}"#),
+        ("Google API key", #"\bAIza[0-9A-Za-z_-]{35}\b"#)
+    ].map { ($0.0, expression($0.1)) }
 
     private static func expression(_ pattern: String) -> NSRegularExpression {
         // Patterns are compile-time constants covered by tests.
