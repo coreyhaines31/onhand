@@ -21,12 +21,19 @@ export default function RootLayout({
       <body>
         {children}
         {process.env.VERCEL_ENV === "production" && (
-          <Script
-            src="https://cdn.usefathom.com/script.js"
-            data-site="CWVCJNNN"
-            data-spa="auto"
-            strategy="afterInteractive"
-          />
+          <>
+            <Script
+              src="https://cdn.usefathom.com/script.js"
+              data-site="CWVCJNNN"
+              data-spa="auto"
+              strategy="afterInteractive"
+            />
+            <Script
+              src="https://ingest.getuserproof.com/sdk.js"
+              data-site="542c6d00-5847-4cda-84c2-dccc11b80915"
+              strategy="afterInteractive"
+            />
+          </>
         )}
       </body>
     </html>
