@@ -43,7 +43,7 @@ export default async function AlternativePage({ params }: Props) {
       headline: `A free ${name} alternative for Mac`,
       description: alternative.verdict,
       url,
-      dateModified: checkedOnISO,
+      dateModified: alternative.checked?.iso ?? checkedOnISO,
       author: { "@type": "Person", name: "Corey Haines" },
       image: `${siteUrl}/opengraph-image`,
     },
@@ -82,7 +82,7 @@ export default async function AlternativePage({ params }: Props) {
         <h2>On Hand vs {name} at a glance</h2>
         <ComparisonTable alternative={alternative} />
         <p className="fine">
-          Checked {checkedOn} against {name}’s own site, release notes, and App Store listing.
+          Checked {alternative.checked?.on ?? checkedOn} against {name}’s own site, release notes, or App Store listing.
           Prices and features change, so check before you buy. Something out of date?{" "}
           <a href="https://github.com/coreyhaines31/onhand/issues">Open an issue</a>.
         </p>

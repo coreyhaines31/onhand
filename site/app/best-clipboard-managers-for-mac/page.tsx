@@ -3,7 +3,7 @@ import Link from "next/link";
 import DownloadCta from "@/components/download-cta";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
-import { alternatives, checkedOn, type Comparison, findAlternative, onHand } from "@/lib/alternatives";
+import { alternatives, type Comparison, findAlternative, onHand } from "@/lib/alternatives";
 import { siteUrl } from "@/lib/site";
 
 const title = "The Best Clipboard Managers for Mac in 2026";
@@ -42,6 +42,11 @@ const picks: { heading: string; slug?: string; body: string }[] = [
     heading: "Best if you already use a launcher: Raycast or Alfred",
     slug: "raycast-clipboard-history",
     body: "If Raycast or Alfred is already open all day, use its clipboard history. Raycast’s is free, with OCR, but Raycast 2 needs macOS Tahoe and Apple silicon. Alfred’s needs the paid Powerpack.",
+  },
+  {
+    heading: "Best for guarding API keys: ClipAudit",
+    slug: "clipaudit",
+    body: "ClipAudit is built around secrets: it recognizes 700+ kinds of keys, keeps them masked in history behind Touch ID, hides them while you screen share, and scrubs them from shell history. It’s $29 per Mac at launch. On Hand covers the basics for free, with 25+ kinds that it won’t save, hides from other clipboard managers, and clears after 90 seconds.",
   },
   {
     heading: "Best for reusable snippets: Clipy",
@@ -91,7 +96,7 @@ export default function BestClipboardManagers() {
         </p>
         <p className="fine">
           We make On Hand, so we’re not neutral. We’ve tried to be fair: every fact below was
-          checked on {checkedOn} against each app’s own site, release notes, or App Store listing,
+          checked in October 2026 against each app’s own site, release notes, or App Store listing,
           and we say when another app is the better fit.
         </p>
 
