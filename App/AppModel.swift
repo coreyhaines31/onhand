@@ -316,7 +316,7 @@ extension AppModel {
     private func clearLater(_ board: NSPasteboard, change: Int) {
         Task {
             try? await Task.sleep(for: .seconds(90))
-            guard board.changeCount == change else { return }
+            guard preferences.clearSensitive, board.changeCount == change else { return }
             board.clearContents()
             lastChange = board.changeCount
         }
