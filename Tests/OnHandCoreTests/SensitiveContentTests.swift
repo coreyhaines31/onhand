@@ -1,3 +1,4 @@
+import Foundation
 @testable import OnHandCore
 import Testing
 
@@ -42,6 +43,7 @@ private let fakeSecretKeys: [(String, String)] = [
     (["dp", "pt", fakeKeyBody + "x"].joined(separator: "."), "Doppler token"),
     ("postgresql://app:" + "s3cr3tPass" + "@db.example.com/app", "database password"),
     ("mongodb+srv://admin:" + "hunter22" + "@cluster0.example.net", "database password"),
+    ("redis://:" + "hunter22hunter" + "@cache.example.com:6379", "database password"),
     ("DATABASE_PASSWORD=" + "correct-horse-battery", "secret"),
     ("export OPENROUTER_API_KEY=\"" + fakeKeyBody + "\"", "secret"),
     ("PORT=3000\nAUTH_SECRET=" + fakeKeyBody, "secret")
@@ -67,4 +69,10 @@ func detectsSecretKeys(_ text: String, name: String) {
 ])
 func ignoresOrdinaryText(_ text: String) {
     #expect(SensitiveContent.detect(in: text) == nil)
+}
+
+@Test func longUppercaseLinesAreQuick() {
+    let start = Date()
+    #expect(SensitiveContent.detect(in: String(repeating: "TOKEN", count: 200_000)) == nil)
+    #expect(Date().timeIntervalSince(start) < 1)
 }

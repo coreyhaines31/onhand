@@ -61,10 +61,13 @@ public enum SensitiveContent: Equatable, Sendable {
         ("Supabase token", #"\bsbp_[a-f0-9]{40}\b"#),
         ("Mailgun API key", #"\bkey-[0-9a-f]{32}\b"#),
         ("Doppler token", #"\bdp\.(?:pt|st|sa|ct|scim|audit)\.[A-Za-z0-9]{40,}"#),
-        ("database password", #"\b(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|rediss?|amqps?)://[^:@\s/]+:[^@\s/]+@"#),
+        ("database password", #"\b(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|rediss?|amqps?)://"#
+            + #"[^:@\s/]{0,256}:[^@\s/]{1,256}@"#),
         // An .env-style line like API_KEY=value. Values that start with $ refer to another variable.
-        ("secret", #"(?m)^[ \t]*(?:export[ \t]+)?[A-Z0-9_]*(?:SECRET|TOKEN|API_KEY|APIKEY|PASSWORD|PASSWD|PRIVATE_KEY)"#
-            + #"[A-Z0-9_]*[ \t]*=[ \t]*['"]?[^\s'"$]{12,}"#)
+        // Bounded runs keep long uppercase lines from backtracking.
+        ("secret", #"(?m)^[ \t]*(?:export[ \t]+)?[A-Z0-9_]{0,64}"#
+            + #"(?:SECRET|TOKEN|API_KEY|APIKEY|PASSWORD|PASSWD|PRIVATE_KEY)"#
+            + #"[A-Z0-9_]{0,64}[ \t]*=[ \t]*['"]?[^\s'"$]{12,}"#)
     ].map { ($0.0, expression($0.1)) }
 
     private static func expression(_ pattern: String) -> NSRegularExpression {
