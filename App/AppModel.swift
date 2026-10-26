@@ -279,6 +279,7 @@ extension AppModel {
         let text = image == nil ? (board.string(forType: .string) ?? "") : ""
         guard board.changeCount == expectedChange else { return }
         if preferences.skipSensitive, let sensitive = SensitiveContent.detect(in: text) {
+            conceal(board, change: expectedChange)
             onSkippedSensitive?(sensitive)
             return
         }
@@ -290,6 +291,23 @@ extension AppModel {
             }
             if image != nil { recognizePendingImages() }
         }
+    }
+
+    /// Rewrites the same clipboard contents with the concealed marker, so other clipboard managers skip them too.
+    private func conceal(_ board: NSPasteboard, change: Int) {
+        let copies = (board.pasteboardItems ?? []).map { item in
+            let copy = NSPasteboardItem()
+            for type in item.types {
+                if let data = item.data(forType: type) { copy.setData(data, forType: type) }
+            }
+            copy.setData(Data(), forType: Self.concealedType)
+            return copy
+        }
+        // Leave a newer copy alone.
+        guard !copies.isEmpty, board.changeCount == change else { return }
+        board.clearContents()
+        board.writeObjects(copies)
+        lastChange = board.changeCount
     }
 
     private func seedDemo() throws {
@@ -315,6 +333,7 @@ extension AppModel {
     }
 
     static let sourceType = NSPasteboard.PasteboardType("org.nspasteboard.source")
+    static let concealedType = NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")
 
     private static func demoImage(text: String) -> Data? {
         guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 720, pixelsHigh: 240,
