@@ -58,7 +58,8 @@ final class AppModel {
         if !isDemo {
             sentCapture.onSent = { [weak self] text, app in self?.saveSent(text, from: app) }
             syncSentCapture()
-            timer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { [weak self] _ in
+            // Checking often lets On Hand conceal a secret before other clipboard managers poll (Maccy: 0.5s).
+            timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
                 Task { @MainActor in self?.poll() }
             }
         }
