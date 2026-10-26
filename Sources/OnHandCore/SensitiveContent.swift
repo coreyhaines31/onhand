@@ -45,7 +45,29 @@ public enum SensitiveContent: Equatable, Sendable {
         ("Slack token", #"\bxox[abprs]-[A-Za-z0-9-]{10,}"#),
         ("Anthropic API key", #"\bsk-ant-[A-Za-z0-9_-]{20,}"#),
         ("OpenAI API key", #"\bsk-(?:proj-)?[A-Za-z0-9_-]{32,}"#),
-        ("Google API key", #"\bAIza[0-9A-Za-z_-]{35}\b"#)
+        ("Google API key", #"\bAIza[0-9A-Za-z_-]{35}\b"#),
+        ("Google OAuth client secret", #"\bGOCSPX-[A-Za-z0-9_-]{28}\b"#),
+        ("Stripe webhook secret", #"\bwhsec_[A-Za-z0-9]{32,}"#),
+        ("GitLab token", #"\bglpat-[A-Za-z0-9_-]{20,}"#),
+        ("npm token", #"\bnpm_[A-Za-z0-9]{36}\b"#),
+        ("PyPI token", #"\bpypi-AgEIcHlwaS5vcmc[A-Za-z0-9_-]{50,}"#),
+        ("Hugging Face token", #"\bhf_[A-Za-z0-9]{34,}"#),
+        ("SendGrid API key", #"\bSG\.[A-Za-z0-9_-]{22}\.[A-Za-z0-9_-]{43}"#),
+        ("Shopify token", #"\bshp(?:at|ca|pa|ss)_[a-fA-F0-9]{32}\b"#),
+        ("DigitalOcean token", #"\bdo[por]_v1_[a-f0-9]{64}\b"#),
+        ("Linear API key", #"\blin_api_[A-Za-z0-9]{40}\b"#),
+        ("Notion token", #"\b(?:secret_[A-Za-z0-9]{43}|ntn_[0-9]{11}[A-Za-z0-9]{35})\b"#),
+        ("Postman API key", #"\bPMAK-[a-f0-9]{24}-[a-f0-9]{34}\b"#),
+        ("Supabase token", #"\bsbp_[a-f0-9]{40}\b"#),
+        ("Mailgun API key", #"\bkey-[0-9a-f]{32}\b"#),
+        ("Doppler token", #"\bdp\.(?:pt|st|sa|ct|scim|audit)\.[A-Za-z0-9]{40,}"#),
+        ("database password", #"\b(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|rediss?|amqps?)://"#
+            + #"[^:@\s/]{0,256}:[^@\s/]{1,256}@"#),
+        // An .env-style line like API_KEY=value. Values that start with $ refer to another variable.
+        // Bounded runs keep long uppercase lines from backtracking.
+        ("secret", #"(?m)^[ \t]*(?:export[ \t]+)?[A-Z0-9_]{0,64}"#
+            + #"(?:SECRET|TOKEN|API_KEY|APIKEY|PASSWORD|PASSWD|PRIVATE_KEY)"#
+            + #"[A-Z0-9_]{0,64}[ \t]*=[ \t]*['"]?[^\s'"$]{12,}"#)
     ].map { ($0.0, expression($0.1)) }
 
     private static func expression(_ pattern: String) -> NSRegularExpression {
