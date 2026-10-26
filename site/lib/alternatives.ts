@@ -22,6 +22,8 @@ export type Alternative = {
   chooseOnHand: string[];
   comparison: Comparison;
   sources: string[];
+  /** Set when this entry was checked later than the rest. */
+  checked?: { on: string; iso: string };
 };
 
 export const comparisonRows: { key: keyof Comparison; label: string }[] = [
@@ -48,7 +50,8 @@ export const onHand: Comparison = {
   pins: "Yes, with named boards",
   ocr: "Yes, on your Mac",
   sync: "No. History stays on your Mac",
-  exclusions: "Yes. Password managers skipped; card numbers, SSNs, and keys never saved",
+  exclusions:
+    "Yes. Password managers skipped; card numbers, SSNs, and 25+ kinds of keys never saved, concealed, and cleared after 90 seconds",
   shortcuts: "⌘⇧Space to open (changeable), ⌘1–9 to copy",
   requires: "macOS 14 or later, Apple silicon or Intel",
 };
@@ -374,6 +377,45 @@ export const alternatives: Alternative[] = [
       requires: "macOS 14 or later",
     },
     sources: ["https://www.supaste.com/", "https://www.supaste.com/updates"],
+  },
+  {
+    slug: "clipaudit",
+    name: "ClipAudit",
+    url: "https://clipaudit.app",
+    summary: "Paid clipboard manager built around protecting API keys and secrets.",
+    status: "New. Version 1.0.0, its first public release, shipped on October 26, 2026.",
+    verdict:
+      "ClipAudit and On Hand both spot secrets you copy, mark them so other clipboard managers skip them, and clear them after 90 seconds. ClipAudit goes further on secrets: 700+ kinds, masked history items behind Touch ID, hiding during screen sharing, and shell history scrubbing. On Hand is free and MIT-licensed, and goes further as a clipboard manager, with screenshot text search, pinboards, and a command for AI agents.",
+    chooseThem: [
+      "You handle lots of API keys and want the widest detection: 700+ kinds, compared with On Hand’s 25+.",
+      "You want secrets kept in history but masked, with Touch ID to reveal them, and hidden while you screen share.",
+      "You want secrets scrubbed from your shell history too, or a log of which apps changed your clipboard.",
+    ],
+    chooseOnHand: [
+      "You want it free and open source. ClipAudit is $29 per Mac with a year of updates, and its source can’t be redistributed.",
+      "You want to search the text inside screenshots or group pinned clips into boards.",
+      "You want Claude Code, Codex, or a script to search your history with the onhand command.",
+    ],
+    comparison: {
+      price: "$29 per Mac at launch (normally $59), with one year of updates; 14-day trial",
+      source: "Source shared with buyers; can’t be redistributed",
+      images: "Not stated on its site",
+      search: "Yes",
+      pins: "Yes",
+      ocr: "Not stated on its site",
+      sync: "No. It blocks network access",
+      exclusions: "Yes. 700+ kinds of secrets concealed, cleared after 90 seconds, masked behind Touch ID",
+      shortcuts: "⌃⌘V to search and paste",
+      requires: "macOS 14 or later, Apple silicon or Intel",
+    },
+    sources: [
+      "https://clipaudit.app/",
+      "https://clipaudit.app/features",
+      "https://clipaudit.app/faq",
+      "https://clipaudit.app/pricing",
+      "https://clipaudit.app/changelog",
+    ],
+    checked: { on: "October 26, 2026", iso: "2026-10-26" },
   },
 ];
 
