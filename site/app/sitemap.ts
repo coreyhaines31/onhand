@@ -10,6 +10,7 @@ const paths = [
   ...guides.map(({ slug }) => `/guides/${slug}`),
   "/features/search-text-in-images",
   "/features/command-line",
+  "/features/protect-api-keys",
   "/best-clipboard-managers-for-mac",
   "/alternatives",
   ...alternatives.map(({ slug }) => `/alternatives/${slug}`),

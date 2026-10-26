@@ -42,6 +42,7 @@ export default function SiteFooter() {
           <Link href="/guides">Guides</Link>
           <Link href="/features/search-text-in-images">Search screenshots</Link>
           <Link href="/features/command-line">Command line</Link>
+          <Link href="/features/protect-api-keys">Protect API keys</Link>
           <Link href="/best-clipboard-managers-for-mac">Best clipboard managers</Link>
           <Link href="/alternatives">Compare</Link>
           <Link href="/install">Install</Link>
