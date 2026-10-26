@@ -46,7 +46,7 @@ const faqs: { question: string; answer: string; link?: { href: string; label: st
   {
     question: "Does it capture passwords?",
     answer:
-      "On Hand skips concealed and temporary clipboard items and excludes several common password managers by default. It also won’t save card numbers, Social Security numbers, or secret keys, including in screenshots. It can’t recognize every secret, so pause capture before copying other private information, or press ⌃⌥⌘⌫ to forget your last copy.",
+      "On Hand skips concealed and temporary clipboard items and excludes several common password managers by default. It also won’t save card numbers, Social Security numbers, or secret keys, including in screenshots. When you copy one as text, it marks it so other clipboard managers that respect the concealed signal skip it too, and clears it from your clipboard after 90 seconds. It can’t recognize every secret, so pause capture before copying other private information, or press ⌃⌥⌘⌫ to forget your last copy.",
   },
   {
     question: "Can AI agents use my clipboard history?",
@@ -187,7 +187,8 @@ export default function Home() {
         <h2>Your history. On your Mac.</h2>
         <p>
           Your clips stay local, with no app analytics or clipboard uploads.
-          Card numbers, Social Security numbers, and secret keys aren’t saved.
+          Card numbers, Social Security numbers, and secret keys aren’t saved,
+          and they’re cleared from your clipboard after 90 seconds.
           Pause capture anytime, choose apps to exclude, and set how long
           unpinned clips stay.
         </p>

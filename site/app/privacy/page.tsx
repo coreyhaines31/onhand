@@ -47,6 +47,13 @@ export default function Privacy() {
           as its text is read. You can turn this off in Settings.
         </p>
         <p>
+          When you copy one of these as text, On Hand also marks the clipboard
+          as concealed, the same signal password managers use, so other
+          clipboard managers that respect it skip it too. After 90 seconds it
+          clears the secret from the clipboard if it’s still there. You can turn
+          clearing off in Settings.
+        </p>
+        <p>
           These checks are conventions and patterns, not guarantees: passwords
           you type yourself, addresses, and other private details can still be
           saved. Pause capture before copying sensitive information, or press
