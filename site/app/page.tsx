@@ -23,7 +23,17 @@ export const metadata: Metadata = {
     description:
       "Copy it once. Find it again. A native clipboard manager that keeps your history on your Mac.",
     url: "/",
+    images: { url: "/og-video.png", width: 1200, height: 630, alt: "On Hand — free, open-source clipboard manager for Mac" },
+    // iMessage and Discord autoplay this loop inline; everywhere else shows the still above.
+    videos: {
+      url: `${siteUrl}/og.mp4`,
+      secureUrl: `${siteUrl}/og.mp4`,
+      type: "video/mp4",
+      width: 1200,
+      height: 630,
+    },
   },
+  twitter: { card: "summary_large_image", images: "/og-video.png" },
 };
 
 const faqs: { question: string; answer: string; link?: { href: string; label: string } }[] = [

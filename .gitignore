@@ -11,3 +11,4 @@ node_modules/
 site/*.tsbuildinfo
 site/public/downloads/*.zip
 .build-release/
+site/_og/out/
