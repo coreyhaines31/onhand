@@ -51,6 +51,6 @@ Do not overwrite published versioned archives. A changed binary requires a new v
 
 The website's `/download` route redirects to `releases/latest/download/OnHand.zip`, so it needs no change per release as long as each release includes that asset. Keep compatibility, installation, and privacy copy aligned with the tested release.
 
-Run `npm --prefix site run lint`, `npm --prefix site run typecheck`, and `npm --prefix site run build` before deploying. Fathom is enabled only for Vercel production builds. Deploy from the repository root with `vercel deploy --cwd site --prod --scope coreys-apps`.
+Run `npm --prefix site run lint`, `npm --prefix site run typecheck`, and `npm --prefix site run build` before deploying. Analytics (the TracerKit loader, which serves Headstream) and UserProof load only on Vercel production builds. Deploy from the repository root with `vercel deploy --cwd site --prod --scope coreys-apps`.
 
 `bash scripts/package-preview.sh` remains available for local developer previews; its output is not a signed public release.

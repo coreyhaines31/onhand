@@ -23,9 +23,8 @@ export default function RootLayout({
         {process.env.VERCEL_ENV === "production" && (
           <>
             <Script
-              src="https://cdn.usefathom.com/script.js"
-              data-site="CWVCJNNN"
-              data-spa="auto"
+              src="https://tracerkit.com/t.js"
+              data-key="tk_reSNBkS6vAJ2q-uW"
               strategy="afterInteractive"
             />
             <Script
