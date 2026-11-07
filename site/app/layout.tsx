@@ -29,6 +29,11 @@ export default function RootLayout({
               strategy="afterInteractive"
             />
             <Script
+              src="https://tracerkit.com/t.js"
+              data-key="tk_reSNBkS6vAJ2q-uW"
+              strategy="afterInteractive"
+            />
+            <Script
               src="https://ingest.getuserproof.com/sdk.js"
               data-site="542c6d00-5847-4cda-84c2-dccc11b80915"
               strategy="afterInteractive"
