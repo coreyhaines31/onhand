@@ -82,12 +82,13 @@ export default function Privacy() {
         </p>
         <h2>What the website collects</h2>
         <p>
-          The website uses Headstream, loaded through the TracerKit tag manager,
-          for visit analytics, and UserProof to see how visitors use the site
-          (clicks, scrolling and page interactions, not anything you type).
-          Headstream sets one first-party cookie with a random visitor id so it
-          can tell new visits from returning ones; UserProof sets no cookies and
-          keeps random ids in your browser’s storage. No ad tracking, no personal
+          The website uses the TracerKit tag manager and Headstream for visit
+          analytics, and UserProof to see how visitors use the site (clicks,
+          scrolling and page interactions, not anything you type). TracerKit and
+          Headstream set first-party cookies and browser storage with random
+          visitor and session ids so they can tell new visits from returning
+          ones; UserProof sets no cookies and keeps random ids in your browser’s
+          storage. No ad tracking, no personal
           data sold or shared. Vercel may process request information to serve
           the website.
           The site uses system fonts. The interactive demo uses sample clips; it only writes a sample
