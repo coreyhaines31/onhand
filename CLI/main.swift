@@ -259,6 +259,13 @@ func pin(_ arguments: Arguments) {
     attempt { try store.pin(clip.id, to: board) }
     announceHistoryChange()
     print("Pinned \(describe(clip))\(board.map { " to \($0)" } ?? "").")
+    if !clip.isPinned, let sensitive = clip.sensitiveContent {
+        FileHandle.standardError.write(Data("""
+        Warning: this clip looks like a \(sensitive.name). Pinned clips never expire and aren’t cleaned up \
+        as sensitive, so it stays until you delete it (onhand delete \(shortID(clip))).
+
+        """.utf8))
+    }
 }
 
 func unpin(_ arguments: Arguments) {

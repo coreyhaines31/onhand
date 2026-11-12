@@ -23,6 +23,8 @@ final class AppModel {
     var copiedID: String?
     var copySequence = 0
     var onSkippedSensitive: ((SensitiveContent) -> Void)?
+    /// Pinned clips skip sensitive cleanup and never expire, so pinning a likely secret gets a warning.
+    var onPinnedSensitive: ((SensitiveContent) -> Void)?
     let sentCapture = SentCapture()
     private let isDemo = ProcessInfo.processInfo.arguments.contains("--demo")
     private var store: HistoryStore?
@@ -45,11 +47,13 @@ final class AppModel {
                 preferences.saveSent = true
                 try seedDemo()
             } else {
-                try FileManager.default.createDirectory(at: HistoryLocation.folder(), withIntermediateDirectories: true,
+                let folder = try HistoryLocation.folder()
+                try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true,
                                                         attributes: [.posixPermissions: 0o700])
                 let file = try HistoryLocation.file()
                 store = try HistoryStore(path: file.path)
                 try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: file.path)
+                try HistoryLocation.excludeFromBackup(folder: folder, file: file)
             }
             reload()
             removeSensitiveTextClips()
@@ -144,8 +148,20 @@ final class AppModel {
         reload()
     }
 
-    func pin(_ clip: Clip) { perform { try store?.togglePin(clip.id); reload() } }
-    func pin(_ clip: Clip, to board: String?) { perform { try store?.pin(clip.id, to: board); reload() } }
+    func pin(_ clip: Clip) {
+        perform { try store?.togglePin(clip.id); reload() }
+        warnIfPinningSensitive(clip)
+    }
+
+    func pin(_ clip: Clip, to board: String?) {
+        perform { try store?.pin(clip.id, to: board); reload() }
+        warnIfPinningSensitive(clip)
+    }
+
+    private func warnIfPinningSensitive(_ clip: Clip) {
+        guard preferences.skipSensitive, !clip.isPinned, let sensitive = clip.sensitiveContent else { return }
+        onPinnedSensitive?(sensitive)
+    }
 
     func createBoard(_ name: String, pinning clip: Clip? = nil) {
         perform {
@@ -153,6 +169,7 @@ final class AppModel {
             let created = try store.createBoard(name)
             if let clip { try store.pin(clip.id, to: created) }
             reload()
+            if let clip { warnIfPinningSensitive(clip) }
         }
     }
 
@@ -215,6 +232,7 @@ final class AppModel {
                     onSkippedSensitive?(sensitive)
                 } else {
                     try store?.setRecognizedText(sensitive == nil ? text : "", for: clip.id)
+                    if let sensitive { onPinnedSensitive?(sensitive) }
                 }
             } catch { return }
             reload()
@@ -268,11 +286,12 @@ extension AppModel {
         let source = NSWorkspace.shared.frontmostApplication
         let types = Set((board.types ?? []).map(\.rawValue))
             .union((board.pasteboardItems ?? []).flatMap { $0.types.map(\.rawValue) })
+        let declaredSource = board.string(forType: Self.sourceType)
         guard CapturePolicy.allows(types: types, sourceBundleID: source?.bundleIdentifier,
-                                   excludedApps: preferences.exclusions),
+                                   declaredSourceBundleID: declaredSource, excludedApps: preferences.exclusions),
               !types.contains(NSPasteboard.PasteboardType.fileURL.rawValue),
               // Clips copied back with the `onhand` command are already in history.
-              board.string(forType: Self.sourceType) != HistoryLocation.bundleID else { return }
+              declaredSource != HistoryLocation.bundleID else { return }
         let expectedChange = board.changeCount
         var image: Data?
         if let data = board.data(forType: .png) ?? board.data(forType: .tiff),
@@ -344,7 +363,7 @@ extension AppModel {
         }
     }
 
-    static let sourceType = NSPasteboard.PasteboardType("org.nspasteboard.source")
+    static let sourceType = NSPasteboard.PasteboardType(CapturePolicy.sourceType)
     static let concealedType = NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")
 
     private static func demoImage(text: String) -> Data? {

@@ -28,6 +28,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         item.button?.action = #selector(togglePanel(_:))
         statusItem = item
         model.onSkippedSensitive = { [weak self] kind in self?.showNotice("Didn’t save this \(kind.name)") }
+        model.onPinnedSensitive = { [weak self] kind in
+            self?.showNotice("This pinned clip looks like a \(kind.name). Pinned clips are kept until you delete them.")
+        }
         KeyboardShortcuts.onKeyUp(for: .forgetLastCopy) { [weak self] in
             self?.model.forgetLastCopy()
             self?.showNotice("Forgot your last copy")

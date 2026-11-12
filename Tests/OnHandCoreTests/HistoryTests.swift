@@ -98,6 +98,21 @@ import Testing
     #expect(CapturePolicy.allows(types: ["public.png"], sourceBundleID: "com.apple.Preview", excludedApps: []))
 }
 
+@Test func skipsAnExcludedAppThatCopiesWhileAnotherAppIsInFront() {
+    let excluded = CapturePolicy.defaultExcludedApps
+    // A password manager's quick-access window copies while Safari is frontmost, naming itself on the clipboard.
+    #expect(!CapturePolicy.allows(types: ["public.utf8-plain-text", CapturePolicy.sourceType],
+                                 sourceBundleID: "com.apple.Safari", declaredSourceBundleID: "com.bitwarden.desktop",
+                                 excludedApps: excluded))
+    #expect(!CapturePolicy.allows(types: [], sourceBundleID: nil, declaredSourceBundleID: "org.keepassxc.keepassxc",
+                                 excludedApps: excluded))
+    // A browser extension that marks its copy concealed is skipped whatever app is in front.
+    #expect(!CapturePolicy.allows(types: ["public.utf8-plain-text", "org.nspasteboard.ConcealedType"],
+                                 sourceBundleID: "com.google.Chrome", excludedApps: excluded))
+    #expect(CapturePolicy.allows(types: ["public.utf8-plain-text"], sourceBundleID: "com.apple.Safari",
+                                declaredSourceBundleID: "com.apple.Notes", excludedApps: excluded))
+}
+
 @Test func preservesEmbeddedNullsAndUnicode() throws {
     let store = try HistoryStore(path: ":memory:")
     let value = "Before\0After · こんにちは 👋"
@@ -216,4 +231,23 @@ import Testing
     let clips = try store.all()
     #expect(clips.count == 2)
     #expect(clips.first { $0.text == "On my way" }?.isSent == true)
+}
+
+@Test func historyIsExcludedFromBackups() throws {
+    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let file = folder.appendingPathComponent("history.sqlite")
+    _ = try HistoryStore(path: file.path)
+    let sideFile = URL(fileURLWithPath: file.path + "-wal")
+    FileManager.default.createFile(atPath: sideFile.path, contents: Data())
+    let excluded = { (url: URL) in
+        try URL(fileURLWithPath: url.path).resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup
+    }
+    #expect(try excluded(file) == false)
+    try HistoryLocation.excludeFromBackup(folder: folder, file: file)
+    for url in [folder, file, sideFile] { #expect(try excluded(url) == true) }
+    // Running it again on launch, as an existing install does, keeps it excluded.
+    try HistoryLocation.excludeFromBackup(folder: folder, file: file)
+    #expect(try excluded(file) == true)
 }

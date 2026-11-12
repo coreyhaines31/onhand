@@ -14,6 +14,11 @@ public struct Clip: Identifiable, Equatable, Sendable {
     /// Saved because you sent it from a text field, not because you copied it.
     public var isSent = false
 
+    /// What looks secret in this clip, for warning before it's kept forever by a pin.
+    public var sensitiveContent: SensitiveContent? {
+        SensitiveContent.detect(in: kind == .image ? (recognizedText ?? "") : text)
+    }
+
     public var title: String {
         if kind == .image { return "Image" }
         return text.split(whereSeparator: \.isNewline).first.map(String.init) ?? text

@@ -7,13 +7,20 @@ public enum CapturePolicy {
         "de.petermaurer.TransientPasteboardType", "com.typeit4me.clipping",
         "Pasteboard generator type"
     ]
+    /// The `org.nspasteboard.source` type, where the app that wrote the clipboard can name itself.
+    public static let sourceType = "org.nspasteboard.source"
     public static let defaultExcludedApps: Set<String> = [
         "com.1password.1password", "com.agilebits.onepassword7", "com.bitwarden.desktop",
-        "com.apple.Passwords", "com.dashlane.Dashlane", "com.lastpass.LastPass"
+        "com.apple.Passwords", "com.apple.keychainaccess", "com.dashlane.Dashlane", "com.lastpass.LastPass",
+        "org.keepassxc.keepassxc", "me.proton.pass.electron", "in.sinew.Enpass-Desktop",
+        "com.markmcguill.strongbox.mac"
     ]
 
-    public static func allows(types: Set<String>, sourceBundleID: String?, excludedApps: Set<String>) -> Bool {
+    /// The frontmost app isn't always the one that copied: a password manager's menu bar or quick-access window
+    /// can write while another app is in front. So an excluded app named by the clipboard itself counts too.
+    public static func allows(types: Set<String>, sourceBundleID: String?, declaredSourceBundleID: String? = nil,
+                              excludedApps: Set<String>) -> Bool {
         guard types.isDisjoint(with: ignoredTypes) else { return false }
-        return sourceBundleID.map { !excludedApps.contains($0) } ?? true
+        return [sourceBundleID, declaredSourceBundleID].compactMap { $0 }.allSatisfy { !excludedApps.contains($0) }
     }
 }
