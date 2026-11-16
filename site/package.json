@@ -25,5 +25,8 @@
     "portless": "^0.6.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.71.0"
+  },
+  "overrides": {
+    "minimatch": "11.0.8"
   }
 }
