@@ -40,18 +40,3 @@ struct KeyCap: View {
             .contentShape(Rectangle())
     }
 }
-
-/// A small LED like PanelKit's status lights, for inline status text.
-struct HandLED: View {
-    let status: PanelStatus
-    @Environment(\.panelTheme) private var theme
-
-    var body: some View {
-        let color = theme.color(for: status)
-        Circle()
-            .fill(color)
-            .frame(width: 7, height: 7)
-            .shadow(color: color, radius: 2.5)
-            .accessibilityHidden(true)
-    }
-}

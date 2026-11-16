@@ -8,7 +8,7 @@ struct PausedBanner: View {
 
     var body: some View {
         HStack(spacing: 9) {
-            HandLED(status: .caution)
+            StatusLED(.caution)
             Text("Capture is paused. New copies aren’t saved.")
                 .font(.system(size: 12)).foregroundStyle(theme.ink2)
                 .fixedSize(horizontal: false, vertical: true)

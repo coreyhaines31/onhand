@@ -188,7 +188,7 @@ struct HistoryView: View {
         let count = model.visibleClips.count
         let state = model.recording ? "Capturing · On this Mac only" : "Capture paused"
         return HStack(spacing: 6) {
-            HandLED(status: model.recording ? .go : .caution)
+            StatusLED(model.recording ? .go : .caution)
             Text("\(state) · \(count == 1 ? "1 item" : "\(count) items")")
                 .foregroundStyle(theme.sub).monospacedDigit().lineLimit(1).minimumScaleFactor(0.8)
             Spacer(minLength: 4)
