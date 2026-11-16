@@ -1,24 +1,28 @@
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { sourceUrl } from "@/lib/site";
 
-export default function SiteNav() {
+export default function SiteNav({ children }: { children?: ReactNode }) {
   return (
-    <nav className="nav wrap" aria-label="Main navigation">
-      <Link className="brand" href="/" aria-label="On Hand home">
-        <span className="mark">
-          <Image src="/brand-symbol.svg" width={29} height={29} alt="" />
-        </span>
-        On Hand
-      </Link>
-      <div className="nav-links">
-        <Link href="/#features">Features</Link>
-        <Link href="/alternatives">Compare</Link>
-        <a href={sourceUrl}>
-          View source code <ArrowUpRight size={12} />
-        </a>
+    <div className={children ? "bx-hero" : "bx-hero site-top"}>
+      <div className="bx-wrap">
+        <nav className="bx-nav" aria-label="Main navigation">
+          <Link className="bx-brand" href="/" aria-label="On Hand home">
+            <Image src="/on-hand-icon.png" width={32} height={32} alt="" priority />
+            On Hand
+          </Link>
+          <div className="nav-links">
+            <Link href="/#features">Features</Link>
+            <Link href="/alternatives">Compare</Link>
+            <a href={sourceUrl}>
+              View source code <ArrowUpRight size={12} aria-hidden />
+            </a>
+          </div>
+        </nav>
+        {children}
       </div>
-    </nav>
+    </div>
   );
 }

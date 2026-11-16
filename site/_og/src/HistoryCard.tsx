@@ -1,5 +1,5 @@
 import {Easing, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {INK, INK_2} from './OgVideo';
+import {INK, SUB, SYS} from './OgVideo';
 
 // On Hand's history panel: four copies land on top and push the list down, the selection walks down to a
 // message copied two hours ago, it's pasted, then the new clips fold away so the loop ends where it starts.
@@ -20,7 +20,7 @@ const OLD: Clip[] = [
   {kind: 'text', text: 'Invoice 2291 is attached.', source: 'Mail', age: 'Mon'},
 ];
 const ARRIVALS = [0.25, 0.75, 1.25, 1.75];
-const ROW = 58;
+const ROW = 52;
 const ROWS = 5;
 const PICK = NEW.length; // the 2-hour-old message, once all four new clips sit above it
 
@@ -37,16 +37,12 @@ const Glyph = ({kind, color}: {kind: Kind; color: string}) => {
   };
   if (kind === 'image') {
     return (
-      <div style={{width: 40, height: 40, borderRadius: 8, background: '#f4f4f6', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.06)', padding: '8px 6px', boxSizing: 'border-box'}}>
-        <div style={{height: 8, borderRadius: 2, background: '#8fb4e6', width: 22}} />
-        <div style={{height: 3, borderRadius: 2, background: '#c7c7cc', width: 26, marginTop: 5}} />
-        <div style={{height: 3, borderRadius: 2, background: '#c7c7cc', width: 18, marginTop: 4}} />
-      </div>
+      <div style={{width: 34, height: 34, borderRadius: 7, background: 'repeating-linear-gradient(135deg, #a9abad 0 5px, #cdcfd0 5px 10px)'}} />
     );
   }
   return (
-    <div style={{width: 40, height: 40, borderRadius: 8, background: '#eef3fc', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <div style={{width: 34, height: 34, boxSizing: 'border-box', borderRadius: 7, background: 'linear-gradient(180deg, #f7f7f7, #d9dadb)', border: '1px solid #9c9ea0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <path d={paths[kind]} />
       </svg>
     </div>
@@ -54,29 +50,29 @@ const Glyph = ({kind, color}: {kind: Kind; color: string}) => {
 };
 
 const Row = ({clip, y, opacity, check}: {clip: Clip; y: number; opacity: number; check: number}) => (
-  <div style={{position: 'absolute', left: 0, right: 0, top: y, height: ROW, display: 'flex', alignItems: 'center', gap: 14, padding: '0 10px', opacity}}>
-    <div style={{position: 'relative', width: 40, height: 40, flexShrink: 0}}>
+  <div style={{position: 'absolute', left: 0, right: 0, top: y, height: ROW, display: 'flex', alignItems: 'center', gap: 12, padding: '0 10px', opacity}}>
+    <div style={{position: 'relative', width: 34, height: 34, flexShrink: 0}}>
       <div style={{position: 'absolute', inset: 0, opacity: 1 - Math.min(1, check * 2)}}>
-        <Glyph kind={clip.kind} color="#3478d4" />
+        <Glyph kind={clip.kind} color="#2c2c2d" />
       </div>
       {check > 0.001 && (
-        <div style={{position: 'absolute', inset: 0, opacity: check, transform: `scale(${0.7 + 0.3 * check})`, borderRadius: 8, background: '#0071e3', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+        <div style={{position: 'absolute', inset: 0, opacity: check, transform: `scale(${0.7 + 0.3 * check})`, borderRadius: 7, background: '#1b1b1b', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <svg width={19} height={19} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 6 9 17l-5-5" />
           </svg>
         </div>
       )}
     </div>
     <div style={{minWidth: 0, flex: 1}}>
-      <div style={{fontSize: 19, color: INK, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.01em'}}>{clip.text}</div>
-      <div style={{fontSize: 15, color: INK_2, marginTop: 2}}>
+      <div style={{fontSize: 17, fontWeight: 600, color: INK, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{clip.text}</div>
+      <div style={{fontSize: 14, color: SUB, marginTop: 1}}>
         {clip.source} · {clip.age}
       </div>
     </div>
   </div>
 );
 
-export const HistoryCard = ({accentInk, accentFill}: {accentInk: string; accentFill: string}) => {
+export const HistoryCard = ({accent}: {accent: string}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = frame / fps;
@@ -103,23 +99,26 @@ export const HistoryCard = ({accentInk, accentFill}: {accentInk: string; accentF
 
   return (
     <div
-      style={{width: '100%', height: '100%', boxSizing: 'border-box', padding: '24px 22px', borderRadius: 30, background: 'rgba(251,251,253,0.9)',
-        boxShadow: '0 0 0 1px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.05), 0 16px 36px rgba(35,50,80,0.12)'}}
+      style={{width: '100%', height: '100%', boxSizing: 'border-box', borderRadius: 14, background: '#eeeeed', overflow: 'hidden', fontFamily: SYS, color: INK,
+        boxShadow: '0 18px 40px rgba(0,0,0,.32), 0 2px 6px rgba(0,0,0,.14), 0 0 0 .5px rgba(0,0,0,.35)'}}
     >
-      <div style={{display: 'flex', alignItems: 'center', gap: 10, height: 34, padding: '0 10px'}}>
-        <svg width={24} height={24} viewBox="0 0 64 64" fill="none" stroke="#6e6e73" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round">
-          <path transform="rotate(40 32 32)" d="M23 47V20a9 9 0 0 1 18 0v25a6.5 6.5 0 0 1-13 0V24a4 4 0 0 1 8 0v15" />
-        </svg>
-        <div style={{fontSize: 24, fontWeight: 600, letterSpacing: '-0.02em', color: INK}}>History</div>
-        <div style={{marginLeft: 'auto', fontSize: 17, color: '#8e8e93'}}>⌘⇧Space</div>
-      </div>
-      <div style={{height: 1, background: 'rgba(0,0,0,0.07)', margin: '12px 0 6px'}} />
       <div
-        style={{position: 'relative', height: ROW * ROWS, overflow: 'hidden',
+        style={{display: 'flex', alignItems: 'center', gap: 10, height: 58, padding: '0 18px', borderBottom: '1px solid rgba(0,0,0,.25)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.55)',
+          background: 'repeating-linear-gradient(0deg, rgba(255,255,255,.22) 0 1px, rgba(0,0,0,.035) 1px 2px, transparent 2px 3px), linear-gradient(100deg, rgba(255,255,255,0) 18%, rgba(255,255,255,.5) 40%, rgba(255,255,255,0) 64%), linear-gradient(180deg, #e7e8e9, #c3c5c7)'}}
+      >
+        <div style={{display: 'flex', alignItems: 'center', gap: 9, background: '#1b1b1b', color: '#d8d9da', padding: '7px 12px 7px 10px', borderRadius: 2,
+          fontFamily: '"Barlow Semi Condensed", sans-serif', fontWeight: 600, fontSize: 14, letterSpacing: '0.26em'}}>
+          <span style={{width: 8, height: 8, borderRadius: '50%', background: accent, boxShadow: `0 0 6px ${accent}`}} />
+          HISTORY
+        </div>
+        <div style={{marginLeft: 'auto', fontSize: 16, color: '#3d3f41'}}>⌘⇧Space</div>
+      </div>
+      <div
+        style={{position: 'relative', height: ROW * ROWS, overflow: 'hidden', margin: '8px 10px 0',
           WebkitMaskImage: 'linear-gradient(transparent, #000 8px, #000 calc(100% - 8px), transparent)'}}
       >
         <div
-          style={{position: 'absolute', left: 0, right: 0, top: selRow * ROW + 2, height: ROW - 4, borderRadius: 10, background: accentFill,
+          style={{position: 'absolute', left: 0, right: 0, top: selRow * ROW + 2, height: ROW - 4, borderRadius: 7, background: '#f8f8f7', boxShadow: 'inset 0 0 0 1px #c9cacb',
             opacity: selShow, transform: `scale(${pressScale})`}}
         />
         {NEW.map((clip, k) => {
@@ -133,13 +132,13 @@ export const HistoryCard = ({accentInk, accentFill}: {accentInk: string; accentF
           <Row key={clip.text} clip={clip} y={(m + pushed) * ROW - scroll} opacity={1} check={m === 0 ? check : 0} />
         ))}
       </div>
-      <div style={{position: 'relative', height: 44, marginTop: 16, padding: '0 10px'}}>
-        <div style={{position: 'absolute', left: 10, top: 6, fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', color: '#8e8e93', opacity: keeping}}>
+      <div style={{position: 'relative', height: 54, marginTop: 8, borderTop: '1px solid #dcdcdb'}}>
+        <div style={{position: 'absolute', left: 20, top: 13, fontSize: 21, fontWeight: 600, color: SUB, opacity: keeping}}>
           Keeping what you copy…
         </div>
-        <div style={{position: 'absolute', left: 10, top: 2, whiteSpace: 'nowrap', fontSize: 30, fontWeight: 700, letterSpacing: '-0.03em', color: accentInk,
+        <div style={{position: 'absolute', left: 20, top: 10, whiteSpace: 'nowrap', fontSize: 24, fontWeight: 700, color: INK,
           opacity: pasted, transform: `translateY(${(1 - pastedIn) * 8}px)`}}>
-          Pasted <span style={{color: INK_2, fontWeight: 600}}>· from 2 hours ago</span>
+          Pasted <span style={{color: SUB, fontWeight: 600}}>· from 2 hours ago</span>
         </div>
       </div>
     </div>

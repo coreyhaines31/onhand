@@ -1,0 +1,117 @@
+/* Nav and hero on the brushed fascia. */
+.bx-brand img {
+  border-radius: 0;
+}
+.nav-links {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 15px;
+}
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--bx-ink2);
+}
+.nav-links a:hover {
+  color: var(--bx-ink);
+}
+.site-top .bx-nav {
+  padding-block: 14px;
+}
+.hero-copy {
+  min-width: 0;
+}
+.hero .bx-badge {
+  line-height: 1.4;
+}
+.hero .bx-badge i {
+  flex-shrink: 0;
+}
+.headline {
+  font-family: var(--bx-display);
+  font-weight: 600;
+  font-size: clamp(44px, 6.4vw, 78px);
+  line-height: 0.97;
+  margin-top: 18px;
+  text-wrap: balance;
+}
+.headline span {
+  font-weight: 300;
+}
+.agent-install {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--bx-ink2);
+}
+.agent-install button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--bx-ink2);
+  color: var(--bx-ink);
+  font: 600 13px/1 var(--bx-body);
+}
+.agent-install button:hover {
+  background: rgba(127, 127, 127, 0.12);
+}
+.agent-install a,
+.download-note a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.download-note {
+  line-height: 1.7;
+}
+.hero-note {
+  margin-top: 18px;
+  font: 600 12px/1.4 var(--bx-display);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bx-ink2);
+}
+.hero-visual {
+  min-width: 0;
+}
+.hero-visual .bx-mount {
+  padding: 40px 20px 32px;
+}
+.demo-caption {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--bx-ink2);
+}
+@media (max-width: 880px) {
+  .hero-visual {
+    width: min(100%, 520px);
+    margin-inline: auto;
+  }
+}
+@media (max-width: 520px) {
+  .nav-links {
+    gap: 16px;
+  }
+  .nav-links a:not(:last-child) {
+    display: none;
+  }
+  .hero-visual .bx-mount {
+    padding: 34px 10px 24px;
+    margin-inline: -8px;
+  }
+}
+.hero h1.bx-badge {
+  font: 600 12px/1.4 var(--bx-display);
+  letter-spacing: 0.26em;
+  margin-top: 0;
+}

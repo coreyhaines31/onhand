@@ -17,10 +17,7 @@ export const RemotionRoot = () => (
         headline: 'Copy it once.',
         headlineAccent: 'Find it again.',
         sub: 'Free for macOS · onhandformac.com',
-        accent: '#4a6283',
-        accentInk: '#375880',
-        accentFill: 'rgba(0,113,227,0.11)',
-        field: ['#aecdf6', '#d2c9ee', '#a3cdff', '#c7bfe8'],
+        accent: '#b43a9e',
       } satisfies OgVideoProps
     }
   />

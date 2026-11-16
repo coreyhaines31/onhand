@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import "./brushed/brushed.css";
+import "./brushed/popover.css";
 import "./globals.css";
+import "./styles/hero.css";
+import "./styles/demo.css";
+import "./styles/home.css";
+import "./styles/footer.css";
 import { siteUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: {
@@ -18,7 +24,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@300;600;700&display=swap"
+        />
+      </head>
+      <body className="bx">
         {children}
         {process.env.VERCEL_ENV === "production" && (
           <>
