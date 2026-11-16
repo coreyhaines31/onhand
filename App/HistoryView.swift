@@ -114,9 +114,23 @@ struct HistoryView: View {
     }
 
     private var searchBar: some View {
-        HistorySearchField(text: $model.query, focusRequest: model.searchFocusRequest,
-                           onSubmit: copySelected, onMove: move)
-            .frame(height: 24).padding(.horizontal, 16).padding(.top, 14)
+        HStack(spacing: 6) {
+            Image(systemName: "magnifyingglass").font(.system(size: 11.5, weight: .medium))
+                .foregroundStyle(theme.sub).frame(width: 13, height: 13).accessibilityHidden(true)
+            HistorySearchField(text: $model.query, focusRequest: model.searchFocusRequest,
+                               onSubmit: copySelected, onMove: move)
+                .frame(height: 22)
+            Text("⌘F").font(.system(size: 11)).foregroundStyle(theme.sub).accessibilityHidden(true)
+        }
+        .padding(.horizontal, 10).padding(.vertical, 3)
+        .background(
+            RoundedRectangle(cornerRadius: 6).fill(theme.field)
+                .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(theme.line, lineWidth: 1))
+                .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(
+                    LinearGradient(colors: [.black.opacity(0.08), .clear], startPoint: .top, endPoint: .center),
+                    lineWidth: 1))
+        )
+        .padding(.horizontal, 14).padding(.top, 12)
     }
 
     private var pausedBanner: some View {

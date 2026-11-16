@@ -14,6 +14,13 @@ struct HistorySearchField: NSViewRepresentable {
         field.placeholderString = "Search clipboard history"
         field.setAccessibilityLabel("Search clipboard history")
         field.sendsSearchStringImmediately = true
+        field.isBezeled = false
+        field.isBordered = false
+        field.drawsBackground = false
+        field.focusRingType = .none
+        field.font = .systemFont(ofSize: 12.5)
+        // The Brushed well draws its own magnifier; the unbezeled cell would draw it over the text.
+        (field.cell as? NSSearchFieldCell)?.searchButtonCell = nil
         field.delegate = context.coordinator
         return field
     }
