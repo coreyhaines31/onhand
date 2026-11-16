@@ -162,13 +162,7 @@ struct HistoryView: View {
     private var history: some View {
         Group {
             if model.visibleClips.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: model.query.isEmpty ? "square.on.square.dashed" : "magnifyingglass")
-                        .font(.system(size: 28, weight: .light)).foregroundStyle(.tertiary)
-                    Text(emptyTitle).font(.headline)
-                    Text(emptyDetail).font(.system(size: 12)).foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center).frame(maxWidth: 290)
-                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                EmptyHistory(query: model.query, filter: model.filter, board: model.board)
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
@@ -233,23 +227,6 @@ struct HistoryView: View {
         }.frame(maxWidth: .infinity)
     }
 
-    private var emptyTitle: String {
-        if !model.query.isEmpty { return "Nothing here by that name." }
-        if model.filter == "Pinned", model.board != nil { return "Nothing on this board yet." }
-        if model.filter == "Sent" { return "Nothing sent yet." }
-        return model.filter == "Pinned" ? "Keep your favorites close." : "Ready when you copy."
-    }
-    private var emptyDetail: String {
-        if !model.query.isEmpty { return "Try a different word or the name of the app you copied from." }
-        if model.filter == "Pinned", model.board != nil {
-            return "Right-click any clip and choose Pin to Board."
-        }
-        if model.filter == "Pinned" { return "Pin any clip to keep it beyond your history limit." }
-        if model.filter == "Sent" {
-            return "Messages you send in the apps you chose in Settings show up here."
-        }
-        return "Copy some text, a link, or an image. It will be waiting right here."
-    }
     private func copySelected() {
         if let clip = model.visibleClips.first(where: { $0.id == model.selectedID }) ?? model.visibleClips.first {
             onCopy(clip)
