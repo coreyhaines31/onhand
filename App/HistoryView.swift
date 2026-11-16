@@ -17,7 +17,7 @@ struct HistoryView: View {
         VStack(spacing: 0) {
             fascia
             if !model.preferences.hasStarted {
-                welcome
+                WelcomeView(ready: model.ready) { model.start() }
             } else if let clip = model.clips.first(where: { $0.id == model.previewID }) {
                 ClipDetailView(clip: clip, copied: model.copiedID == clip.id,
                                image: clip.kind == .image ? model.preview(clip) : nil,
@@ -200,28 +200,6 @@ struct HistoryView: View {
         .padding(.horizontal, 14).padding(.vertical, 9)
         .overlay(alignment: .top) { Rectangle().fill(theme.line).frame(height: 1) }
         .accessibilityElement(children: .combine)
-    }
-
-    private var welcome: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            HandMark()
-            Text("Your next copy has a home.").font(.title2.weight(.semibold))
-            Text("On Hand remembers the text, links, and images you copy, so you can find them again.")
-                .font(.system(size: 14)).foregroundStyle(.secondary)
-                .multilineTextAlignment(.center).frame(maxWidth: 340)
-            VStack(alignment: .leading, spacing: 12) {
-                Label("History stays on this Mac", systemImage: "lock.shield")
-                Label("Password-marked clips are skipped", systemImage: "key")
-                Label("Unpinned clips expire after 7 days", systemImage: "clock")
-            }.font(.system(size: 12)).foregroundStyle(.secondary).padding(.vertical, 8)
-            Button("Start keeping my clipboard") { model.start() }
-                .buttonStyle(.borderedProminent).controlSize(.large).disabled(!model.ready)
-            Text("Pause or clear your history anytime.").font(.system(size: 11)).foregroundStyle(.tertiary)
-            Spacer()
-            Text("⌘⇧Space to open · Esc to dismiss").font(.system(size: 11)).foregroundStyle(.secondary)
-                .padding(.bottom, 24)
-        }.frame(maxWidth: .infinity)
     }
 
     private func copySelected() {
