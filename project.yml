@@ -19,6 +19,9 @@ packages:
   Sparkle:
     url: https://github.com/sparkle-project/Sparkle
     exactVersion: '2.10.0'
+  PanelKit:
+    url: https://github.com/coreyhaines31/mac-app-kit
+    branch: feature/2-panelkit
 targets:
   OnHand:
     type: application
@@ -32,6 +35,7 @@ targets:
       - package: OnHandCore
       - package: KeyboardShortcuts
       - package: Sparkle
+      - package: PanelKit
       - target: OnHandCLI
         copy:
           destination: executables

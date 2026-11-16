@@ -1,6 +1,7 @@
 import AppKit
 import KeyboardShortcuts
 import OnHandCore
+import PanelKit
 import ServiceManagement
 import SwiftUI
 
@@ -16,6 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        PanelKit.registerFonts()
         installMenu()
         NSWorkspace.shared.notificationCenter.addObserver(
             self, selector: #selector(applicationActivated(_:)),
