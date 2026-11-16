@@ -1002,6 +1002,147 @@ export default function Home() {
           <a href="/privacy">
             Read the privacy policy <ArrowUpRight size={14} aria-hidden />
           </a>
+          <div className="lf-safety">
+            <article className="bx-card">
+              <h3>What it touches</h3>
+              <ul className="lf-list">
+                <li>
+                  <strong>The clipboard.</strong> Four times a second it checks
+                  whether anything new was copied, and reads it only when
+                  something was.
+                </li>
+                <li>
+                  <strong>One history file</strong> in your Library folder, and
+                  its own settings.
+                </li>
+                <li>
+                  <strong>Message boxes</strong> in apps you list, only if you
+                  turn on Sent messages.
+                </li>
+              </ul>
+            </article>
+            <article className="bx-card">
+              <h3>What it never does</h3>
+              <ul className="lf-list">
+                <li>
+                  <strong>Upload anything.</strong> No account, no sync, no
+                  analytics. Its only network request checks for updates.
+                </li>
+                <li>
+                  <strong>Record keystrokes</strong>, read password fields, or
+                  import what you copied before you started.
+                </li>
+                <li>
+                  <strong>Paste on its own.</strong> Choosing a clip copies it, and
+                  you press ⌘V. Only ⌃⌥↑ fills a message box, when you press it.
+                </li>
+              </ul>
+            </article>
+            <article className="bx-card">
+              <h3>Permissions it asks for</h3>
+              <ul className="lf-list">
+                <li>
+                  <strong>Clipboard access.</strong> If macOS asks whether On Hand
+                  can paste from other apps, choose Allow. It can’t keep history
+                  without it.
+                </li>
+                <li>
+                  <strong>Accessibility</strong>, only for Sent messages, to read
+                  the message box in apps you chose.
+                </li>
+                <li>
+                  <strong>Login item.</strong> It starts with your Mac. Turn off
+                  Launch at login in Settings to stop that.
+                </li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="settings" className="bx-section">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">Settings</span>
+            <h2>Every setting fits on one screen.</h2>
+            <p>
+              Open ⋯ › Settings from the history window. This is all of it, so
+              there’s nothing hidden to find later.
+            </p>
+          </div>
+          <div className="lf-cards">
+            <article className="bx-card">
+              <h3>General</h3>
+              <ul className="lf-list">
+                <li>The shortcut that opens On Hand, and the one that forgets your last copy</li>
+                <li>Keep history open while switching apps</li>
+                <li>Launch at login</li>
+                <li>Keep unpinned clips for 1, 7, 30, or 90 days</li>
+              </ul>
+            </article>
+            <article className="bx-card">
+              <h3>Privacy</h3>
+              <ul className="lf-list">
+                <li>Pause capture</li>
+                <li>Don’t save card numbers, Social Security numbers, or secret keys</li>
+                <li>Clear them from the clipboard after 90 seconds</li>
+                <li>Apps whose copies are never kept</li>
+                <li>Clear history, with or without pinned clips</li>
+              </ul>
+            </article>
+            <article className="bx-card">
+              <h3>Sent messages</h3>
+              <ul className="lf-list">
+                <li>Save messages you send, off by default</li>
+                <li>The apps to save them from</li>
+                <li>The shortcuts that step through what you sent</li>
+                <li>Below them: your version, Check for updates, and Quit</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="new" className="bx-section">
+        <div className="bx-wrap lf-new">
+          <span className="bx-strip">New in 1.6.0</span>
+          <div className="lf-head">
+            <h2>A new look, no Time Machine copies, and safer pins.</h2>
+            <p>
+              On Hand 1.6.0 shipped on November 16, 2026. The history panel is
+              redesigned to match my other free Mac apps, with a new app icon and
+              menu bar icon, and every feature and shortcut works as before. History is now kept out of Time Machine backups and local
+              snapshots. Copies made by an excluded app are skipped even when
+              another app is in front, and pinning a clip that looks like a
+              secret warns you first.{" "}
+              <a href={`${source}/releases`}>All release notes</a>
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="free" className="bx-section">
+        <div className="bx-wrap lf-feature">
+          <div className="lf-copy">
+            <span className="bx-eyebrow">Price</span>
+            <h2>Free. No account. No subscription.</h2>
+            <p>
+              There’s no server behind On Hand, so there’s no monthly bill to
+              pass on to you. There’s no trial, no feature held back for a paid
+              tier, and nothing to sign up for. The source is MIT-licensed on GitHub, so you can read
+              exactly what it does with your clipboard, build it yourself, or
+              send a fix. Optional paid services may come later.
+            </p>
+          </div>
+          <div className="bx-card">
+            <h3>System requirements</h3>
+            <ul className="lf-list">
+              <li>macOS 14 Sonoma or later, including Sequoia and Tahoe</li>
+              <li>Apple silicon or Intel</li>
+              <li>Signed and notarized by Apple</li>
+              <li>Updates itself, or with Homebrew</li>
+              <li>
+                Source on <a href={source}>GitHub</a> under the MIT license
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
       <section id="questions" className="bx-section">
