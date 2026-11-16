@@ -21,7 +21,8 @@ packages:
     exactVersion: '2.10.0'
   PanelKit:
     url: https://github.com/coreyhaines31/panelkit
-    from: 0.1.0
+    # Temporary: track development until PanelKit 0.2.0 is tagged, then pin `from: 0.2.0`.
+    branch: development
 targets:
   OnHand:
     type: application
