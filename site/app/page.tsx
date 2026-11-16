@@ -18,6 +18,7 @@ import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
 import {
   faqs,
+  passwordManagers,
   shortcuts,
 } from "@/lib/home";
 import { agentInstruction, agentPrompt, brewCommand, cliExamples } from "@/lib/install";
@@ -578,6 +579,157 @@ export default function Home() {
                 the same as sending it, so that draft may be saved too.
               </li>
             </ul>
+          </div>
+        </div>
+      </section>
+      <section id="skips" className="bx-section">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">What it keeps</span>
+            <h2>What On Hand saves, skips, and clears.</h2>
+            <p>
+              A clipboard manager sees everything you copy, so it should be
+              exact about what it keeps. This is the full list, straight from
+              the code.
+            </p>
+          </div>
+          <div className="lf-safety">
+            <article className="bx-card">
+              <span className="bx-led">Saved</span>
+              <ul className="lf-list go">
+                <li>
+                  <strong>Text</strong> up to 1 MB. Rich text is saved as plain
+                  text.
+                </li>
+                <li>
+                  <strong>Links</strong>: any copied http or https address, so the
+                  Links tab can find them.
+                </li>
+                <li>
+                  <strong>Images</strong> up to 10 MB, with the text in them
+                  recognized for search.
+                </li>
+                <li>
+                  <strong>Where and when:</strong> the app you copied from and the
+                  time, shown on each clip.
+                </li>
+                <li>
+                  <strong>Sent messages</strong>, only if you turn them on, only
+                  from apps you choose.
+                </li>
+              </ul>
+            </article>
+            <article className="bx-card">
+              <span className="bx-led st">Skipped</span>
+              <ul className="lf-list st">
+                <li>
+                  <strong>Anything marked concealed, temporary, or
+                  auto-generated</strong>, the signals password managers put on
+                  what they copy.
+                </li>
+                <li>
+                  <strong>Copies from {passwordManagers.length} password
+                  managers</strong> by default: {passwordManagers.join(", ")}.
+                  Add any other app in Settings.
+                </li>
+                <li>
+                  <strong>Card numbers, US Social Security numbers, and secret
+                  keys</strong>: more than 25 kinds of keys and tokens (GitHub,
+                  Stripe, AWS, OpenAI, Anthropic, Slack, npm and more), database
+                  URLs with a password, and <code>.env</code> lines like{" "}
+                  <code>API_SECRET=…</code>. In screenshots too.
+                </li>
+                <li>
+                  <strong>Copied files</strong>, text over 1 MB, and images over
+                  10 MB.
+                </li>
+                <li>
+                  <strong>Anything copied while capture is paused</strong>, or
+                  before you chose to start.
+                </li>
+              </ul>
+            </article>
+          </div>
+          <div className="lf-cards">
+            <article className="bx-card">
+              <h3>Concealed in a quarter second</h3>
+              <p>
+                When you copy a key or a card number as text, On Hand tags it as
+                private within about a quarter second. Other clipboard managers
+                that honor that tag usually skip it too.
+              </p>
+            </article>
+            <article className="bx-card">
+              <h3>Cleared after 90 seconds</h3>
+              <p>
+                Then it clears the secret from your clipboard after 90 seconds,
+                long enough to paste it once. You can turn that off in Settings ›
+                Privacy.
+              </p>
+            </article>
+            <article className="bx-card">
+              <h3>Named, not silent</h3>
+              <p>
+                The menu bar icon briefly shows a raised hand when it skips
+                something, and its tooltip says what it found, like “GitHub
+                token”, so you know why a copy is missing.
+              </p>
+            </article>
+          </div>
+          <p className="lf-note">
+            These checks can’t catch everything. Addresses, passwords you type
+            yourself, and other private details can still be saved. Pause
+            capture first, or press <kbd>⌃⌥⌘⌫</kbd> to forget a copy.{" "}
+            <a href="/features/protect-api-keys">See every key it recognizes</a>
+          </p>
+        </div>
+      </section>
+      <section id="storage" className="bx-section">
+        <div className="bx-wrap lf-feature">
+          <div className="lf-copy">
+            <span className="bx-eyebrow">Storage</span>
+            <h2>Where your clipboard history lives.</h2>
+            <p>
+              Your history is one database file on your Mac. There’s no server,
+              no account, and no sync, so there’s no copy of it anywhere else.
+            </p>
+            <ul className="lf-list">
+              <li>
+                <strong>Only your user can open it.</strong> The folder and the
+                file are readable by your macOS account alone.
+              </li>
+              <li>
+                <strong>Kept out of Time Machine</strong> and local snapshots, so
+                deleting a clip really removes it.
+              </li>
+              <li>
+                <strong>Unpinned clips expire</strong> after 1, 7, 30, or 90 days.
+                Seven is the default.
+              </li>
+              <li>
+                <strong>History holds up to 500 clips or 50 MB.</strong> When it’s
+                full, the oldest unpinned clips go first.
+              </li>
+              <li>
+                <strong>Clear it anytime</strong> from Settings, with or without
+                your pinned clips.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div className="lf-path">
+              <span>History</span>
+              ~/Library/Application Support/OnHand/history.sqlite
+            </div>
+            <div className="lf-path">
+              <span>Settings</span>
+              ~/Library/Preferences/com.onhandformac.OnHand.plist
+            </div>
+            <p className="lf-note">
+              Delete those two to erase everything On Hand has kept. With
+              Homebrew, <code>brew uninstall --zap --cask onhand</code> does it
+              for you.
+            </p>
           </div>
         </div>
       </section>
