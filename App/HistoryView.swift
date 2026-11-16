@@ -69,17 +69,14 @@ struct HistoryView: View {
         HandFascia(nameplate: "Clips", slip: slipContent,
                    detail: model.isPaused ? "Capture paused" : "Passwords skipped") {
             if model.previewID != nil {
-                Button { model.previewID = nil } label: { KeyCap(symbol: "chevron.left") }
-                    .buttonStyle(.plain).help("Back to history").accessibilityLabel("Back to history")
+                KeyCap("chevron.left", accessibilityLabel: "Back to history") { model.previewID = nil }
                     .keyboardShortcut("[", modifiers: .command)
             }
             Nameplate(model.previewID == nil ? "Clips" : "Clip preview")
             Spacer(minLength: 0)
             if model.preferences.hasStarted {
-                Button { model.togglePause() } label: { KeyCap(symbol: model.recording ? "pause.fill" : "play.fill") }
-                    .buttonStyle(.plain)
-                    .help(model.recording ? "Pause capture" : "Resume capture")
-                    .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
+                KeyCap(model.recording ? "pause.fill" : "play.fill",
+                       accessibilityLabel: model.recording ? "Pause capture" : "Resume capture") { model.togglePause() }
             }
             moreMenu
         }
@@ -96,9 +93,9 @@ struct HistoryView: View {
             Divider()
             Button("Settings…", action: onSettings)
         } label: {
-            KeyCap(symbol: "ellipsis")
+            Image(systemName: "ellipsis")
         }
-        .menuStyle(.button).buttonStyle(.plain).menuIndicator(.hidden).fixedSize()
+        .menuStyle(.button).buttonStyle(KeyCapStyle()).menuIndicator(.hidden).fixedSize()
         .help("More").accessibilityLabel("More")
         .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
     }

@@ -21,8 +21,7 @@ struct BoardBar: View {
                             Button("Delete Board", role: .destructive) { onDelete(name) }
                         }
                 }
-                Button(action: onNew) { KeyCap(symbol: "plus") }
-                    .buttonStyle(.plain).help("New board").accessibilityLabel("New board")
+                KeyCap("plus", accessibilityLabel: "New board", action: onNew)
             }
             .padding(.horizontal, 14).padding(.vertical, 1)
         }
