@@ -62,7 +62,8 @@ export const alternatives: Alternative[] = [
     name: "Maccy",
     url: "https://maccy.app",
     summary: "Free, open-source, keyboard-first clipboard manager.",
-    status: "Actively maintained. Version 2.7.1 shipped in August 2026.",
+    status: "Actively maintained. Version 2.8.0 shipped in October 2026.",
+    checked: { on: "November 16, 2026", iso: "2026-11-16" },
     verdict:
       "Maccy is a great app, and it’s the closest thing to On Hand. Both are free, MIT-licensed, local-only, need macOS 14, and search text in images. The real difference is feel: Maccy is a compact popup you drive with ⇧⌘C, while On Hand is a menu bar window with previews, filters, and a keep-open mode.",
     chooseThem: [
@@ -136,7 +137,8 @@ export const alternatives: Alternative[] = [
     name: "Paste",
     url: "https://pasteapp.io",
     summary: "Polished subscription clipboard app with iCloud sync.",
-    status: "Actively maintained. Version 7.0.1 shipped in October 2026.",
+    status: "Actively maintained. Version 7.1.0 shipped in November 2026.",
+    checked: { on: "November 16, 2026", iso: "2026-11-16" },
     verdict:
       "Paste is the most polished paid option, and it’s the one to pick if you need clipboard history on your iPhone and iPad too. If you only need it on one Mac and don’t want a subscription, On Hand covers the everyday parts for free.",
     chooseThem: [
@@ -145,12 +147,12 @@ export const alternatives: Alternative[] = [
       "You’re happy to pay for a mature, polished app.",
     ],
     chooseOnHand: [
-      "You don’t want a subscription. Paste costs $29.99 a year, or $99.99 for lifetime on the App Store.",
+      "You don’t want a subscription. Paste costs $29.99 a year, or $89.99 for lifetime on the App Store.",
       "You’d rather your clipboard never leaves your Mac.",
       "You want an open-source app whose code you can read.",
     ],
     comparison: {
-      price: "From $2.49/month or $29.99/year. $99.99 lifetime on the App Store. 7-day trial",
+      price: "From $2.49/month or $29.99/year. $89.99 lifetime on the App Store. 7-day trial",
       source: "Closed source",
       images: "Yes",
       search: "Yes",
