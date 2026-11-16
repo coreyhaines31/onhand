@@ -15,6 +15,7 @@ import MakerNote from "@/components/maker-note";
 import MoreApps from "@/components/more-apps";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
+import { faqs } from "@/lib/home";
 import { agentInstruction, agentPrompt, brewCommand, cliExamples } from "@/lib/install";
 import { downloadUrl as download, siteUrl, sourceUrl as source } from "@/lib/site";
 
@@ -37,53 +38,6 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", images: "/og-video.png" },
 };
-
-const faqs: { question: string; answer: string; link?: { href: string; label: string } }[] = [
-  {
-    question: "Is On Hand free?",
-    answer:
-      "Yes. On Hand is free, with no account, trial, or subscription. The local app’s source is available under the MIT license. Optional paid services may come later.",
-  },
-  {
-    question: "Will it run on my Mac?",
-    answer:
-      "On Hand supports Apple silicon and Intel Macs running macOS 14 or later. It is signed and notarized by Apple.",
-    link: { href: "/install", label: "Read the installation guide" },
-  },
-  {
-    question: "What does On Hand save?",
-    answer:
-      "Text, web links, and images you copy after turning on capture. On Hand reads the text in images on your Mac so you can search screenshots. History holds up to 500 clips or 50 MB. Unpinned clips expire after seven days by default. Text over 1 MB, images over 10 MB, and copied files are skipped; rich text is saved as plain text.",
-  },
-  {
-    question: "Does it capture passwords?",
-    answer:
-      "On Hand skips concealed and temporary clipboard items and excludes several common password managers by default. It also won’t save card numbers, Social Security numbers, or secret keys, including in screenshots. When you copy one as text, it marks it so other clipboard managers that respect the concealed signal skip it too, and clears it from your clipboard after 90 seconds. It can’t recognize every secret, so pause capture before copying other private information, or press ⌃⌥⌘⌫ to forget your last copy.",
-    link: { href: "/features/protect-api-keys", label: "See which secrets it recognizes" },
-  },
-  {
-    question: "Can AI agents use my clipboard history?",
-    answer:
-      "Yes, when you let them. On Hand includes the onhand command, so Claude Code, Codex, or a script can search your history, read a clip or the text in a screenshot, copy it back, or pause capture from Terminal. Whatever an agent reads goes to its AI provider, so search shows only one-line previews and the full text comes one clip at a time.",
-    link: { href: "/features/command-line", label: "See how the command works" },
-  },
-  {
-    question: "Can it save messages I send?",
-    answer:
-      "Yes, if you turn on Sent messages in Settings. In apps you choose, like Slack or Messages, On Hand saves what you send so you can find it again, and ⌃⌥↑ brings your last message back into the box, like ↑ in Terminal. It needs Accessibility access, reads only the message box, never records keystrokes, and skips password fields.",
-  },
-  {
-    question: "Does it sync between Macs?",
-    answer:
-      "No. Your history stays on the Mac where you copied it. On Hand has no cloud sync.",
-  },
-  {
-    question: "Can I inspect or build the code?",
-    answer:
-      "Yes. The source is MIT-licensed, so you can inspect the code, build the app, report an issue, or contribute.",
-    link: { href: source, label: "View the source on GitHub" },
-  },
-];
 
 const structuredData = [
   {
