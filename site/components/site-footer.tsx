@@ -24,6 +24,12 @@ export default function SiteFooter() {
                 </a>
               </li>
             ))}
+            <li>
+              <span className="soon">
+                <Image src="/family/kill.png" width={56} height={56} alt="" />
+                Kill Cord<small>Coming soon</small>
+              </span>
+            </li>
           </ul>
         </div>
       </aside>
