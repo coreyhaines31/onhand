@@ -9,6 +9,7 @@ import {
   Search,
 } from "lucide-react";
 import ClipboardDemo from "@/components/clipboard-demo";
+import PanelVisual from "@/components/panel-visual";
 import CopyBlock from "@/components/copy-block";
 import CopyPromptButton from "@/components/copy-prompt-button";
 import MakerNote from "@/components/maker-note";
@@ -17,6 +18,7 @@ import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
 import {
   faqs,
+  shortcuts,
 } from "@/lib/home";
 import { agentInstruction, agentPrompt, brewCommand, cliExamples } from "@/lib/install";
 import { downloadUrl as download, siteUrl, sourceUrl as source } from "@/lib/site";
@@ -321,6 +323,261 @@ export default function Home() {
             <CopyBlock text={brewCommand} label="Homebrew install command" />
             <h3>Coding agent prompt</h3>
             <CopyBlock text={agentPrompt} label="coding agent prompt" />
+          </div>
+        </div>
+      </section>
+      <section id="search" className="bx-section">
+        <div className="bx-wrap lf-feature">
+          <div className="lf-copy">
+            <span className="bx-eyebrow">Search</span>
+            <h2>Search your clipboard history by any word you remember.</h2>
+            <p>
+              Type a word or two and the list narrows as you type. A clip matches
+              when every word appears somewhere in it: the text, the app you
+              copied it from, or the text On Hand found in an image.
+            </p>
+            <ul className="lf-list">
+              <li>
+                <strong>Filter by type</strong> with the All, Pinned, Links,
+                Images, and Sent tabs. Links are any copied web address.
+              </li>
+              <li>
+                <strong>Preview before you copy.</strong> <kbd>⌘O</kbd> opens the
+                full clip, so you can check a long one first.
+              </li>
+              <li>
+                <strong>Copy the same thing twice</strong> and it’s kept once, moved
+                to the top with the newest time.
+              </li>
+              <li>
+                <strong>Each clip shows where it came from:</strong> the app, how
+                long ago, and its board if it’s pinned.
+              </li>
+            </ul>
+          </div>
+          <PanelVisual
+            query="order"
+            rows={[
+              {
+                text: "Order #4021 · Ships Thursday",
+                sub: "Screenshot · text in image · 10m ago",
+                shortcut: "⌘1",
+                image: true,
+                selected: true,
+              },
+              {
+                text: "Your order ships Thursday. Tracking to follow.",
+                sub: "Slack · 3h ago · Replies",
+                shortcut: "⌘2",
+                pinned: true,
+              },
+              {
+                text: "shop.example.com/orders/4021",
+                sub: "Mail · 4h ago",
+                shortcut: "⌘3",
+              },
+            ]}
+            status="3 matches · On this Mac only"
+          />
+        </div>
+      </section>
+      <section id="screenshots" className="bx-section">
+        <div className="bx-wrap lf-feature flip">
+          <PanelVisual tab="Images" status="Text found on this Mac">
+            <div className="pv-shot">
+              Payment failed: card declined (code 402)
+              <small>Screenshot · Chrome · 22m ago</small>
+            </div>
+            <div className="pv-ocr">
+              Text in image: Payment <mark>failed</mark>: card declined (code 402)
+            </div>
+          </PanelVisual>
+          <div className="lf-copy">
+            <span className="bx-eyebrow">Text in images</span>
+            <h2>Search the text inside screenshots.</h2>
+            <p>
+              When you copy a screenshot, On Hand reads the words in it, on your
+              Mac, with the text recognition built into macOS. Search for any of those
+              words later and the screenshot comes up, like any other clip.
+            </p>
+            <ul className="lf-list">
+              <li>
+                <strong>Copy the text out.</strong> Preview an image to select and
+                copy its text, without retyping an error message or an order
+                number.
+              </li>
+              <li>
+                <strong>Nothing leaves your Mac.</strong> Recognition runs
+                locally, once for each new image.
+              </li>
+              <li>
+                <strong>Secrets in screenshots count too.</strong> If the text in
+                an image looks like a key or a card number, On Hand doesn’t keep
+                it.
+              </li>
+            </ul>
+            <a className="lf-more" href="/features/search-text-in-images">
+              How search in screenshots works <ArrowUpRight size={14} aria-hidden />
+            </a>
+          </div>
+        </div>
+      </section>
+      <section id="pins" className="bx-section">
+        <div className="bx-wrap lf-feature">
+          <div className="lf-copy">
+            <span className="bx-eyebrow">Pinned clips</span>
+            <h2>Pin snippets, replies, and addresses to boards.</h2>
+            <p>
+              Some things you paste every week: a support reply, a shipping
+              address, a code snippet, a bank reference. Pin them once and they
+              stay until you remove them, no matter how long history is set to
+              keep everything else.
+            </p>
+            <ul className="lf-list">
+              <li>
+                <strong>Pin with <kbd>⌘P</kbd></strong>, or right-click a clip and
+                choose Pin to Board to file it on a board like Snippets or
+                Addresses.
+              </li>
+              <li>
+                <strong>Open a board</strong> under the Pinned tab to see only its
+                clips. Rename or delete a board from its menu.
+              </li>
+              <li>
+                <strong>Copy several clips into one form.</strong> Turn on Keep
+                Window Open While Switching Apps, and history stays put while you
+                paste into another app.
+              </li>
+              <li>
+                <strong>Pinning something that looks like a secret</strong> warns
+                you first, so a key doesn’t end up kept forever by accident.
+              </li>
+            </ul>
+          </div>
+          <PanelVisual
+            tab="Pinned"
+            boards={{ names: ["All pinned", "Snippets", "Addresses", "Replies"], on: "Snippets" }}
+            rows={[
+              {
+                text: "let smallThings = makeSomethingUseful()",
+                sub: "Xcode · Oct 4 · Snippets",
+                shortcut: "⌘1",
+                pinned: true,
+                code: true,
+                selected: true,
+              },
+              {
+                text: "npm run lint && npm run typecheck",
+                sub: "Ghostty · Oct 9 · Snippets",
+                shortcut: "⌘2",
+                pinned: true,
+                code: true,
+              },
+              {
+                text: "SELECT * FROM orders WHERE status = 'late'",
+                sub: "TablePlus · Oct 21 · Snippets",
+                shortcut: "⌘3",
+                pinned: true,
+                code: true,
+              },
+            ]}
+            status="Pinned clips never expire"
+          />
+        </div>
+      </section>
+      <section id="shortcuts" className="bx-section">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">Keyboard</span>
+            <h2>Keyboard shortcuts for every part of it.</h2>
+            <p>
+              On Hand is built to use without the mouse. Open it from any app,
+              find the clip, copy it, and you’re back where you were.
+            </p>
+          </div>
+          <div className="lf-table-wrap">
+            <table className="lf-table">
+              <thead>
+                <tr>
+                  <th scope="col">Shortcut</th>
+                  <th scope="col">What it does</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shortcuts.map((row) => (
+                  <tr key={row.keys}>
+                    <th scope="row" className="key">
+                      <kbd>{row.keys}</kbd>
+                    </th>
+                    <td>{row.action}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="lf-note">
+            You can change the open, forget, and message shortcuts in Settings.
+            The message shortcuts are only active while Sent messages is on, so
+            other apps keep them otherwise.
+          </p>
+        </div>
+      </section>
+      <section id="sent" className="bx-section">
+        <div className="bx-wrap lf-feature flip">
+          <PanelVisual
+            tab="Sent"
+            rows={[
+              {
+                text: "Ship it Monday, then the site.",
+                sub: "Messages · Sent · 24m ago",
+                shortcut: "⌘1",
+                selected: true,
+              },
+              {
+                text: "Can you send the Q3 numbers before standup?",
+                sub: "Slack · Sent · 2h ago",
+                shortcut: "⌘2",
+              },
+              {
+                text: "Rewrite this so it’s half as long.",
+                sub: "Claude · Sent · 5h ago",
+                shortcut: "⌘3",
+              },
+            ]}
+            status="Sent messages on · 3 apps"
+          />
+          <div className="lf-copy">
+            <span className="bx-eyebrow">Sent messages · optional</span>
+            <h2>Find a message you already sent.</h2>
+            <p>
+              Like pressing ↑ in Terminal, but for the apps you choose. Turn on
+              Sent messages, add Slack, Messages, or Claude, and On Hand keeps
+              what you send so you can find it again or send it again.
+            </p>
+            <ul className="lf-list">
+              <li>
+                <strong>Saved when the box empties.</strong> When a message box
+                clears after you send, what was in it is saved as a clip labeled
+                Sent.
+              </li>
+              <li>
+                <strong>Bring it back.</strong> Click into a message box and press{" "}
+                <kbd>⌃⌥↑</kbd> to fill in the last message you sent from that
+                app. Press it again for older ones, or <kbd>⌃⌥↓</kbd> to go
+                forward.
+              </li>
+              <li>
+                <strong>Off until you turn it on.</strong> It needs Accessibility
+                access, reads only the message box in apps you listed, never
+                records keystrokes, and skips password fields.
+              </li>
+              <li>
+                <strong>Works with standard text fields.</strong> Some apps don’t
+                share their text fields with macOS, and On Hand can’t see
+                messages sent from those. Deleting a whole draft at once looks
+                the same as sending it, so that draft may be saved too.
+              </li>
+            </ul>
           </div>
         </div>
       </section>
