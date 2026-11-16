@@ -3,33 +3,6 @@ import OnHandCore
 import PanelKit
 import SwiftUI
 
-/// The metal fascia at the top of the panel: nameplate and header keys, the current clip on a slip, label strips.
-struct HandFascia<Controls: View>: View {
-    let nameplate: String
-    let slip: ClipSlip.Content
-    let detail: String
-    @ViewBuilder let controls: Controls
-    @Environment(\.panelTheme) private var theme
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 6) {
-                controls
-            }
-            ClipSlip(content: slip)
-                .padding(.top, 8)
-            LabelStrips("Clipboard", detail: detail)
-        }
-        .padding(.top, 11)
-        .padding(.horizontal, 14)
-        .padding(.bottom, 13)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(BrushedMetal(anodised: theme.isDark))
-        .overlay(alignment: .top) { Rectangle().fill(theme.fasciaHighlight).frame(height: 1) }
-        .overlay(alignment: .bottom) { Rectangle().fill(theme.fasciaEdge).frame(height: 1) }
-    }
-}
-
 /// A paper slip held by a chrome clip, showing what is on the clipboard.
 struct ClipSlip: View {
     enum Content {

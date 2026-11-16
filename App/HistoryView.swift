@@ -66,19 +66,22 @@ struct HistoryView: View {
     }
 
     private var fascia: some View {
-        HandFascia(nameplate: "Clips", slip: slipContent,
-                   detail: model.isPaused ? "Capture paused" : "Passwords skipped") {
-            if model.previewID != nil {
-                KeyCap("chevron.left", accessibilityLabel: "Back to history") { model.previewID = nil }
-                    .keyboardShortcut("[", modifiers: .command)
-            }
-            Nameplate(model.previewID == nil ? "Clips" : "Clip preview")
-            Spacer(minLength: 0)
+        let fascia = Fascia(nameplate: model.previewID == nil ? "Clips" : "Clip preview",
+                            detail: model.isPaused ? "Capture paused" : "Passwords skipped", label: "Clipboard") {
+            ClipSlip(content: slipContent).padding(.top, 8)
+        }
+        .trailingAccessory {
             if model.preferences.hasStarted {
                 KeyCap(model.recording ? "pause.fill" : "play.fill",
                        accessibilityLabel: model.recording ? "Pause capture" : "Resume capture") { model.togglePause() }
             }
             moreMenu
+        }
+        // An empty leading slot still takes space, so the back key is added only in preview.
+        guard model.previewID != nil else { return fascia }
+        return fascia.leadingAccessory {
+            KeyCap("chevron.left", accessibilityLabel: "Back to history") { model.previewID = nil }
+                .keyboardShortcut("[", modifiers: .command)
         }
     }
 
