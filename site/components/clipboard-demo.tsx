@@ -9,12 +9,11 @@ import {
   Ellipsis,
   Image as ImageIcon,
   Link,
-  Paperclip,
   Pin,
   Search,
   X,
 } from "lucide-react";
-import { type KeyboardEvent, useState } from "react";
+import { type CSSProperties, type KeyboardEvent, useState } from "react";
 
 type Clip = {
   id: number;
@@ -89,21 +88,17 @@ function age(minutes: number) {
 function Thumbnail({ clip, copied }: { clip: Clip; copied: boolean }) {
   if (copied) {
     return (
-      <span className="clip-icon" aria-hidden="true">
-        <Check size={16} />
+      <span className="ico" aria-hidden="true">
+        <Check size={13} />
       </span>
     );
   }
   if (clip.kind === "image") {
-    return (
-      <span className="clip-icon clip-shot" aria-hidden="true">
-        <span>{clip.text}</span>
-      </span>
-    );
+    return <span className="thumb" aria-hidden="true" />;
   }
   return (
-    <span className="clip-icon" aria-hidden="true">
-      {clip.kind === "link" ? <Link size={15} /> : <AlignLeft size={15} />}
+    <span className="ico" aria-hidden="true">
+      {clip.kind === "link" ? <Link size={12} /> : <AlignLeft size={12} />}
     </span>
   );
 }
@@ -180,57 +175,89 @@ export default function ClipboardDemo() {
     }
   }
 
+  const onClipboard =
+    clips.find((clip) => clip.id === copiedID) ??
+    [...clips].sort((left, right) => left.minutesAgo - right.minutesAgo)[0];
+
   return (
-    <div className="demo-window" aria-label="Interactive On Hand preview">
-      <div className="demo-header">
-        {preview ? (
-          <button
-            className="demo-back"
-            onClick={() => setPreviewID(null)}
-            aria-label="Back to demo history"
-          >
-            <ChevronLeft size={15} />
-          </button>
-        ) : (
-          <Paperclip size={16} aria-hidden="true" />
-        )}
-        <strong>{preview ? "Clip preview" : "On Hand"}</strong>
-        <div className="demo-tools">
-          <button
-            onClick={() => setPaused(!paused)}
-            aria-label={paused ? "Resume capture" : "Pause capture"}
-            title={paused ? "Resume capture" : "Pause capture"}
-          >
-            {paused ? <CirclePlay /> : <CirclePause />}
-          </button>
-          <span
-            title="Settings and shortcuts are in the Mac app"
-            aria-hidden="true"
-          >
-            <Ellipsis />
+    <div
+      className="pop light demo-pop"
+      style={{ "--acc": "#b43a9e" } as CSSProperties}
+      role="group"
+      aria-label="Interactive On Hand preview"
+    >
+      <div className="fas">
+        <div className="fh">
+          {preview ? (
+            <span className="demo-title">
+              <button
+                className="tbi"
+                onClick={() => setPreviewID(null)}
+                aria-label="Back to demo history"
+              >
+                <ChevronLeft size={14} />
+              </button>
+              <strong>Clip preview</strong>
+            </span>
+          ) : (
+            <span className="np">
+              <i aria-hidden="true" />
+              Clips
+            </span>
+          )}
+          <span className="tbar">
+            <button
+              className="tbi"
+              onClick={() => setPaused(!paused)}
+              aria-label={paused ? "Resume capture" : "Pause capture"}
+              title={paused ? "Resume capture" : "Pause capture"}
+            >
+              {paused ? <CirclePlay size={13} /> : <CirclePause size={13} />}
+            </button>
+            <span
+              className="tbi"
+              title="Settings and shortcuts are in the Mac app"
+              aria-hidden="true"
+            >
+              <Ellipsis size={13} />
+            </span>
           </span>
+        </div>
+        {onClipboard && (
+          <div className="slip" aria-hidden="true">
+            <span className="sclip" />
+            <code>{onClipboard.text}</code>
+            <small>
+              On the clipboard now · {onClipboard.source} ·{" "}
+              {age(onClipboard.minutesAgo)}
+            </small>
+          </div>
+        )}
+        <div className="labs" aria-hidden="true">
+          <span className="lo">Passwords skipped</span>
+          <span className="ls">Clipboard</span>
         </div>
       </div>
       {preview ? (
         <div className="demo-detail">
-          <div className="demo-metadata">
-            <strong>
+          <div className="sect">
+            <span className="demo-kind">
               {preview.kind === "image" ? (
-                <ImageIcon size={13} />
+                <ImageIcon size={12} />
               ) : preview.kind === "link" ? (
-                <Link size={13} />
+                <Link size={12} />
               ) : (
-                <AlignLeft size={13} />
+                <AlignLeft size={12} />
               )}
               {preview.kind === "image"
                 ? "Image"
                 : preview.kind === "link"
                   ? "Link"
                   : "Text"}
-            </strong>
-            <p>
+            </span>
+            <span>
               From {preview.source} · {age(preview.minutesAgo)}
-            </p>
+            </span>
           </div>
           <div className="demo-content">
             {preview.kind === "image" ? (
@@ -243,23 +270,24 @@ export default function ClipboardDemo() {
               preview.text
             )}
           </div>
-          <div className="demo-actions">
+          <div className="acts">
             <button
+              className="b"
               onClick={() => pin(preview.id)}
               aria-pressed={preview.pinned}
             >
-              <Pin size={13} />
+              <Pin size={12} />
               {preview.pinned ? "Unpin" : "Pin"}
             </button>
-            <button className="copy-action" onClick={() => copy(preview)}>
+            <button className="b pri wide" onClick={() => copy(preview)}>
               {copiedID === preview.id ? "Copied" : "Copy"}
             </button>
           </div>
         </div>
       ) : (
         <>
-          <label className="demo-search">
-            <Search size={14} aria-hidden="true" />
+          <label className="field demo-search">
+            <Search size={13} aria-hidden="true" />
             <input
               value={query}
               onChange={(event) => {
@@ -275,27 +303,25 @@ export default function ClipboardDemo() {
                 onClick={() => setQuery("")}
                 aria-label="Clear demo search"
               >
-                <X size={13} />
+                <X size={12} />
               </button>
             )}
           </label>
           {paused && (
-            <div className="demo-paused">
-              <CirclePause size={14} aria-hidden="true" />
-              <span>Capture is paused. New copies aren’t saved.</span>
-              <button onClick={() => setPaused(false)}>Resume</button>
+            <div className="notice demo-paused">
+              <span className="led-l ca">Capture paused</span>
+              <p>Capture is paused. New copies aren’t saved.</p>
+              <button className="b sm" onClick={() => setPaused(false)}>
+                Resume
+              </button>
             </div>
           )}
-          <div
-            className="demo-filters"
-            role="group"
-            aria-label="Filter demo clips"
-          >
+          <div className="tabs" role="group" aria-label="Filter demo clips">
             {filters.map((item) => (
               <button
                 key={item}
                 aria-pressed={filter === item}
-                className={filter === item ? "active" : ""}
+                className={filter === item ? "on" : ""}
                 onClick={() => chooseFilter(item)}
               >
                 {item}
@@ -303,11 +329,11 @@ export default function ClipboardDemo() {
             ))}
           </div>
           {filter === "Pinned" && (
-            <div className="demo-boards" role="group" aria-label="Boards">
+            <div className="tabs demo-boards" role="group" aria-label="Boards">
               {[null, ...boards].map((name) => (
                 <button
                   key={name ?? "all"}
-                  className={board === name ? "active" : ""}
+                  className={board === name ? "on" : ""}
                   aria-pressed={board === name}
                   onClick={() => {
                     setBoard(name);
@@ -323,7 +349,7 @@ export default function ClipboardDemo() {
             {visible.length ? (
               visible.map((clip, index) => (
                 <div
-                  className={`demo-row ${clip === selected ? "selected" : ""}`}
+                  className={`demo-row ${clip === selected ? "sel" : ""}`}
                   key={clip.id}
                 >
                   <button
@@ -333,23 +359,16 @@ export default function ClipboardDemo() {
                   >
                     <Thumbnail clip={clip} copied={copiedID === clip.id} />
                     <span className="clip-text">
-                      <span>{clip.text}</span>
-                      <small>
-                        {clip.source}
-                        <b>·</b>
-                        {age(clip.minutesAgo)}
-                        {clip.board && (
-                          <>
-                            <b>·</b>
-                            {clip.board}
-                          </>
-                        )}
+                      <span className={clip.text.includes("()") ? "nm clip" : "nm"}>
+                        {clip.text}
+                      </span>
+                      <small className="sb">
+                        {clip.source} · {age(clip.minutesAgo)}
+                        {clip.board && <> · {clip.board}</>}
                       </small>
                     </span>
                   </button>
-                  {index < 9 && (
-                    <kbd className="clip-shortcut">⌘{index + 1}</kbd>
-                  )}
+                  {index < 9 && <kbd className="clip-shortcut">⌘{index + 1}</kbd>}
                   <button
                     className="preview-button"
                     onClick={() => {
@@ -366,7 +385,7 @@ export default function ClipboardDemo() {
                     aria-pressed={clip.pinned}
                     onClick={() => pin(clip.id)}
                   >
-                    <Pin size={13} />
+                    <Pin size={12} />
                   </button>
                 </div>
               ))
@@ -385,17 +404,16 @@ export default function ClipboardDemo() {
           </div>
         </>
       )}
-      <div className="demo-footer">
-        <span>
-          <i className={paused ? "paused" : ""} />
-          {paused ? "Capture paused" : "Capturing · On this Mac only"}
-          <b>·</b>
+      <div className="pf">
+        <span className="demo-state">
+          <i className={paused ? "paused" : ""} aria-hidden="true" />
+          {paused ? "Capture paused" : "Capturing · On this Mac only"} ·{" "}
           {visible.length === 1 ? "1 item" : `${visible.length} items`}
         </span>
         <span
           role="status"
           aria-live="polite"
-          className={copiedID !== null && !copyFailed ? "copied" : ""}
+          className="demo-status"
         >
           {copyFailed
             ? "This browser blocked copying."
