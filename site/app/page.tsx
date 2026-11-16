@@ -15,7 +15,9 @@ import MakerNote from "@/components/maker-note";
 import MoreApps from "@/components/more-apps";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
-import { faqs } from "@/lib/home";
+import {
+  faqs,
+} from "@/lib/home";
 import { agentInstruction, agentPrompt, brewCommand, cliExamples } from "@/lib/install";
 import { downloadUrl as download, siteUrl, sourceUrl as source } from "@/lib/site";
 
@@ -130,51 +132,175 @@ export default function Home() {
           </div>
         </section>
       </SiteNav>
-      <section id="features" className="bx-section" aria-label="Features">
-        <div className="bx-wrap bx-grid features">
-          <article className="bx-card">
-            <Search size={25} strokeWidth={1.5} />
-            <h2>Find the link you lost.</h2>
+      <section id="story" className="bx-section">
+        <div className="bx-wrap lf-story">
+          <div className="lf-head">
+            <span className="bx-eyebrow">A Tuesday, 4:52 PM</span>
+            <h2>The tracking link you copied at lunch is gone.</h2>
             <p>
-              Search a word you remember or the app you copied from, even{" "}
-              <a href="/features/search-text-in-images">text inside a screenshot</a>.
-              Filter by type and preview a clip before you copy it back.
+              A customer asks where their order is. You copied the tracking link
+              at 12:40, meaning to send it later. Since then you’ve copied a Git
+              command, a hex color, a reply from Slack, and a screenshot of an
+              error.
             </p>
-          </article>
-          <article className="bx-card">
-            <Pin size={25} strokeWidth={1.5} />
-            <h2>Keep the clips you reuse.</h2>
             <p>
-              Pin a reply, an address, or a useful snippet, and group pins into
-              boards. They stay until you remove them. Leave history open to
-              reuse clips across apps.
+              Your Mac kept one of those: the screenshot. So you dig back through
+              Mail for the shipping email, again, and copy the link a second time.
             </p>
-          </article>
-          <article className="bx-card">
-            <Keyboard size={25} strokeWidth={1.5} />
-            <h2>Keep your hands on the keys.</h2>
             <p>
-              Press <kbd>⌘⇧Space</kbd> to open history. Choose a clip with the
-              arrow keys and Return, or use <kbd>⌘1–9</kbd>. Paste with{" "}
-              <kbd>⌘V</kbd>.
+              With On Hand, you press <kbd>⌘⇧Space</kbd>, type “ups”, press Return,
+              and paste. The link was there the whole time, along with everything
+              else you copied that afternoon.
             </p>
-          </article>
+          </div>
+          <ol className="lf-timeline" aria-label="An afternoon of copies">
+            <li className="lost">
+              <time>12:40</time>
+              <span>Tracking link from the shipping email</span>
+            </li>
+            <li className="lost">
+              <time>1:15</time>
+              <span>
+                <code>git switch -c fix/checkout-total</code>
+              </span>
+            </li>
+            <li className="lost">
+              <time>2:30</time>
+              <span>
+                <code>#b43a9e</code> for the new banner
+              </span>
+            </li>
+            <li className="lost">
+              <time>3:05</time>
+              <span>A teammate’s Slack reply you meant to reuse</span>
+            </li>
+            <li>
+              <time>4:10</time>
+              <span>A screenshot of the error. The only thing left on your clipboard.</span>
+            </li>
+            <li className="now">
+              <time>4:52</time>
+              <span>
+                <kbd>⌘⇧Space</kbd>, “ups”, Return. All five are still in On Hand.
+              </span>
+            </li>
+          </ol>
         </div>
       </section>
-      <section className="bx-band privacy">
+      <section id="problem" className="bx-section">
         <div className="bx-wrap">
-          <LockKeyhole size={30} strokeWidth={1.4} aria-hidden />
-          <h2>Your history. On your Mac.</h2>
-          <p>
-            Your clips stay local, with no app analytics or clipboard uploads.
-            Card numbers, Social Security numbers, and secret keys aren’t saved,
-            and they’re cleared from your clipboard after 90 seconds.
-            Pause capture anytime, choose apps to exclude, and set how long
-            unpinned clips stay.
+          <div className="lf-head">
+            <span className="bx-eyebrow">The problem</span>
+            <h2>Your Mac’s clipboard holds one thing.</h2>
+            <p>
+              Every copy replaces the one before it. Nothing warns you, and
+              nothing keeps the old one. You only notice when you need it back.
+            </p>
+          </div>
+          <div className="lf-cards">
+            <article className="bx-card">
+              <blockquote>“I literally just copied that.”</blockquote>
+              <p>
+                You copied an address, then copied a name to go with it, and the
+                address is gone. Now you’re switching windows to find it again.
+              </p>
+            </article>
+            <article className="bx-card">
+              <blockquote>“Where did I see that link?”</blockquote>
+              <p>
+                It was in a tab, or a message, or a doc, sometime this morning.
+                You remember a word from it. You don’t remember where it lived.
+              </p>
+            </article>
+            <article className="bx-card">
+              <blockquote>“I’ll just take the screenshot again.”</blockquote>
+              <p>
+                Error dialogs close and receipts scroll away. A screenshot you
+                copied but didn’t save is gone the moment you copy anything else.
+              </p>
+            </article>
+          </div>
+          <p className="lf-note">
+            macOS Tahoe added clipboard history to Spotlight, which helps with
+            “what did I just copy?” Apple’s guide covers opening and clearing it,
+            and nothing about pinning clips or skipping apps. Before Tahoe, macOS
+            keeps only your last copy.{" "}
+            <a href="/mac-clipboard-history">How clipboard history works on a Mac</a>
           </p>
-          <a href="/privacy">
-            Read the privacy policy <ArrowUpRight size={14} aria-hidden />
-          </a>
+        </div>
+      </section>
+      <section id="features" className="bx-section" aria-labelledby="features-heading">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">What it does</span>
+            <h2 id="features-heading">A clipboard manager for Mac that remembers for you.</h2>
+          </div>
+          <div className="bx-grid features">
+            <article className="bx-card">
+              <Search size={25} strokeWidth={1.5} />
+              <h3>Find the link you lost.</h3>
+              <p>
+                Search a word you remember or the app you copied from, even{" "}
+                <a href="/features/search-text-in-images">text inside a screenshot</a>.
+                Filter by type and preview a clip before you copy it back.
+              </p>
+            </article>
+            <article className="bx-card">
+              <Pin size={25} strokeWidth={1.5} />
+              <h3>Keep the clips you reuse.</h3>
+              <p>
+                Pin a reply, an address, or a useful snippet, and group pins into
+                boards. They stay until you remove them. Leave history open to
+                reuse clips across apps.
+              </p>
+            </article>
+            <article className="bx-card">
+              <Keyboard size={25} strokeWidth={1.5} />
+              <h3>Keep your hands on the keys.</h3>
+              <p>
+                Press <kbd>⌘⇧Space</kbd> to open history. Choose a clip with the
+                arrow keys and Return, or use <kbd>⌘1–9</kbd>. Paste with{" "}
+                <kbd>⌘V</kbd>.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="how" className="bx-section">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">How it works</span>
+            <h2>Three steps, then you just copy.</h2>
+            <p>
+              There’s nothing new to learn. You copy the way you always have. On
+              Hand keeps each copy, and brings any of them back when you ask.
+            </p>
+          </div>
+          <ol className="lf-steps">
+            <li>
+              <h3>Install it</h3>
+              <p>
+                Download the app and drag it to Applications, or run{" "}
+                <code>brew install --cask coreyhaines31/tap/onhand</code>. A
+                clipboard icon appears in your menu bar.
+              </p>
+            </li>
+            <li>
+              <h3>Choose “Start keeping my clipboard”</h3>
+              <p>
+                On Hand saves what you copy from that moment on. It never imports
+                what was on your clipboard before you said yes.
+              </p>
+            </li>
+            <li>
+              <h3>Copy as usual, then press ⌘⇧Space</h3>
+              <p>
+                Type a word to search, press Return to copy a clip back, and
+                paste with <kbd>⌘V</kbd>. On Hand switches you back to the app you
+                were in.
+              </p>
+            </li>
+          </ol>
         </div>
       </section>
       <section id="install" className="bx-section" aria-label="Install from the command line">
@@ -220,7 +346,22 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <MakerNote />
+      <section className="bx-band privacy">
+        <div className="bx-wrap">
+          <LockKeyhole size={30} strokeWidth={1.4} aria-hidden />
+          <h2>Your history. On your Mac.</h2>
+          <p>
+            Your clips stay local, with no app analytics or clipboard uploads.
+            Card numbers, Social Security numbers, and secret keys aren’t saved,
+            and they’re cleared from your clipboard after 90 seconds.
+            Pause capture anytime, choose apps to exclude, and set how long
+            unpinned clips stay.
+          </p>
+          <a href="/privacy">
+            Read the privacy policy <ArrowUpRight size={14} aria-hidden />
+          </a>
+        </div>
+      </section>
       <section id="questions" className="bx-section">
         <div className="bx-wrap faq">
           <h2>Before you download.</h2>
@@ -263,6 +404,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <MakerNote />
       <MoreApps />
       <SiteFooter />
     </main>
