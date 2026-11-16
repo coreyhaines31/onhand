@@ -63,8 +63,8 @@ struct HistoryView: View {
     }
 
     private var fascia: some View {
-        let fascia = Fascia(nameplate: model.previewID == nil ? "Clips" : "Clip preview",
-                            detail: model.isPaused ? "Capture paused" : "Passwords skipped", label: "Clipboard") {
+        Fascia(nameplate: model.previewID == nil ? "Clips" : "Clip preview",
+               detail: model.isPaused ? "Capture paused" : "Passwords skipped", label: "Clipboard") {
             ClipSlip(content: slipContent).padding(.top, 8)
         }
         .trailingAccessory {
@@ -74,9 +74,7 @@ struct HistoryView: View {
             }
             moreMenu
         }
-        // An empty leading slot still takes space, so the back key is added only in preview.
-        guard model.previewID != nil else { return fascia }
-        return fascia.leadingAccessory {
+        .leadingAccessory(isPresented: model.previewID != nil) {
             KeyCap("chevron.left", accessibilityLabel: "Back to history") { model.previewID = nil }
                 .keyboardShortcut("[", modifiers: .command)
         }
@@ -112,8 +110,9 @@ struct HistoryView: View {
     private var searchBar: some View {
         NativeSearchField(text: $model.query, prompt: "Search clipboard history", shortcut: "⌘F",
                           focusRequest: model.searchFocusRequest, onSubmit: copySelected, onMove: move)
-            // The kit's well adds 8 pt below; the tabs and banner already carry their own top spacing.
-            .padding(.top, 12).padding(.bottom, -8)
+            // The tabs and paused banner carry their own top spacing.
+            .panelFieldBottomPadding(0)
+            .padding(.top, 12)
     }
 
     private var filters: some View {
