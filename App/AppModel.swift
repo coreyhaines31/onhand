@@ -21,6 +21,8 @@ final class AppModel {
     var previewID: String?
     var searchFocusRequest = 0
     var copiedID: String?
+    /// The history clip that is on the system clipboard right now, when On Hand knows it.
+    private(set) var clipboardClipID: String?
     var copySequence = 0
     var onSkippedSensitive: ((SensitiveContent) -> Void)?
     /// Pinned clips skip sensitive cleanup and never expire, so pinning a likely secret gets a warning.
@@ -41,11 +43,12 @@ final class AppModel {
         do {
             if isDemo {
                 store = try HistoryStore(path: ":memory:")
-                preferences.hasStarted = true
+                preferences.hasStarted = !ProcessInfo.processInfo.arguments.contains("--welcome")
                 // The demo never polls the clipboard, so it can show either state safely.
                 isPaused = ProcessInfo.processInfo.arguments.contains("--paused")
                 preferences.saveSent = true
                 try seedDemo()
+                clipboardClipID = try store?.all().max { $0.createdAt < $1.createdAt }?.id
             } else {
                 let folder = try HistoryLocation.folder()
                 try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true,
@@ -203,6 +206,7 @@ final class AppModel {
         lastChange = board.changeCount
         if success {
             copiedID = clip.id
+            clipboardClipID = clip.id
             copySequence += 1
         } else { errorMessage = "Could not write to the clipboard. Please try again." }
         return success
@@ -250,6 +254,7 @@ final class AppModel {
                 previews.removeAllObjects()
             }
             lastCapture = nil
+            clipboardClipID = nil
             board.clearContents()
             lastChange = board.changeCount
             reload()
@@ -282,6 +287,7 @@ extension AppModel {
         let board = NSPasteboard.general
         guard board.changeCount != lastChange else { return }
         lastChange = board.changeCount
+        clipboardClipID = nil
         guard recording else { return }
         let source = NSWorkspace.shared.frontmostApplication
         let types = Set((board.types ?? []).map(\.rawValue))
@@ -307,6 +313,7 @@ extension AppModel {
             let id = try store?.insert(text: text, image: image, source: source?.localizedName ?? "Unknown app")
             if let id {
                 lastCapture = (id, expectedChange)
+                clipboardClipID = id
                 reload()
             }
             if image != nil { recognizePendingImages() }
