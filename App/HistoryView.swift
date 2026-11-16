@@ -134,37 +134,18 @@ struct HistoryView: View {
     }
 
     private var filters: some View {
-        VStack(spacing: 10) {
-            FilterTabs(selection: $model.filter, options: model.preferences.saveSent
-                       ? ["All", "Pinned", "Links", "Images", "Sent"] : ["All", "Pinned", "Links", "Images"])
-            if model.filter == "Pinned" { boardBar }
-        }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 8)
-    }
-
-    private var boardBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 6) {
-                boardChip("All pinned", selected: model.board == nil) { model.board = nil }
-                ForEach(model.boards, id: \.self) { name in
-                    boardChip(name, selected: model.board == name) { model.board = name }
-                        .contextMenu {
-                            Button("Rename…") { boardName = name; renamingBoard = name }
-                            Button("Delete Board", role: .destructive) { model.deleteBoard(name) }
-                        }
-                }
-                Button { newBoard(pinning: nil) } label: { Image(systemName: "plus").font(.caption) }
-                    .buttonStyle(.borderless).help("New board").accessibilityLabel("New board")
+        let names = model.preferences.saveSent
+            ? ["All", "Pinned", "Links", "Images", "Sent"] : ["All", "Pinned", "Links", "Images"]
+        return VStack(spacing: 2) {
+            Tabs(names.map { PanelChoice($0, $0) }, selection: $model.filter)
+            if model.filter == "Pinned" {
+                BoardBar(boards: model.boards, selection: model.board,
+                         onSelect: { model.board = $0 },
+                         onRename: { boardName = $0; renamingBoard = $0 },
+                         onDelete: { model.deleteBoard($0) },
+                         onNew: { newBoard(pinning: nil) })
             }
-        }
-    }
-
-    private func boardChip(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title).font(.caption).padding(.horizontal, 10).padding(.vertical, 4)
-                .foregroundStyle(selected ? Color.accentColor : .primary)
-                .background(selected ? Color.accentColor.opacity(0.14) : Color.primary.opacity(0.06), in: Capsule())
-        }
-        .buttonStyle(.plain).accessibilityAddTraits(selected ? .isSelected : [])
+        }.padding(.top, 2)
     }
 
     private func newBoard(pinning clip: Clip?) {
