@@ -6,6 +6,7 @@ import "./globals.css";
 import "./styles/hero.css";
 import "./styles/demo.css";
 import "./styles/home.css";
+import "./styles/footer.css";
 import { siteUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: {
