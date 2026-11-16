@@ -161,7 +161,7 @@ struct HistoryView: View {
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(spacing: 2) {
+                        LazyVStack(spacing: 1) {
                             ForEach(Array(model.visibleClips.enumerated()), id: \.element.id) { index, clip in
                                 ClipRow(clip: clip, shortcut: index < 9 ? index + 1 : nil,
                                         selected: model.selectedID == clip.id, copied: model.copiedID == clip.id,
@@ -176,7 +176,7 @@ struct HistoryView: View {
                             if model.query.isEmpty, model.filter == "All", model.visibleClips.count < 4 {
                                 HistoryHint()
                             }
-                        }.padding(.horizontal, 8).padding(.bottom, 8)
+                        }.padding(.horizontal, 6).padding(.top, 2).padding(.bottom, 8)
                     }.onChange(of: model.selectedID) { _, id in
                         if let id { proxy.scrollTo(id, anchor: .center) }
                     }
