@@ -1,0 +1,171 @@
+/* Homepage sections below the hero. */
+.features.bx-grid {
+  margin-top: 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+.features .bx-card {
+  padding: 24px;
+}
+.features svg {
+  color: var(--bx-ink2);
+  margin-bottom: 6px;
+}
+.features h2 {
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+.features p {
+  color: var(--bx-ink2);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.features p a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.privacy {
+  padding-block: 72px;
+  text-align: center;
+}
+.privacy svg {
+  color: #a9abad;
+  margin-bottom: 14px;
+}
+.privacy h2 {
+  font-weight: 700;
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.04;
+}
+.privacy p {
+  max-width: 60ch;
+  margin: 16px auto 20px;
+  line-height: 1.65;
+}
+.privacy a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #f0f0f0;
+  text-decoration: underline;
+  text-decoration-color: #5b5d5e;
+  text-underline-offset: 3px;
+}
+.privacy a:hover {
+  color: #fff;
+  text-decoration-color: currentColor;
+}
+
+.quick-install {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 64px;
+}
+.quick-install > div {
+  min-width: 0;
+}
+.quick-install h2,
+.faq h2,
+.download-row h2 {
+  font-weight: 700;
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.04;
+}
+.quick-install p {
+  margin: 14px 0 18px;
+  color: var(--bx-ink2);
+  line-height: 1.65;
+}
+.quick-install p code {
+  font: 0.85em var(--bx-mono);
+  background: var(--bx-field);
+  border: 1px solid var(--bx-rule);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.quick-install a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--bx-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--bx-rule);
+  text-underline-offset: 3px;
+}
+.quick-install a:hover {
+  text-decoration-color: currentColor;
+}
+.quick-install h3 {
+  font: 600 12px/1 var(--bx-display);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bx-muted);
+  margin: 0 0 8px;
+}
+.quick-install .copy-block + h3 {
+  margin-top: 24px;
+}
+
+.faq {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 64px;
+}
+.faq .bx-faq summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.faq .bx-faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq .bx-faq summary::after {
+  content: "+";
+  color: var(--bx-muted);
+  font-weight: 300;
+}
+.faq .bx-faq details[open] summary::after {
+  content: "−";
+}
+.faq .bx-faq a {
+  color: var(--bx-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.download-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.download-row p {
+  color: var(--bx-ink2);
+  margin-top: 10px;
+}
+.download-row p a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+@media (max-width: 800px) {
+  .quick-install,
+  .faq {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .download-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .bx-section,
+  .privacy {
+    padding-block: 52px;
+  }
+}

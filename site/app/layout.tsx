@@ -3,7 +3,9 @@ import Script from "next/script";
 import "./brushed/brushed.css";
 import "./brushed/popover.css";
 import "./globals.css";
+import "./styles/hero.css";
 import "./styles/demo.css";
+import "./styles/home.css";
 import { siteUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: {
