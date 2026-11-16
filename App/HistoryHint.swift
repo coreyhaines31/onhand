@@ -3,15 +3,17 @@ import SwiftUI
 
 /// A quiet reminder under short histories, so a near-empty panel explains itself.
 struct HistoryHint: View {
+    @Environment(\.handTheme) private var theme
+
     var body: some View {
         VStack(spacing: 6) {
-            Image(systemName: "paperclip").font(.system(size: 18, weight: .light)).foregroundStyle(.tertiary)
+            Image(nsImage: BrandIcon.image()).foregroundStyle(theme.sub.opacity(0.7)).accessibilityHidden(true)
             Text("Copy anything and it shows up here.")
             if let shortcut = KeyboardShortcuts.getShortcut(for: .showHistory) {
                 Text("Press \(shortcut.description) to open On Hand from any app.")
             }
         }
-        .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+        .font(.system(size: 12)).foregroundStyle(theme.sub).multilineTextAlignment(.center)
         .frame(maxWidth: .infinity).padding(.top, 28).padding(.horizontal, 24)
     }
 }

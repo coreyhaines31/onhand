@@ -1,3 +1,4 @@
+import PanelKit
 import SwiftUI
 
 /// What the list shows when nothing matches the search, tab or board.
@@ -6,13 +7,17 @@ struct EmptyHistory: View {
     let filter: String
     let board: String?
 
+    @Environment(\.handTheme) private var theme
+
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             Image(systemName: query.isEmpty ? "square.on.square.dashed" : "magnifyingglass")
-                .font(.system(size: 28, weight: .light)).foregroundStyle(.tertiary)
-            Text(title).font(.headline)
-            Text(detail).font(.system(size: 12)).foregroundStyle(.secondary)
-                .multilineTextAlignment(.center).frame(maxWidth: 290)
+                .font(.system(size: 26, weight: .light)).foregroundStyle(theme.sub.opacity(0.7))
+                .accessibilityHidden(true)
+            Text(title).font(PanelFont.condensed(20, .semibold)).foregroundStyle(theme.ink)
+                .accessibilityAddTraits(.isHeader)
+            Text(detail).font(.system(size: 12)).foregroundStyle(theme.sub)
+                .multilineTextAlignment(.center).frame(maxWidth: 260)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
