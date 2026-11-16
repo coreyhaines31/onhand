@@ -228,7 +228,8 @@
   padding: 30px 16px;
 }
 .panel-visual .pop {
-  width: 360px;
+  width: 100%;
+  max-width: 360px;
 }
 .panel-visual .pop::before {
   display: none;
@@ -454,7 +455,7 @@
   .lf-story,
   .lf-feature,
   .lf-feature.flip {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
   }
   .lf-feature.flip .panel-visual {
@@ -495,4 +496,34 @@
 .privacy .lf-safety p,
 .privacy .lf-safety ul {
   margin: 6px 0 0;
+}
+@media (max-width: 600px) {
+  .lf-table:not(.lf-compare) thead {
+    display: none;
+  }
+  .lf-table:not(.lf-compare) tr,
+  .lf-table:not(.lf-compare) th,
+  .lf-table:not(.lf-compare) td {
+    display: block;
+    width: auto;
+  }
+  .lf-table:not(.lf-compare) tbody th {
+    padding-bottom: 2px;
+    white-space: normal;
+  }
+  .lf-table:not(.lf-compare) td {
+    border-top: 0;
+    padding-top: 2px;
+  }
+  .lf-table:not(.lf-compare) tr + tr th {
+    border-top: 1px solid var(--bx-rule);
+  }
+  .lf-table:not(.lf-compare) tr:first-child th {
+    border-top: 0;
+  }
+}
+@media (max-width: 600px) {
+  .lf-compare tbody th {
+    width: 130px;
+  }
 }
