@@ -1,4 +1,5 @@
 import OnHandCore
+import PanelKit
 import SwiftUI
 
 struct HistoryView: View {
@@ -10,11 +11,11 @@ struct HistoryView: View {
     @State private var renamingBoard: String?
     @State private var boardName = ""
     @State private var boardClip: Clip?
+    @Environment(\.handTheme) private var theme
 
     var body: some View {
         VStack(spacing: 0) {
-            header
-            Divider()
+            fascia
             if !model.preferences.hasStarted {
                 welcome
             } else if let clip = model.clips.first(where: { $0.id == model.previewID }) {
@@ -32,7 +33,9 @@ struct HistoryView: View {
         }
         .frame(width: HandLayout.width)
         .frame(minHeight: HandLayout.height, maxHeight: .infinity)
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background(theme.background)
+        .foregroundStyle(theme.ink)
+        .panelAccent(PanelAccent.onHand)
         .ignoresSafeArea()
         .task(id: model.copySequence) {
             guard model.copiedID != nil else { return }
@@ -63,41 +66,51 @@ struct HistoryView: View {
         )) { Button("OK") { model.errorMessage = nil } } message: { Text(model.errorMessage ?? "") }
     }
 
-    private var header: some View {
-        HStack(spacing: 10) {
+    private var fascia: some View {
+        HandFascia(nameplate: "Clips", slip: slipContent,
+                   detail: model.isPaused ? "Capture paused" : "Passwords skipped") {
             if model.previewID != nil {
-                Button { model.previewID = nil } label: { Image(systemName: "chevron.left") }
-                    .buttonStyle(.borderless).help("Back to history").accessibilityLabel("Back to history")
+                Button { model.previewID = nil } label: { KeyCap(symbol: "chevron.left") }
+                    .buttonStyle(.plain).help("Back to history").accessibilityLabel("Back to history")
                     .keyboardShortcut("[", modifiers: .command)
-            } else {
-                Image(nsImage: BrandIcon.image(size: 17)).foregroundStyle(.secondary)
             }
-            Text(model.previewID == nil ? "On Hand" : "Clip preview").font(.headline)
-            Spacer()
+            Nameplate(model.previewID == nil ? "Clips" : "Clip preview")
+            Spacer(minLength: 0)
             if model.preferences.hasStarted {
-                Button { model.togglePause() } label: {
-                    Image(systemName: model.recording ? "pause.circle" : "play.circle").font(.system(size: 15))
-                }
-                .buttonStyle(.borderless)
-                .help(model.recording ? "Pause capture" : "Resume capture")
-                .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
+                Button { model.togglePause() } label: { KeyCap(symbol: model.recording ? "pause.fill" : "play.fill") }
+                    .buttonStyle(.plain)
+                    .help(model.recording ? "Pause capture" : "Resume capture")
+                    .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
             }
-            Menu {
-                if model.preferences.hasStarted {
-                    Toggle("Keep Window Open While Switching Apps", isOn: Binding(
-                        get: { model.preferences.keepOpen }, set: { model.preferences.keepOpen = $0 }
-                    ))
-                }
-                Button("Keyboard Shortcuts") { DispatchQueue.main.async { showingShortcuts = true } }
-                Divider()
-                Button("Settings…", action: onSettings)
-            } label: {
-                Image(systemName: "ellipsis.circle").font(.system(size: 15))
+            moreMenu
+        }
+    }
+
+    private var moreMenu: some View {
+        Menu {
+            if model.preferences.hasStarted {
+                Toggle("Keep Window Open While Switching Apps", isOn: Binding(
+                    get: { model.preferences.keepOpen }, set: { model.preferences.keepOpen = $0 }
+                ))
             }
-            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
-            .help("More").accessibilityLabel("More")
-            .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
-        }.padding(.horizontal, 16).padding(.vertical, 12)
+            Button("Keyboard Shortcuts") { DispatchQueue.main.async { showingShortcuts = true } }
+            Divider()
+            Button("Settings…", action: onSettings)
+        } label: {
+            KeyCap(symbol: "ellipsis")
+        }
+        .menuStyle(.button).buttonStyle(.plain).menuIndicator(.hidden).fixedSize()
+        .help("More").accessibilityLabel("More")
+        .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
+    }
+
+    private var slipContent: ClipSlip.Content {
+        let current = model.clips.first { $0.id == model.clipboardClipID }
+        let newest = model.clips.filter { !$0.isSent }.max { $0.createdAt < $1.createdAt }
+        guard let clip = current ?? newest else {
+            return .empty(model.preferences.hasStarted ? "Nothing copied yet" : "Nothing kept yet")
+        }
+        return .clip(clip, image: clip.kind == .image ? model.preview(clip) : nil, onClipboard: current != nil)
     }
 
     private var searchBar: some View {
