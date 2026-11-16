@@ -1,4 +1,5 @@
 import OnHandCore
+import PanelKit
 import SwiftUI
 
 struct HistoryView: View {
@@ -10,29 +11,27 @@ struct HistoryView: View {
     @State private var renamingBoard: String?
     @State private var boardName = ""
     @State private var boardClip: Clip?
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
-            Divider()
+        Panel(accent: PanelAccent.onHand, fillsHeight: true) {
+            fascia
             if !model.preferences.hasStarted {
-                welcome
+                WelcomeView(ready: model.ready) { model.start() }
             } else if let clip = model.clips.first(where: { $0.id == model.previewID }) {
                 ClipDetailView(clip: clip, copied: model.copiedID == clip.id,
                                image: clip.kind == .image ? model.preview(clip) : nil,
                                onCopy: { onCopy(clip) }, onPin: { model.pin(clip) })
             } else {
                 searchBar
-                if model.isPaused { pausedBanner }
+                if model.isPaused { PausedBanner { model.togglePause() } }
                 filters
                 history
-                Divider()
-                footer
             }
+        } footer: {
+            if model.preferences.hasStarted, !model.clips.contains(where: { $0.id == model.previewID }) { footer }
         }
-        .frame(width: HandLayout.width)
         .frame(minHeight: HandLayout.height, maxHeight: .infinity)
-        .background(Color(nsColor: .windowBackgroundColor))
         .ignoresSafeArea()
         .task(id: model.copySequence) {
             guard model.copiedID != nil else { return }
@@ -63,94 +62,72 @@ struct HistoryView: View {
         )) { Button("OK") { model.errorMessage = nil } } message: { Text(model.errorMessage ?? "") }
     }
 
-    private var header: some View {
-        HStack(spacing: 10) {
-            if model.previewID != nil {
-                Button { model.previewID = nil } label: { Image(systemName: "chevron.left") }
-                    .buttonStyle(.borderless).help("Back to history").accessibilityLabel("Back to history")
-                    .keyboardShortcut("[", modifiers: .command)
-            } else {
-                Image(nsImage: BrandIcon.image(size: 17)).foregroundStyle(.secondary)
-            }
-            Text(model.previewID == nil ? "On Hand" : "Clip preview").font(.headline)
-            Spacer()
+    private var fascia: some View {
+        Fascia(nameplate: model.previewID == nil ? "Clips" : "Clip preview",
+               detail: model.isPaused ? "Capture paused" : "Passwords skipped", label: "Clipboard") {
+            ClipSlip(content: slipContent).padding(.top, 8)
+        }
+        .trailingAccessory {
             if model.preferences.hasStarted {
-                Button { model.togglePause() } label: {
-                    Image(systemName: model.recording ? "pause.circle" : "play.circle").font(.system(size: 15))
-                }
-                .buttonStyle(.borderless)
-                .help(model.recording ? "Pause capture" : "Resume capture")
-                .accessibilityLabel(model.recording ? "Pause capture" : "Resume capture")
+                KeyCap(model.recording ? "pause.fill" : "play.fill",
+                       accessibilityLabel: model.recording ? "Pause capture" : "Resume capture") { model.togglePause() }
             }
-            Menu {
-                if model.preferences.hasStarted {
-                    Toggle("Keep Window Open While Switching Apps", isOn: Binding(
-                        get: { model.preferences.keepOpen }, set: { model.preferences.keepOpen = $0 }
-                    ))
-                }
-                Button("Keyboard Shortcuts") { DispatchQueue.main.async { showingShortcuts = true } }
-                Divider()
-                Button("Settings…", action: onSettings)
-            } label: {
-                Image(systemName: "ellipsis.circle").font(.system(size: 15))
+            moreMenu
+        }
+        .leadingAccessory(isPresented: model.previewID != nil) {
+            KeyCap("chevron.left", accessibilityLabel: "Back to history") { model.previewID = nil }
+                .keyboardShortcut("[", modifiers: .command)
+        }
+    }
+
+    private var moreMenu: some View {
+        Menu {
+            if model.preferences.hasStarted {
+                Toggle("Keep Window Open While Switching Apps", isOn: Binding(
+                    get: { model.preferences.keepOpen }, set: { model.preferences.keepOpen = $0 }
+                ))
             }
-            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
-            .help("More").accessibilityLabel("More")
-            .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
-        }.padding(.horizontal, 16).padding(.vertical, 12)
+            Button("Keyboard Shortcuts") { DispatchQueue.main.async { showingShortcuts = true } }
+            Divider()
+            Button("Settings…", action: onSettings)
+        } label: {
+            Image(systemName: "ellipsis")
+        }
+        .menuStyle(.button).buttonStyle(KeyCapStyle()).menuIndicator(.hidden).fixedSize()
+        .help("More").accessibilityLabel("More")
+        .popover(isPresented: $showingShortcuts) { ShortcutHelp() }
+    }
+
+    private var slipContent: ClipSlip.Content {
+        let current = model.clips.first { $0.id == model.clipboardClipID }
+        let newest = model.clips.filter { !$0.isSent }.max { $0.createdAt < $1.createdAt }
+        guard let clip = current ?? newest else {
+            return .empty(model.preferences.hasStarted ? "Nothing copied yet" : "Nothing kept yet")
+        }
+        return .clip(clip, image: clip.kind == .image ? model.preview(clip) : nil, onClipboard: current != nil)
     }
 
     private var searchBar: some View {
-        HistorySearchField(text: $model.query, focusRequest: model.searchFocusRequest,
-                           onSubmit: copySelected, onMove: move)
-            .frame(height: 24).padding(.horizontal, 16).padding(.top, 14)
-    }
-
-    private var pausedBanner: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "pause.circle.fill").foregroundStyle(.orange)
-            Text("Capture is paused. New copies aren’t saved.")
-            Spacer()
-            Button("Resume") { model.togglePause() }.controlSize(.small)
-        }
-        .font(.callout)
-        .padding(.horizontal, 10).padding(.vertical, 7)
-        .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
-        .padding(.horizontal, 16).padding(.top, 10)
+        NativeSearchField(text: $model.query, prompt: "Search clipboard history", shortcut: "⌘F",
+                          focusRequest: model.searchFocusRequest, onSubmit: copySelected, onMove: move)
+            // The tabs and paused banner carry their own top spacing.
+            .panelFieldBottomPadding(0)
+            .padding(.top, 12)
     }
 
     private var filters: some View {
-        VStack(spacing: 10) {
-            FilterTabs(selection: $model.filter, options: model.preferences.saveSent
-                       ? ["All", "Pinned", "Links", "Images", "Sent"] : ["All", "Pinned", "Links", "Images"])
-            if model.filter == "Pinned" { boardBar }
-        }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 8)
-    }
-
-    private var boardBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 6) {
-                boardChip("All pinned", selected: model.board == nil) { model.board = nil }
-                ForEach(model.boards, id: \.self) { name in
-                    boardChip(name, selected: model.board == name) { model.board = name }
-                        .contextMenu {
-                            Button("Rename…") { boardName = name; renamingBoard = name }
-                            Button("Delete Board", role: .destructive) { model.deleteBoard(name) }
-                        }
-                }
-                Button { newBoard(pinning: nil) } label: { Image(systemName: "plus").font(.caption) }
-                    .buttonStyle(.borderless).help("New board").accessibilityLabel("New board")
+        let names = model.preferences.saveSent
+            ? ["All", "Pinned", "Links", "Images", "Sent"] : ["All", "Pinned", "Links", "Images"]
+        return VStack(spacing: 2) {
+            Tabs(names.map { PanelChoice($0, $0) }, selection: $model.filter)
+            if model.filter == "Pinned" {
+                BoardBar(boards: model.boards, selection: model.board,
+                         onSelect: { model.board = $0 },
+                         onRename: { boardName = $0; renamingBoard = $0 },
+                         onDelete: { model.deleteBoard($0) },
+                         onNew: { newBoard(pinning: nil) })
             }
-        }
-    }
-
-    private func boardChip(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title).font(.caption).padding(.horizontal, 10).padding(.vertical, 4)
-                .foregroundStyle(selected ? Color.accentColor : .primary)
-                .background(selected ? Color.accentColor.opacity(0.14) : Color.primary.opacity(0.06), in: Capsule())
-        }
-        .buttonStyle(.plain).accessibilityAddTraits(selected ? .isSelected : [])
+        }.padding(.top, 2)
     }
 
     private func newBoard(pinning clip: Clip?) {
@@ -162,17 +139,11 @@ struct HistoryView: View {
     private var history: some View {
         Group {
             if model.visibleClips.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: model.query.isEmpty ? "square.on.square.dashed" : "magnifyingglass")
-                        .font(.system(size: 28, weight: .light)).foregroundStyle(.tertiary)
-                    Text(emptyTitle).font(.headline)
-                    Text(emptyDetail).font(.system(size: 12)).foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center).frame(maxWidth: 290)
-                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                EmptyHistory(query: model.query, filter: model.filter, board: model.board)
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(spacing: 2) {
+                        LazyVStack(spacing: 1) {
                             ForEach(Array(model.visibleClips.enumerated()), id: \.element.id) { index, clip in
                                 ClipRow(clip: clip, shortcut: index < 9 ? index + 1 : nil,
                                         selected: model.selectedID == clip.id, copied: model.copiedID == clip.id,
@@ -187,7 +158,7 @@ struct HistoryView: View {
                             if model.query.isEmpty, model.filter == "All", model.visibleClips.count < 4 {
                                 HistoryHint()
                             }
-                        }.padding(.horizontal, 8).padding(.bottom, 8)
+                        }.padding(.horizontal, 6).padding(.top, 2).padding(.bottom, 8)
                     }.onChange(of: model.selectedID) { _, id in
                         if let id { proxy.scrollTo(id, anchor: .center) }
                     }
@@ -197,59 +168,23 @@ struct HistoryView: View {
     }
 
     private var footer: some View {
-        HStack(spacing: 6) {
-            Circle().fill(model.recording ? Color.green : .orange).frame(width: 5, height: 5)
-            Text(model.recording ? "Capturing · On this Mac only" : "Capture paused")
-                .foregroundStyle(.secondary)
-            Text("·").foregroundStyle(.tertiary)
-            Text(model.visibleClips.count == 1 ? "1 item" : "\(model.visibleClips.count) items")
-                .foregroundStyle(.secondary).monospacedDigit()
-            Spacer()
+        let count = model.visibleClips.count
+        let state = model.recording ? "Capturing · On this Mac only" : "Capture paused"
+        return HStack(spacing: 6) {
+            StatusLED(model.recording ? .go : .caution)
+            Text("\(state) · \(count == 1 ? "1 item" : "\(count) items")")
+                .foregroundStyle(theme.sub).monospacedDigit().lineLimit(1).minimumScaleFactor(0.8)
+            Spacer(minLength: 4)
             Text(model.copiedID == nil ? "↑↓ select  ↵ copy" : "Copied · ⌘V to paste")
-                .foregroundStyle(model.copiedID == nil ? Color.secondary : Color.accentColor)
+                .fontWeight(model.copiedID == nil ? .regular : .semibold)
+                .foregroundStyle(model.copiedID == nil ? theme.sub : theme.go).fixedSize()
         }
-        .font(.caption).padding(.horizontal, 16).padding(.vertical, 10)
+        .font(.system(size: 11))
+        .padding(.horizontal, 14).padding(.vertical, 9)
+        .overlay(alignment: .top) { Rectangle().fill(theme.line).frame(height: 1) }
+        .accessibilityElement(children: .combine)
     }
 
-    private var welcome: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            HandMark()
-            Text("Your next copy has a home.").font(.title2.weight(.semibold))
-            Text("On Hand remembers the text, links, and images you copy, so you can find them again.")
-                .font(.system(size: 14)).foregroundStyle(.secondary)
-                .multilineTextAlignment(.center).frame(maxWidth: 340)
-            VStack(alignment: .leading, spacing: 12) {
-                Label("History stays on this Mac", systemImage: "lock.shield")
-                Label("Password-marked clips are skipped", systemImage: "key")
-                Label("Unpinned clips expire after 7 days", systemImage: "clock")
-            }.font(.system(size: 12)).foregroundStyle(.secondary).padding(.vertical, 8)
-            Button("Start keeping my clipboard") { model.start() }
-                .buttonStyle(.borderedProminent).controlSize(.large).disabled(!model.ready)
-            Text("Pause or clear your history anytime.").font(.system(size: 11)).foregroundStyle(.tertiary)
-            Spacer()
-            Text("⌘⇧Space to open · Esc to dismiss").font(.system(size: 11)).foregroundStyle(.secondary)
-                .padding(.bottom, 24)
-        }.frame(maxWidth: .infinity)
-    }
-
-    private var emptyTitle: String {
-        if !model.query.isEmpty { return "Nothing here by that name." }
-        if model.filter == "Pinned", model.board != nil { return "Nothing on this board yet." }
-        if model.filter == "Sent" { return "Nothing sent yet." }
-        return model.filter == "Pinned" ? "Keep your favorites close." : "Ready when you copy."
-    }
-    private var emptyDetail: String {
-        if !model.query.isEmpty { return "Try a different word or the name of the app you copied from." }
-        if model.filter == "Pinned", model.board != nil {
-            return "Right-click any clip and choose Pin to Board."
-        }
-        if model.filter == "Pinned" { return "Pin any clip to keep it beyond your history limit." }
-        if model.filter == "Sent" {
-            return "Messages you send in the apps you chose in Settings show up here."
-        }
-        return "Copy some text, a link, or an image. It will be waiting right here."
-    }
     private func copySelected() {
         if let clip = model.visibleClips.first(where: { $0.id == model.selectedID }) ?? model.visibleClips.first {
             onCopy(clip)

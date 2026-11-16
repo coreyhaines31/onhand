@@ -21,7 +21,7 @@ make lint      # SwiftLint, strict
 make app       # builds dist/On Hand.app
 ```
 
-The Makefile uses `/Applications/Xcode.app` directly, so it works even if `xcode-select` points somewhere else. `make app` generates the Xcode project with XcodeGen, resolves the pinned Swift packages, renders the app icon, and builds a release app with an ad-hoc signature for local use. Local builds don't check for updates.
+The Makefile uses `/Applications/Xcode.app` directly, so it works even if `xcode-select` points somewhere else. `make app` generates the Xcode project with XcodeGen, resolves the pinned Swift packages, and builds a release app with an ad-hoc signature for local use. Local builds don't check for updates.
 
 ### Set up with a coding agent
 
@@ -63,9 +63,9 @@ Combine it with `--filter Pinned`, `--board Snippets`, `--query coffee`, `--prev
 | `Tests/OnHandCoreTests/` | Swift Testing tests for the core library (`make test`). |
 | `App/` | The macOS app: menu bar item, history panel (SwiftUI), settings, updates. |
 | `CLI/` | The `onhand` command. It's bundled at `On Hand.app/Contents/MacOS/onhand` and reads the same history file. |
-| `Resources/` | App icon and `Info.plist`. |
+| `Resources/` | App icon (`OnHand.icns`, from the shared mac-app-kit icon set) and `Info.plist`. |
 | `project.yml` | XcodeGen spec: app target, version numbers, and pinned dependencies (KeyboardShortcuts, Sparkle). |
-| `scripts/` | Local build, app icon rendering, release, and Homebrew cask scripts. |
+| `scripts/` | Local build, release, and Homebrew cask scripts. |
 | `site/` | The onhandformac.com website (Next.js). |
 
 ## How capture works
