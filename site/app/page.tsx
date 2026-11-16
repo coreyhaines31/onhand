@@ -17,7 +17,11 @@ import MoreApps from "@/components/more-apps";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
 import {
+  checkedOn,
   commands,
+  compareColumns,
+  compareRows,
+  compareSources,
   faqs,
   passwordManagers,
   shortcuts,
@@ -841,6 +845,146 @@ export default function Home() {
           <p className="lf-note">
             Homebrew links the command for you. If you installed another way,{" "}
             <a href="/features/command-line">link it once</a> from the app bundle.
+          </p>
+        </div>
+      </section>
+      <section id="people" className="bx-section">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">Who it’s for</span>
+            <h2>For developers, writers, and anyone who answers messages all day.</h2>
+          </div>
+          <div className="lf-cards">
+            <article className="bx-card">
+              <h3>Developers</h3>
+              <p>
+                Commands, branch names, stack traces, and the URL from the last
+                deploy. Pin the snippets you type every day. Tokens you copy
+                aren’t saved, and your coding agent can search the rest with{" "}
+                <code>onhand</code>.
+              </p>
+            </article>
+            <article className="bx-card">
+              <h3>Writers, editors, and marketers</h3>
+              <p>
+                Links, quotes, headlines, and the paragraph you cut “for later”.
+                Search by a word you remember, and pull text out of a screenshot
+                instead of retyping it.
+              </p>
+            </article>
+            <article className="bx-card">
+              <h3>Support, sales, and ops</h3>
+              <p>
+                The same five replies, order numbers, and addresses, all day.
+                Pin them to boards, keep the window open while you work through
+                a form, and find what you sent yesterday under Sent.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="compare" className="bx-section">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">Alternatives</span>
+            <h2>Mac clipboard managers, honestly compared.</h2>
+            <p>
+              On Hand isn’t the only way to get clipboard history on a Mac, and
+              it isn’t the best fit for everyone. Here’s how it compares with
+              what people usually weigh it against, from each one’s own site and
+              docs. Deeper comparisons:{" "}
+              <a href="/alternatives/maccy">Maccy</a>,{" "}
+              <a href="/alternatives/raycast-clipboard-history">Raycast</a>,{" "}
+              <a href="/alternatives/paste">Paste</a>,{" "}
+              <a href="/alternatives/alfred-clipboard-history">Alfred</a>, and{" "}
+              <a href="/alternatives">more</a>.
+            </p>
+          </div>
+          <div className="lf-table-wrap">
+            <table className="lf-table lf-compare">
+              <thead>
+                <tr>
+                  <th scope="col">
+                    <span className="sr-only">Feature</span>
+                  </th>
+                  {compareColumns.map((column) => (
+                    <th scope="col" key={column.name} className={column.href ? "" : "us"}>
+                      {column.href ? <a href={column.href}>{column.name}</a> : column.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {compareRows.map((row) => (
+                  <tr key={row.label}>
+                    <th scope="row">{row.label}</th>
+                    {row.cells.map((cell, index) => (
+                      <td key={compareColumns[index].name} className={index === 0 ? "us" : ""}>
+                        <b className={cell.good ? "y" : ""}>{cell.text}</b>
+                        {cell.note && <small>{cell.note}</small>}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="lf-better">
+            <article className="bx-card">
+              <h3>Where they’re better</h3>
+              <ul className="lf-list">
+                <li>
+                  <strong>Paste</strong> syncs history to your iPhone and iPad,
+                  keeps it with no limit, shares Pinboards with a team, and has
+                  an MCP server for Claude, Codex, and Cursor.
+                </li>
+                <li>
+                  <strong>Raycast and Alfred</strong> are whole launchers. If you
+                  live in one already, its clipboard history is right there,
+                  with snippets and much more beside it.
+                </li>
+                <li>
+                  <strong>Maccy</strong> is the closest match: free, MIT, and
+                  local, with years of releases, a compact popup, and optional
+                  paste-on-select.
+                </li>
+                <li>
+                  <strong>Most of them paste for you.</strong> On Hand puts the
+                  clip back on your clipboard and you press <kbd>⌘V</kbd>.
+                </li>
+              </ul>
+            </article>
+            <article className="bx-card">
+              <h3>Where On Hand is different</h3>
+              <ul className="lf-list">
+                <li>
+                  <strong>It checks what you copy, not just where.</strong> Keys,
+                  card numbers, and SSNs are caught in any app, concealed, and
+                  cleared.
+                </li>
+                <li>
+                  <strong>It’s free and open everywhere</strong>, with no paid
+                  tier for longer history or sync, because there’s no server.
+                </li>
+                <li>
+                  <strong>Unlike Spotlight and Raycast 2, it runs on macOS 14 and
+                  15</strong> and on Intel Macs, and agents can use it through a
+                  plain Terminal command.
+                </li>
+              </ul>
+            </article>
+          </div>
+          <p className="lf-sources">
+            Checked on {checkedOn} on each product’s own pages:{" "}
+            {compareSources.map((url, index) => (
+              <span key={url}>
+                {index > 0 && ", "}
+                <a href={url} rel="nofollow noopener">
+                  {url.replace(/^https:\/\/(www\.)?/, "")}
+                </a>
+              </span>
+            ))}
+            . “Not documented” means we couldn’t find it on their site, not that it’s missing.
           </p>
         </div>
       </section>
