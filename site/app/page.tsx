@@ -103,17 +103,17 @@ export default function Home() {
               <span>Find it again.</span>
             </p>
             <p className="bx-lede">
-              Bring back the text, links, and images you copied earlier. On Hand
-              keeps them in your Mac’s menu bar, ready to reuse.
+              Press ⌘⇧Space and search what you’ve copied: text, links,
+              and the words inside screenshots. Your history stays on your Mac.
             </p>
             <div className="bx-cta">
               <a className="bx-btn" href={download}>
                 <ArrowDown size={18} aria-hidden />
-                Download for free
+                Download On Hand free
               </a>
               <a className="bx-btn sec" href={source}>
                 <Code2 size={18} aria-hidden />
-                View source code
+                Read the source
               </a>
             </div>
             <CopyPromptButton text={agentPrompt} />
@@ -241,7 +241,7 @@ export default function Home() {
         <div className="bx-wrap">
           <div className="lf-head">
             <span className="bx-eyebrow">What it does</span>
-            <h2 id="features-heading">A clipboard manager for Mac that remembers for you.</h2>
+            <h2 id="features-heading">A clipboard manager for Mac that remembers what you copied.</h2>
           </div>
           <div className="bx-grid features">
             <article className="bx-card">
@@ -353,7 +353,7 @@ export default function Home() {
               </li>
               <li>
                 <strong>Copy the same thing twice</strong> and it’s kept once, moved
-                to the top with the newest time.
+                to the top, so duplicates don’t crowd your history.
               </li>
               <li>
                 <strong>Each clip shows where it came from:</strong> the app, how
@@ -434,7 +434,7 @@ export default function Home() {
             <span className="bx-eyebrow">Pinned clips</span>
             <h2>Pin snippets, replies, and addresses to boards.</h2>
             <p>
-              Some things you paste every week: a support reply, a shipping
+              Some text you paste every week: a support reply, a shipping
               address, a code snippet, a bank reference. Pin them once and they
               stay until you remove them, no matter how long history is set to
               keep everything else.
@@ -495,7 +495,7 @@ export default function Home() {
         <div className="bx-wrap">
           <div className="lf-head">
             <span className="bx-eyebrow">Keyboard</span>
-            <h2>Keyboard shortcuts for every part of it.</h2>
+            <h2>Keyboard shortcuts, so you never reach for the mouse.</h2>
             <p>
               On Hand is built to use without the mouse. Open it from any app,
               find the clip, copy it, and you’re back where you were.
@@ -673,7 +673,7 @@ export default function Home() {
               </p>
             </article>
             <article className="bx-card">
-              <h3>Named, not silent</h3>
+              <h3>It tells you what it skipped</h3>
               <p>
                 The menu bar icon briefly shows a raised hand when it skips
                 something, and its tooltip says what it found, like “GitHub
@@ -704,8 +704,8 @@ export default function Home() {
                 file are readable by your macOS account alone.
               </li>
               <li>
-                <strong>Kept out of Time Machine</strong> and local snapshots, so
-                deleting a clip really removes it.
+                <strong>Kept out of Time Machine</strong> and local snapshots, so a
+                clip you delete doesn’t live on in a backup.
               </li>
               <li>
                 <strong>Unpinned clips expire</strong> after 1, 7, 30, or 90 days.
@@ -1105,12 +1105,12 @@ export default function Home() {
         <div className="bx-wrap lf-new">
           <span className="bx-strip">New in 1.6.0</span>
           <div className="lf-head">
-            <h2>A new look, no Time Machine copies, and safer pins.</h2>
+            <h2>A new look, history kept out of backups, and safer pins.</h2>
             <p>
               On Hand 1.6.0 shipped on November 16, 2026. The history panel is
               redesigned to match my other free Mac apps, with a new app icon and
               menu bar icon, and every feature and shortcut works as before. History is now kept out of Time Machine backups and local
-              snapshots. Copies made by an excluded app are skipped even when
+              snapshots. On Hand skips copies from an excluded app even when
               another app is in front, and pinning a clip that looks like a
               secret warns you first.{" "}
               <a href={`${source}/releases`}>All release notes</a>
@@ -1147,7 +1147,7 @@ export default function Home() {
       </section>
       <section id="questions" className="bx-section">
         <div className="bx-wrap faq">
-          <h2>Before you download.</h2>
+          <h2>Questions before you download.</h2>
           <div className="questions bx-faq">
             {faqs.map((faq) => (
               <details key={faq.question}>
@@ -1171,18 +1171,18 @@ export default function Home() {
           <div>
             <h2>Free. Open source. On your Mac.</h2>
             <p>
-              Free for macOS 14+.{" "}
+              For macOS 14 or later, on Apple silicon and Intel.{" "}
               <a href="/install">Installation guide</a>
             </p>
           </div>
           <div className="download-actions">
             <a className="bx-btn" href={download}>
               <ArrowDown size={18} aria-hidden />
-              Download for free
+              Download On Hand free
             </a>
             <a className="bx-btn sec" href={source}>
               <Code2 size={18} aria-hidden />
-              View source code
+              Read the source
             </a>
           </div>
         </div>
