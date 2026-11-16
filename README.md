@@ -149,7 +149,7 @@ Read the full [privacy policy](https://onhandformac.com/privacy).
 
 **macOS asks whether On Hand can paste from other apps.** Choose **Allow**. On Hand needs to read the clipboard to save your history. You can change this later in System Settings › Privacy & Security.
 
-**I can't see the paperclip in the menu bar.** Your menu bar may be full or hiding icons. Press ⌘⇧Space instead, or open On Hand again from Applications.
+**I can't see the clipboard in the menu bar.** Your menu bar may be full or hiding icons. Press ⌘⇧Space instead, or open On Hand again from Applications.
 
 **A copy I expected was skipped.** On Hand skips text over 1 MB, images over 10 MB, and anything that looks like a card number, Social Security number, or secret key. The menu bar icon briefly shows a raised hand when it skips one of those, and its tooltip names what it found, like a GitHub token. You can turn this off in Settings › Privacy.
 

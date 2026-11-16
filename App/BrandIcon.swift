@@ -2,12 +2,14 @@ import AppKit
 
 @MainActor
 enum BrandIcon {
-    /// The paperclip template glyph for the menu bar and in-app headers.
-    static func image(size: CGFloat) -> NSImage {
-        let configuration = NSImage.SymbolConfiguration(pointSize: size * 15 / 19, weight: .regular)
-        let image = NSImage(systemSymbolName: "paperclip", accessibilityDescription: "On Hand")?
-            .withSymbolConfiguration(configuration) ?? NSImage(size: NSSize(width: size, height: size))
-        image.isTemplate = true
-        return image
+    /// The clipboard-stack template glyph (an 18 pt drawing) for the menu bar and in-app marks.
+    static func image(size: CGFloat = 18) -> NSImage {
+        guard let glyph = NSImage(named: "MenuBarGlyph")?.copy() as? NSImage else {
+            return NSImage(size: NSSize(width: size, height: size))
+        }
+        glyph.size = NSSize(width: size, height: size)
+        glyph.isTemplate = true
+        glyph.accessibilityDescription = "On Hand"
+        return glyph
     }
 }

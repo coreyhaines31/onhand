@@ -22,7 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             name: NSWorkspace.didActivateApplicationNotification, object: nil
         )
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = BrandIcon.image(size: 19)
+        item.button?.image = BrandIcon.image()
         item.button?.toolTip = "On Hand — clipboard history"
         item.button?.target = self
         item.button?.action = #selector(togglePanel(_:))
@@ -125,7 +125,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         button.setAccessibilityLabel("On Hand: \(message)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self, id == self.skipNoticeID, let button = self.statusItem?.button else { return }
-            button.image = BrandIcon.image(size: 19)
+            button.image = BrandIcon.image()
             button.toolTip = "On Hand — clipboard history"
             button.setAccessibilityLabel(nil)
         }
