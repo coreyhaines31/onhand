@@ -103,17 +103,17 @@ export default function Home() {
               <span>Find it again.</span>
             </p>
             <p className="bx-lede">
-              Bring back the text, links, and images you copied earlier. On Hand
-              keeps them in your Mac’s menu bar, ready to reuse.
+              Press ⌘⇧Space and search everything you’ve copied: text, links,
+              and the words inside screenshots. Your history stays on your Mac.
             </p>
             <div className="bx-cta">
               <a className="bx-btn" href={download}>
                 <ArrowDown size={18} aria-hidden />
-                Download for free
+                Download On Hand free
               </a>
               <a className="bx-btn sec" href={source}>
                 <Code2 size={18} aria-hidden />
-                View source code
+                Read the source
               </a>
             </div>
             <CopyPromptButton text={agentPrompt} />
@@ -1171,18 +1171,18 @@ export default function Home() {
           <div>
             <h2>Free. Open source. On your Mac.</h2>
             <p>
-              Free for macOS 14+.{" "}
+              For macOS 14 or later, on Apple silicon and Intel.{" "}
               <a href="/install">Installation guide</a>
             </p>
           </div>
           <div className="download-actions">
             <a className="bx-btn" href={download}>
               <ArrowDown size={18} aria-hidden />
-              Download for free
+              Download On Hand free
             </a>
             <a className="bx-btn sec" href={source}>
               <Code2 size={18} aria-hidden />
-              View source code
+              Read the source
             </a>
           </div>
         </div>
