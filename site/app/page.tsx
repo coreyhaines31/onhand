@@ -11,6 +11,7 @@ import {
 import ClipboardDemo from "@/components/clipboard-demo";
 import CopyBlock from "@/components/copy-block";
 import CopyPromptButton from "@/components/copy-prompt-button";
+import MakerNote from "@/components/maker-note";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
 import { agentInstruction, agentPrompt, brewCommand, cliExamples } from "@/lib/install";
@@ -264,6 +265,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <MakerNote />
       <section id="questions" className="bx-section">
         <div className="bx-wrap faq">
           <h2>Before you download.</h2>
