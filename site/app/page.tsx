@@ -17,6 +17,7 @@ import MoreApps from "@/components/more-apps";
 import SiteFooter from "@/components/site-footer";
 import SiteNav from "@/components/site-nav";
 import {
+  commands,
   faqs,
   passwordManagers,
   shortcuts,
@@ -753,6 +754,94 @@ export default function Home() {
             <h3>Or run it yourself</h3>
             <CopyBlock text={cliExamples} label="onhand examples" />
           </div>
+        </div>
+      </section>
+      <section id="cli" className="bx-section">
+        <div className="bx-wrap">
+          <div className="lf-head">
+            <span className="bx-eyebrow">Command line</span>
+            <h2>A clipboard history your coding agent can search.</h2>
+            <p>
+              You copied the error, the webhook URL, or the snippet an hour ago.
+              Instead of pasting it into the chat, tell your agent you copied it.
+              With the line above in its instructions, it runs{" "}
+              <code>onhand search</code>, finds the clip, and reads it.
+            </p>
+          </div>
+          <div className="lf-feature">
+            <pre className="lf-term" aria-label="Example Claude Code session using onhand">
+              <span className="you">&gt; Use the Stripe webhook URL I copied this morning.</span>
+              {"\n\n"}
+              <span className="ok">⏺</span> Bash(onhand search webhook --kind link)
+              {"\n  "}
+              <span className="c">⎿</span> ID       TYPE   COPIED    FROM          PINNED      PREVIEW
+              {"\n     "}3f2a91c0 link   3h ago    Safari                    example.com/hooks/stripe
+              {"\n\n"}
+              <span className="ok">⏺</span> Bash(onhand get 3f2a91c0)
+              {"\n  "}
+              <span className="c">⎿</span> example.com/hooks/stripe
+              {"\n\n"}
+              <span className="ok">⏺</span> Found it. Adding it to .env.example and the
+              {"\n  "}webhook setup in README.md.
+            </pre>
+            <ul className="lf-list">
+              <li>
+                <strong>It reads only what it asks for.</strong> Search returns
+                one-line previews. The full text comes from <code>get</code>,
+                one clip at a time.
+              </li>
+              <li>
+                <strong>Short IDs.</strong> Any unique start of a clip’s ID works,
+                like a short Git hash.
+              </li>
+              <li>
+                <strong>JSON for scripts.</strong> <code>--json</code> works on
+                search, get, boards, and status.
+              </li>
+              <li>
+                <strong>Works with the app open or closed.</strong> The command
+                edits the same history file, and a running app picks up changes
+                right away.
+              </li>
+              <li>
+                <strong>Your agent’s provider sees what it reads.</strong> The
+                command sends nothing anywhere itself, but whatever an agent reads
+                goes to its AI provider, like any file it opens.
+              </li>
+            </ul>
+          </div>
+          <div className="lf-table-wrap">
+            <table className="lf-table">
+              <thead>
+                <tr>
+                  <th scope="col">Command</th>
+                  <th scope="col">What it does</th>
+                </tr>
+              </thead>
+              <tbody>
+                {commands.map((row) => (
+                  <tr key={row.command}>
+                    <th scope="row" className="key">
+                      <code>{row.command}</code>
+                    </th>
+                    <td>
+                      {row.does}
+                      {row.flags && (
+                        <>
+                          {" "}
+                          <code>{row.flags}</code>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="lf-note">
+            Homebrew links the command for you. If you installed another way,{" "}
+            <a href="/features/command-line">link it once</a> from the app bundle.
+          </p>
         </div>
       </section>
       <section className="bx-band privacy">
