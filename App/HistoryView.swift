@@ -27,7 +27,6 @@ struct HistoryView: View {
                 if model.isPaused { PausedBanner { model.togglePause() } }
                 filters
                 history
-                Divider()
                 footer
             }
         }
@@ -186,18 +185,21 @@ struct HistoryView: View {
     }
 
     private var footer: some View {
-        HStack(spacing: 6) {
-            Circle().fill(model.recording ? Color.green : .orange).frame(width: 5, height: 5)
-            Text(model.recording ? "Capturing · On this Mac only" : "Capture paused")
-                .foregroundStyle(.secondary)
-            Text("·").foregroundStyle(.tertiary)
-            Text(model.visibleClips.count == 1 ? "1 item" : "\(model.visibleClips.count) items")
-                .foregroundStyle(.secondary).monospacedDigit()
-            Spacer()
+        let count = model.visibleClips.count
+        let state = model.recording ? "Capturing · On this Mac only" : "Capture paused"
+        return HStack(spacing: 6) {
+            HandLED(status: model.recording ? .go : .caution)
+            Text("\(state) · \(count == 1 ? "1 item" : "\(count) items")")
+                .foregroundStyle(theme.sub).monospacedDigit().lineLimit(1).minimumScaleFactor(0.8)
+            Spacer(minLength: 4)
             Text(model.copiedID == nil ? "↑↓ select  ↵ copy" : "Copied · ⌘V to paste")
-                .foregroundStyle(model.copiedID == nil ? Color.secondary : Color.accentColor)
+                .fontWeight(model.copiedID == nil ? .regular : .semibold)
+                .foregroundStyle(model.copiedID == nil ? theme.sub : theme.go).fixedSize()
         }
-        .font(.caption).padding(.horizontal, 16).padding(.vertical, 10)
+        .font(.system(size: 11))
+        .padding(.horizontal, 14).padding(.vertical, 9)
+        .overlay(alignment: .top) { Rectangle().fill(theme.line).frame(height: 1) }
+        .accessibilityElement(children: .combine)
     }
 
     private var welcome: some View {
