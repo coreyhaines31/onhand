@@ -14,7 +14,7 @@ struct HistoryView: View {
     @Environment(\.panelTheme) private var theme
 
     var body: some View {
-        VStack(spacing: 0) {
+        Panel(accent: PanelAccent.onHand, fillsHeight: true) {
             fascia
             if !model.preferences.hasStarted {
                 WelcomeView(ready: model.ready) { model.start() }
@@ -27,14 +27,11 @@ struct HistoryView: View {
                 if model.isPaused { PausedBanner { model.togglePause() } }
                 filters
                 history
-                footer
             }
+        } footer: {
+            if model.preferences.hasStarted, !model.clips.contains(where: { $0.id == model.previewID }) { footer }
         }
-        .frame(width: HandLayout.width)
         .frame(minHeight: HandLayout.height, maxHeight: .infinity)
-        .background(theme.background)
-        .foregroundStyle(theme.ink)
-        .panelAccent(PanelAccent.onHand)
         .ignoresSafeArea()
         .task(id: model.copySequence) {
             guard model.copiedID != nil else { return }
@@ -115,7 +112,8 @@ struct HistoryView: View {
     private var searchBar: some View {
         NativeSearchField(text: $model.query, prompt: "Search clipboard history", shortcut: "⌘F",
                           focusRequest: model.searchFocusRequest, onSubmit: copySelected, onMove: move)
-            .padding(.top, 12)
+            // The kit's well adds 8 pt below; the tabs and banner already carry their own top spacing.
+            .padding(.top, 12).padding(.bottom, -8)
     }
 
     private var filters: some View {

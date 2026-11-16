@@ -21,6 +21,6 @@ struct PausedBanner: View {
                 .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(theme.line, lineWidth: 1))
         )
         .accessibilityElement(children: .contain)
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 14).padding(.top, 8)
     }
 }
