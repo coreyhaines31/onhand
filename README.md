@@ -53,10 +53,10 @@ On Hand updates itself. Check anytime from ⋯ › Settings › Check for update
 
 ## Getting started
 
-1. **Open On Hand** from Applications. A paperclip appears in your menu bar and the history window opens.
+1. **Open On Hand** from Applications. A clipboard icon appears in your menu bar and the history window opens.
 2. **Choose "Start keeping my clipboard."** On Hand only saves things you copy from now on. It never imports what was on your clipboard before.
 3. **Copy something** in any app, the way you normally would.
-4. **Press ⌘⇧Space** (or click the paperclip) to open your history. Type to search, then press Return to copy a clip back.
+4. **Press ⌘⇧Space** (or click the clipboard icon) to open your history. Type to search, then press Return to copy a clip back.
 5. **Paste with ⌘V** in the app you're working in. On Hand switches you back to it automatically.
 
 On Hand starts with your Mac. To stop that, turn off **Launch at login** in Settings.
