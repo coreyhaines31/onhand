@@ -4,7 +4,7 @@ import SwiftUI
 /// Shown under the search field while capture is paused.
 struct PausedBanner: View {
     let onResume: () -> Void
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         HStack(spacing: 9) {

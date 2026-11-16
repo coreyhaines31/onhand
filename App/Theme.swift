@@ -7,11 +7,6 @@ enum HandLayout {
     static let height: CGFloat = 600
 }
 
-extension EnvironmentValues {
-    /// PanelKit's Brushed colours for the current appearance.
-    var handTheme: PanelTheme { PanelTheme.resolve(colorScheme) }
-}
-
 /// The app icon, shown on the welcome screen.
 struct HandMark: View {
     var body: some View {
@@ -25,7 +20,7 @@ struct HandMark: View {
 /// A 20 pt metal key for the small buttons on the fascia.
 struct KeyCap: View {
     let symbol: String
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         Image(systemName: symbol)
@@ -49,7 +44,7 @@ struct KeyCap: View {
 /// A small LED like PanelKit's status lights, for inline status text.
 struct HandLED: View {
     let status: PanelStatus
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         let color = theme.color(for: status)

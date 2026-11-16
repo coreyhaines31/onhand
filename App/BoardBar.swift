@@ -34,7 +34,7 @@ private struct BoardChip: View {
     let title: String
     let selected: Bool
     let action: () -> Void
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         Button(action: action) {

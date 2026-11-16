@@ -9,7 +9,7 @@ struct HandFascia<Controls: View>: View {
     let slip: ClipSlip.Content
     let detail: String
     @ViewBuilder let controls: Controls
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -38,7 +38,7 @@ struct ClipSlip: View {
     }
 
     let content: Content
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     private var ink: Color { theme.isDark ? Color(red: 0.16, green: 0.13, blue: 0.09) : Color(white: 0.11) }
     private var paper: [Color] {

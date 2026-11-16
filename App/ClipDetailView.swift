@@ -10,7 +10,7 @@ struct ClipDetailView: View {
     let onCopy: () -> Void
     let onPin: () -> Void
     private let previewLimit = 40_000
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

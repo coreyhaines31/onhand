@@ -5,7 +5,7 @@ import SwiftUI
 struct WelcomeView: View {
     let ready: Bool
     let onStart: () -> Void
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         VStack(spacing: 0) {

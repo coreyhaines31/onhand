@@ -1,9 +1,10 @@
 import KeyboardShortcuts
+import PanelKit
 import SwiftUI
 
 /// A quiet reminder under short histories, so a near-empty panel explains itself.
 struct HistoryHint: View {
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         VStack(spacing: 6) {

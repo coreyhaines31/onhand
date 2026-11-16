@@ -7,7 +7,7 @@ struct EmptyHistory: View {
     let filter: String
     let board: String?
 
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         VStack(spacing: 10) {

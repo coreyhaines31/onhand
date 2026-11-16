@@ -11,7 +11,7 @@ struct HistoryView: View {
     @State private var renamingBoard: String?
     @State private var boardName = ""
     @State private var boardClip: Clip?
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         VStack(spacing: 0) {

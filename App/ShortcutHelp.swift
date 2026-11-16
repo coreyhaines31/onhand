@@ -3,7 +3,7 @@ import PanelKit
 import SwiftUI
 
 struct ShortcutHelp: View {
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {

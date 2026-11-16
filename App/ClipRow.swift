@@ -1,5 +1,6 @@
 import AppKit
 import OnHandCore
+import PanelKit
 import SwiftUI
 
 struct ClipRow: View {
@@ -16,7 +17,7 @@ struct ClipRow: View {
     let onDelete: () -> Void
     let onPreview: () -> Void
     @State private var hovering = false
-    @Environment(\.handTheme) private var theme
+    @Environment(\.panelTheme) private var theme
 
     var body: some View {
         HStack(spacing: 8) {
