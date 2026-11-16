@@ -23,15 +23,6 @@ export default function MoreApps() {
                 </div>
               </a>
             ))}
-          <div className="soon">
-            <Image src="/family/kill.png" width={56} height={56} alt="" />
-            <div>
-              <b>
-                Kill Cord <em>Coming soon</em>
-              </b>
-              <span>See your API spend before the bill does</span>
-            </div>
-          </div>
         </div>
       </div>
     </section>
