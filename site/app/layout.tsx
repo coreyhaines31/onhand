@@ -43,6 +43,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   preload("/fonts/barlow-400.woff2", { as: "font", type: "font/woff2", crossOrigin: "" });
   preload("/fonts/barlow-semi-condensed-600.woff2", { as: "font", type: "font/woff2", crossOrigin: "" });
+  preload("/fonts/barlow-semi-condensed-300.woff2", { as: "font", type: "font/woff2", crossOrigin: "" });
   return (
     <html lang="en">
       <head>
