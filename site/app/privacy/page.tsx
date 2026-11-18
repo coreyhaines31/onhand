@@ -91,7 +91,7 @@ export default function Privacy() {
           storage. No ad tracking, no personal
           data sold or shared. Vercel may process request information to serve
           the website.
-          The site uses system fonts. The interactive demo uses sample clips; it only writes a sample
+          Its fonts are served from this site, not from Google Fonts. The interactive demo uses sample clips; it only writes a sample
           to your clipboard when you click one. It never reads your clipboard.
         </p>
         <h2>Updates and future services</h2>
