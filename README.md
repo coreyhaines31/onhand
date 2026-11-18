@@ -47,6 +47,8 @@ Install On Hand, a free, open-source clipboard manager for Mac (https://github.c
 3. If Homebrew is installed (`command -v brew`), run `brew install --cask coreyhaines31/tap/onhand` (add `--force` when replacing a copy that wasn't installed with Homebrew). Otherwise, in a new temporary folder: download https://onhandformac.com/download with `curl -fsSL -o OnHand.zip`, unzip it with `ditto -x -k OnHand.zip .`, make sure `codesign --verify --deep --strict "On Hand.app"` and `spctl --assess --type execute "On Hand.app"` both pass, then move any existing /Applications/On Hand.app to the Trash and install with `ditto "On Hand.app" "/Applications/On Hand.app"`.
 4. Open it with `open -a "On Hand"`.
 5. Tell me to click "Start keeping my clipboard" in the window that opens, and that ⌘⇧Space opens my clipboard history from any app.
+6. Ask me whether future agent sessions should be able to search my clipboard history, and tell me that anything an agent reads from it goes to its AI provider. Only if I say yes, append this to your own global instructions file (~/.claude/CLAUDE.md for Claude Code, ~/.codex/AGENTS.md for Codex), unless it's already there, and tell me which file you changed:
+   On Hand keeps my clipboard history. When I mention something I copied earlier, find it with `onhand search <words>` and read it with `onhand get <id>`. Ask before deleting anything.
 ```
 
 On Hand updates itself. Check anytime from ⋯ › Settings › Check for updates.
