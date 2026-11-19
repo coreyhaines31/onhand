@@ -15,4 +15,5 @@ export const familyApps: FamilyApp[] = [
   { key: "hand", name: "On Hand", url: "https://onhandformac.com", tagline: "Copy it once. Find it again." },
   { key: "coat", name: "Coat Check", url: "https://coatcheckformac.com", tagline: "Reach the menu bar icons the notch hides" },
   { key: "kill", name: "Kill Cord", url: "https://killcord.app", tagline: "See your API spend before the bill does" },
+  { key: "exhibit", name: "Exhibit A", url: "https://exhibitaformac.com", tagline: "Mark up a screenshot in a few keystrokes" },
 ];
