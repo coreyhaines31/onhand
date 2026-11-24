@@ -97,7 +97,7 @@
   text-decoration-color: currentColor;
 }
 .quick-install h3 {
-  font: 600 12px/1 var(--bx-display);
+  font: 600 12px/1 var(--bx-display-caps);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--bx-muted);
