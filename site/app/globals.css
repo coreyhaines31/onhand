@@ -188,7 +188,7 @@ kbd {
 }
 .document .back {
   display: inline-block;
-  font: 600 12px/1 var(--bx-display);
+  font: 600 12px/1 var(--bx-display-caps);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--bx-muted);
@@ -258,7 +258,7 @@ kbd {
   font-weight: 600;
 }
 .document thead th {
-  font: 600 12px/1.2 var(--bx-display);
+  font: 600 12px/1.2 var(--bx-display-caps);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   border-bottom: 2px solid var(--bx-ink2);
